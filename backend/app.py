@@ -11,6 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 data_df = pd.read_csv("static/data/600893.SH.csv")
+app.secret_key = 'secret_key'
 
 @app.route('/get_stock_data')
 def get_stock_data():
@@ -46,15 +47,23 @@ def get_triple():
 @app.route('/receive_code', methods=['POST'])
 def receive_code():
     data = request.get_json()
-    # print(data)
     parseResult = parseCode(data)
-    # print(parseResult)
     buy = execute(parseResult[0][1], data_df)
     sell = execute(parseResult[1][1], data_df)
     # 数组中1表示买入，-1表示卖出
-    result = buy - sell
-    print(result)
-    return jsonify(result.tolist())
+    res = (buy - sell).tolist()
+    return jsonify(res)
+
+@app.route('/cal_exampler_data', methods=['POST'])
+def cal_exampler_data():
+    data = request.get_json()
+    parseResult = parseCode(data)
+    buy = execute(parseResult[0][1], data_df)
+    sell = execute(parseResult[1][1], data_df)
+    # 数组中1表示买入，-1表示卖出
+    trade = (buy - sell).tolist()
+    res = execute_exampler(parseResult[0][1], parseResult[1][1], data_df, trade)
+    return jsonify(res)
 
 if __name__ == '__main__':
     app.run()
