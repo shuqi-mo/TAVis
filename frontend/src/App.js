@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import _ from "lodash";
 import axios from "axios";
-import Candle from "./Views/Candle";
+import Candle from "./views/Candle";
 import "./App.scss";
-import Panel from "./Views/Panel";
-import CodeEditor from "./Views/CodeEditor";
+import Panel from "./views/Panel";
+import CodeEditor from "./views/CodeEditor";
 import { Indicator, Evaluation } from "./utils/ClassDefinitions";
-import IndicatorsTable from "./Views/IndicatorsTable";
+import IndicatorsTable from "./views/IndicatorsTable";
 import { Button } from "antd";
-import StocksTable from "./Views/StocksTable";
-import TreeGraph from "./Views/TreeGraph";
-import LineChart from "./Views/LineChart";
+import StocksTable from "./views/StocksTable";
+import TreeGraph from "./views/TreeGraph";
+import LineChart from "./views/LineChart";
 
 const graphData = [
   ["long", "up"],
