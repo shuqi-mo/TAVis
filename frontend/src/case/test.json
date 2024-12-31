@@ -1,0 +1,58 @@
+{
+  "indicators": [
+    {
+      "name": "MACD",
+      "shortterm": "EMA(close, 12)",
+      "longterm": "EMA(close, 26)",
+      "long": "cross(shortterm, longterm)",
+      "short": "cross(longterm, shortterm)"
+    },
+    {
+      "name": "rsi",
+      "price": "rsi(close, 14)",
+      "up": 70,
+      "down": 30,
+      "long": "cross(price, down)",
+      "short": "cross(up, price)"
+    },
+    {
+      "name": "boll",
+      "price": "close",
+      "mid": "EMA(close, 20)",
+      "band": "movingstd(mid, 20)",
+      "multiplier": 2,
+      "up": "mid + multiplier * band",
+      "down": "mid - multiplier * band",
+      "long": "cross(price, down)",
+      "short": "cross(up, price)"
+    },
+    {
+      "name": "BarUpDn",
+      "long": "(close > open) & (open > close[1])",
+      "short": "(open > close) & (close[1] > open)"
+    },
+    {
+      "name": "InSide Bar",
+      "long": "(close > open) & (high < high[1]) & (low > low[1])",
+      "short": "(close < open) & (high < high[1]) & (low > low[1])"
+    }
+  ],
+  "restrictions": [
+    {
+      "long": []
+    },
+    {
+      "short": []
+    },
+    {
+      "nolong": []
+    },
+    {
+      "noshort": []
+    }
+  ],
+  "evaluation": {
+    "period": ["2023-07-01", "2024-07-01"],
+    "stop": [{ "ahead": "1" }, { "loss": "-10%" }, { "gain": "20%" }]
+  }
+}
