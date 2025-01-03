@@ -47,12 +47,20 @@ const StocksTable = ({ stocks }) => {
   const dataSource = stocks.map((stock) => calculatePerformance(stock));
 
   const columns = [
-    { title: "Stock Name", dataIndex: "stock", key: "stock" },
+    {
+      title: "Stock",
+      dataIndex: "stock",
+      key: "stock",
+      className: "custom-table",
+      width: 10,
+    },
     {
       title: "Total Trades",
       dataIndex: "totalTrades",
       key: "totalTrades",
       sorter: (a, b) => a.totalTrades - b.totalTrades,
+      className: "custom-table",
+      width: 10,
     },
     {
       title: "Success Rate",
@@ -60,6 +68,8 @@ const StocksTable = ({ stocks }) => {
       key: "successRate",
       render: (successRate) => `${(successRate * 100).toFixed(2)}%`,
       sorter: (a, b) => a.successRate - b.successRate,
+      className: "custom-table",
+      width: 10,
     },
     {
       title: "Average Return",
@@ -67,16 +77,27 @@ const StocksTable = ({ stocks }) => {
       key: "averageReturn",
       render: (averageReturn) => `${(averageReturn * 100).toFixed(2)}%`,
       sorter: (a, b) => a.averageReturn - b.averageReturn,
+      className: "custom-table",
+      width: 10
     },
     {
       title: "Total Profit",
       dataIndex: "totalProfit",
       key: "totalProfit",
       sorter: (a, b) => a.totalProfit - b.totalProfit,
+      className: "custom-table",
+      width: 10
     },
   ];
 
-  return <Table columns={columns} dataSource={dataSource} pagination={false} />;
+  return (
+    <Table
+      columns={columns}
+      dataSource={dataSource}
+      pagination={false}
+      size="small"
+    />
+  );
 };
 
 export default StocksTable;

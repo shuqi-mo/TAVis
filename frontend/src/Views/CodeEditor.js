@@ -1,28 +1,36 @@
 import MonacoEditor from "react-monaco-editor";
 import { useState } from "react";
-import { Button, Flex } from "antd";
+import { PlayCircleFilled } from "@ant-design/icons";
 
-function CodeEditor({ code, onCodeChange}) {
+function CodeEditor({ code, onCodeChange }) {
   const [tempcode, setTempcode] = useState(null);
 
   const handleExecute = () => {
     onCodeChange(tempcode);
   };
 
+  const options = {
+    fontSize: 10,
+    lineNumbersMinChars: 3,
+    lineHeight: 12,
+    minimap: {
+      enabled: false, // 关闭迷你地图
+    },
+  };
+
   return (
     <div>
+      <div className="view-title">
+        Code Editor <PlayCircleFilled onClick={() => handleExecute()} />
+      </div>
       <MonacoEditor
-        width="500"
-        height="500"
+        width="300"
+        height="450"
         language="javascript"
+        options={options}
         value={code}
-        onChange={(v)=>setTempcode(v)}
+        onChange={(v) => setTempcode(v)}
       />
-      <Flex gap="small" wrap>
-        <Button type="primary" onClick={() => handleExecute()}>
-          execute
-        </Button>
-      </Flex>
     </div>
   );
 }

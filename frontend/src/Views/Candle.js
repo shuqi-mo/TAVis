@@ -2,10 +2,10 @@ import { useEffect, useRef } from "react";
 import _ from "lodash";
 import * as d3 from "d3";
 
-const width = 900;
-const height = 450;
-const margin = { top: 20, right: 30, bottom: 110, left: 80 };
-const margin2 = { top: 380, right: 30, bottom: 30, left: 80 };
+const width = 550;
+const height = 350;
+const margin = { top: 20, right: 10, bottom: 120, left: 40 };
+const margin2 = { top: 260, right: 10, bottom: 50, left: 40 };
 const height2 = height - margin2.bottom - margin2.top;
 const dealHeight = 20;
 

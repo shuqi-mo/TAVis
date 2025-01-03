@@ -1,42 +1,23 @@
-.panel {
-    float: left;
-    width: 250px;
-    height: 800px;
-}
-
-.timeselector {
-    float: left;
-    width: 900px;
-    height: 2000px;
-}
-
-.right {
-    float: left;
-    width: 500px;
-    height: 2000px;
-}
-
-.backtest {
-    width: 700px;
-    height: 500px;
-}
-
 .candle {
-    width: 800px;
-    height: 500px;
-}
-
-.editor {
-    width: 800px;
-    height: 500px;
-}
-
-.exampler {
-    float: left;
     width: 550px;
-    height:300px;
+    height: 350px;
 }
 
-.edit {
-    float: left;
+.page-title {
+    background-color: #000000;
+    padding: 10px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.view-title {
+    background-color: #f0f0f0;
+    padding: 5px;
+    font-weight: bold;
+    border-radius: 25px;
+}
+
+.custom-table {
+    font-size: 10px;
 }

@@ -8,12 +8,16 @@ const IndicatorsTable = ({ indicators }) => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      className: "custom-table",
+      width: 10
     },
     {
       title: "Total Trades",
       dataIndex: "totalTrades",
       key: "totalTrades",
       sorter: (a, b) => a.totalTrades - b.totalTrades, // 按照交易次数排序
+      className: "custom-table",
+      width: 10
     },
     {
       title: "Success Rate",
@@ -21,6 +25,8 @@ const IndicatorsTable = ({ indicators }) => {
       key: "successRate",
       render: (successRate) => `${(successRate * 100).toFixed(2)}%`,
       sorter: (a, b) => a.successRate - b.successRate, // 按照成功率排序
+      className: "custom-table",
+      width: 10
     },
     {
       title: "Average Return",
@@ -28,6 +34,8 @@ const IndicatorsTable = ({ indicators }) => {
       key: "avgReturn",
       render: (avgReturn) => `${(avgReturn * 100).toFixed(2)}%`,
       sorter: (a, b) => a.avgReturn - b.avgReturn, // 按照平均回报率排序
+      className: "custom-table",
+      width: 10
     },
     {
       title: "Total Profit",
@@ -35,6 +43,8 @@ const IndicatorsTable = ({ indicators }) => {
       key: "totalProfit",
       render: (totalProfit) => totalProfit.toFixed(2),
       sorter: (a, b) => a.totalProfit - b.totalProfit, // 按照总利润排序
+      className: "custom-table",
+      width: 10
     },
   ];
 
@@ -56,7 +66,7 @@ const IndicatorsTable = ({ indicators }) => {
     };
   });
 
-  return <Table columns={columns} dataSource={data} pagination={false} />;
+  return <Table className="custom-table" columns={columns} dataSource={data} pagination={false} size="small" cellFontSize="10"/>;
 };
 
 export default IndicatorsTable;

@@ -42,9 +42,9 @@ def get_stock_data():
 def update_single_stock_data():
     data = request.get_json()
     res = {}
-    res["name"] = data["item"]
+    res["name"] = data["selectStock"]
     stock = []
-    data_df = pd.read_csv(file_path + data["item"] + ".csv")
+    data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
     for index, rows in data_df.iterrows():
         stock.append([rows["trade_date"],rows["open"],rows["close"],rows["high"],rows["low"],rows["vol"]])
     res["data"] = stock

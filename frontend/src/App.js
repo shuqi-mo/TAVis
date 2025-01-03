@@ -3,16 +3,19 @@ import _ from "lodash";
 import axios from "axios";
 import Candle from "./Views/Candle";
 import "./App.scss";
-import Panel from "./Views/Panel";
 import CodeEditor from "./Views/CodeEditor";
 import { Indicator, Evaluation } from "./utils/ClassDefinitions";
 import IndicatorsTable from "./Views/IndicatorsTable";
-import { Button } from "antd";
+import { Layout, Menu, Flex, Splitter, Radio } from "antd";
 import StocksTable from "./Views/StocksTable";
+import { SlidersOutlined } from "@ant-design/icons";
+
+const { Sider } = Layout;
 
 function App() {
   const API_URL = "http://localhost:5000";
   const test1 = require("./case/test1.json");
+
   const [data, setData] = useState(null);
   const [code, setCode] = useState(JSON.stringify(test1, null, 2));
   const [trade, setTrade] = useState(null);
@@ -20,6 +23,9 @@ function App() {
   const [selectStock, setSelectStock] = useState("600893.SH");
   const [stockList, setStockList] = useState(["600893.SH"]);
   const [stockPerformance, setStockPerformance] = useState([]);
+
+  const [collapsed, setCollapsed] = useState(true);
+  const [position, setPosition] = useState("current stock");
 
   // 创建策略实例并计算
   const indicators = JSON.parse(code).indicators.map((strategyData) => {
@@ -39,14 +45,6 @@ function App() {
 
   // 创建 Evaluation 实例
   const evaluation = new Evaluation(evaluationData.period, evaluationData.stop);
-
-  const updateValue = (newValue) => {
-    setData(newValue);
-  };
-
-  const updateStock = (newName) => {
-    setSelectStock(newName);
-  };
 
   const updateCode = (newValue) => {
     setCode(newValue);
@@ -130,7 +128,16 @@ function App() {
     }
   }
 
+  // 更新选中股票数据，代码更新时执行策略
   useEffect(() => {
+    axios
+      .post(`${API_URL}/update_single_stock_data`, { selectStock })
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
     processStrategies();
   }, [selectStock, code]);
 
@@ -170,37 +177,99 @@ function App() {
     }
   };
 
+  function getItem(label, key, icon, children) {
+    return {
+      key,
+      icon,
+      children,
+      label,
+    };
+  }
+
+  const stockItems = stockList.map((code, index) => getItem(code, index + 2));
+
+  const items = [
+    getItem("Selected stocks", "1", <SlidersOutlined />, stockItems),
+  ];
+
+  const handleMenuSelect = (event) => {
+    const selectedItem = stockItems.find(
+      (item) => item.key === Number(event.key)
+    );
+    setSelectStock(selectedItem.label);
+  };
+
   return (
-    <div>
-      <div className="panel">
-        <Panel
-          stockList={stockList}
-          onUpdateValue={updateValue}
-          onUpdateStock={updateStock}
-        />
-      </div>
-      <div className="timeselector">
-        {trade && (
-          <div className="candle">
-            <Candle data={data} trade={trade} />
-          </div>
-        )}
-        {backtest && (
-          <div style={{ padding: "20px" }}>
-            <IndicatorsTable indicators={backtest} />
-            <Button type="primary" onClick={() => handleExecute()}>
-              Update for stocklist
-            </Button>
-            <StocksTable stocks={stockPerformance} />
-          </div>
-        )}
-      </div>
-      <div className="right">
-        <div className="editor">
-          <CodeEditor code={code} onCodeChange={updateCode} />
-        </div>
-      </div>
-    </div>
+    <Layout>
+      <div className="page-title">TAVis</div>
+      <Layout
+        style={{
+          minHeight: "100vh",
+          background: "white",
+        }}
+      >
+        <Sider
+          collapsible
+          collapsed={collapsed}
+          onCollapse={(value) => setCollapsed(value)}
+        >
+          <Menu
+            theme="dark"
+            defaultSelectedKeys={["6"]}
+            mode="inline"
+            items={items}
+            onSelect={handleMenuSelect}
+          />
+        </Sider>
+        <Flex vertical="true">
+          <div className="view-title">Candlestick View</div>
+          {trade && (
+            <div className="candle">
+              <Candle data={data} trade={trade} />
+            </div>
+          )}
+          <div className="view-title">Inspection View</div>
+        </Flex>
+        <Flex vertical="true">
+          <Flex>
+            <CodeEditor code={code} onCodeChange={updateCode} />
+            <Flex vertical="true">
+              <div className="view-title">Performance</div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <Radio.Group
+                  size="small"
+                  value={position}
+                  onChange={(e) => setPosition(e.target.value)}
+                >
+                  <Radio.Button value="current stock">current</Radio.Button>
+                  <Radio.Button
+                    value="selected stocks"
+                    onClick={() => handleExecute()}
+                  >
+                    stocks
+                  </Radio.Button>
+                </Radio.Group>
+              </div>
+              {backtest && position === "current stock" && (
+                <div style={{ padding: "20px" }}>
+                  <IndicatorsTable indicators={backtest} />
+                </div>
+              )}
+              {backtest && position === "selected stocks" && (
+                <div style={{ padding: "20px" }}>
+                  <StocksTable stocks={stockPerformance} />
+                </div>
+              )}
+            </Flex>
+          </Flex>
+          <div className="view-title">Analysis View</div>
+        </Flex>
+        <Flex vertical="true">
+          <div className="view-title">Stock Selection View</div>
+          <div className="view-title">Compare View</div>
+        </Flex>
+      </Layout>
+    </Layout>
   );
 }
 
