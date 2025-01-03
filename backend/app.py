@@ -97,15 +97,5 @@ def process_stocks():
     print(f"程序运行时间：{elapsed_time} 秒")
     return jsonify(res)
 
-@app.route('/get_data')
-def get_data():
-    price = data_df["close"]
-    mid = EMA(price, 20)
-    band = movingstd(mid, 20)
-    multiplier = 2
-    up = mid + multiplier * band
-    down = mid - multiplier * band
-    return jsonify([list(price)[20:],list(up)[20:],list(down)[20:]])
-
 if __name__ == '__main__':
     app.run()
