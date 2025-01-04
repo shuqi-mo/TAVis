@@ -10,6 +10,7 @@ import { Layout, Menu, Flex, Radio } from "antd";
 import StocksTable from "./Views/StocksTable";
 import { SlidersOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
+import Exampler from "./Views/Exampler";
 
 const { Sider } = Layout;
 
@@ -25,6 +26,7 @@ function App() {
   const [stockList, setStockList] = useState(["600893.SH"]);
   const [stockPerformance, setStockPerformance] = useState([]);
   const [curveBoxplotData, setCurveBoxplotData] = useState(null);
+  const [examplerData, setExamplerData] = useState(null);
 
   const [collapsed, setCollapsed] = useState(true);
   const [position, setPosition] = useState("current stock");
@@ -36,12 +38,14 @@ function App() {
       name: indicator.name,
       exprLong: indicator.exprLong(),
       exprShort: indicator.exprShort(),
-      trade: null,
-      success: null,
-      singlereturn: null,
-      totalprofit: null,
+      variable: indicator.getSortedVariables(),
+      exprVariable: indicator
+        .getSortedVariables()
+        .map((item) => indicator.exprVariables(item)),
     };
   });
+
+  // console.log(indicators);
 
   const evaluationData = JSON.parse(code).evaluation;
 
@@ -78,16 +82,23 @@ function App() {
     let indicatorName = [];
     let exprLongList = [];
     let exprShortList = [];
+    let exprVariableList = [];
+    let variableList = [];
+
     const startDate = evaluation.startDate;
     const endDate = evaluation.endDate;
     const getStopLossThreshold = evaluation.getStopLossThreshold();
     const getTakeProfitThreshold = evaluation.getTakeProfitThreshold();
     const getAheadStopTime = evaluation.getAheadStopTime();
+
     for (let i = 0; i < indicators.length; i++) {
       indicatorName.push(indicators[i].name);
       exprLongList.push(indicators[i].exprLong);
       exprShortList.push(indicators[i].exprShort);
+      exprVariableList.push(indicators[i].exprVariable);
+      variableList.push(indicators[i].variable);
     }
+    // console.log(exprVariableList);
     try {
       // 等待axios请求完成并获取响应数据
       const response = await axios.post(`${API_URL}/process_single_stock`, {
@@ -127,7 +138,21 @@ function App() {
       setBacktest(newBacktest);
       // 更新curveBoxplotData
       setCurveBoxplotData(response.data[2]);
-      console.log(response.data[2])
+    } catch (error) {
+      console.error("Error:", error);
+    }
+    try {
+      // 等待axios请求完成并获取响应数据
+      const response = await axios.post(`${API_URL}/process_exampler`, {
+        indicatorName,
+        selectStock,
+        variableList,
+        exprVariableList,
+        startDate,
+        endDate,
+      });
+      console.log(response.data);
+      setExamplerData(response.data);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -234,9 +259,20 @@ function App() {
             </div>
           )}
           <div className="view-title">Inspection View</div>
-          {curveBoxplotData && 
-          curveBoxplotData.map(item => <CurveBoxplot boxplotData={item}/>)
-          }
+          <Flex>
+            <Flex vertical="true">
+              {curveBoxplotData &&
+                curveBoxplotData.map((item) => (
+                  <CurveBoxplot boxplotData={item} />
+                ))}
+            </Flex>
+            <Flex vertical="true">
+              {examplerData &&
+                examplerData.map((item) => (
+                  <Exampler data={item[1]} legend={item[2]} />
+                ))}
+            </Flex>
+          </Flex>
         </Flex>
         <Flex vertical="true">
           <Flex>

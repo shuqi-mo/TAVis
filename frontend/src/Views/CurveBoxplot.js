@@ -143,10 +143,11 @@ const CurveBoxplot = ({ boxplotData }) => {
         d3
           .axisBottom(x)
           .ticks(maxLength)
-          .tickFormat((d) => d + 1)
+          // .tickFormat((d) => d + 1)
       )
       .selectAll(".tick text")
-      .style("text-anchor", "middle");
+      // .style("text-anchor", "middle")
+      .style("opacity", 0);
 
     return () => {
       d3.select(svgRef.current).selectAll("*").remove();

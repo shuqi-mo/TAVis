@@ -1,7 +1,6 @@
 class Indicator {
   constructor(data) {
     this.name = data.name;
-    this.type = data.type;
     this.long = data.long;
     this.short = data.short;
 
@@ -48,6 +47,32 @@ class Indicator {
   exprShort() {
     // 根据类中存储的变量来动态计算short
     return this.short.replace(/(\w+)/g, (match) => {
+      // 替换变量为对应的值
+      if (this.variables[match]) {
+        return this.variables[match];
+      }
+      return match;
+    });
+  }
+
+  // 提取 long 和 short 中的变量
+  extractVariables(expression) {
+    const variableRegex = /\b[a-zA-Z_][a-zA-Z0-9_]*\b/g;
+    return expression.match(variableRegex).filter(
+      (v) => !["cross"].includes(v) // 排除 cross 函数名
+    );
+  }
+
+  // 获取所有参与比较的变量，并按顺序排序
+  getSortedVariables() {
+    const longVars = this.extractVariables(this.long);
+    const shortVars = this.extractVariables(this.short);
+    return [...new Set([...longVars, ...shortVars])].sort();
+  }
+
+  exprVariables(expr) {
+    // 根据类中存储的变量来动态计算short
+    return expr.replace(/(\w+)/g, (match) => {
       // 替换变量为对应的值
       if (this.variables[match]) {
         return this.variables[match];

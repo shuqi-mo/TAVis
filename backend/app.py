@@ -71,6 +71,30 @@ def process_single_stock():
         boxplotData.append([name, res[3]])
     return jsonify([float_trade, performance, boxplotData])
 
+@app.route('/process_exampler', methods=['POST'])
+def process_exampler():
+    data = request.get_json()
+    data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
+    variableList = []
+    for i in range(len(data["indicatorName"])):
+        name = data["indicatorName"][i]
+        variable = []
+        for j in range(len(data["exprVariableList"][i])):
+            res = execute_expr(data["exprVariableList"][i][j], data_df)
+            if res.dtype.kind in 'biu':
+                res = [int(res)] * len(data_df["close"])
+            variable.append(list(res))
+        variableList.append([name, variable, data["variableList"][i]])
+    
+    mask = (data_df['trade_date'] >= data["startDate"]) & (data_df['trade_date'] <= data["endDate"])
+    for i in range(len(data["indicatorName"])):
+        for j in range(len(data["exprVariableList"][i])):
+            origin = pd.Series(variableList[i][1][j])
+            update = origin[mask].reset_index(drop=True)
+            update = list(update)
+            variableList[i][1][j] = update
+    return jsonify(variableList)
+
 @app.route('/process_stocks', methods=['POST'])
 def process_stocks():
     data = request.get_json()
