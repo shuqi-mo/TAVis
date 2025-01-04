@@ -56,6 +56,7 @@ def process_single_stock():
     data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
     float_trade = []
     performance = []
+    boxplotData = []
     for i in range(len(data["indicatorName"])):
         name = data["indicatorName"][i]
         long = execute_expr(data["exprLongList"][i], data_df)
@@ -67,7 +68,8 @@ def process_single_stock():
         price, trade = updatePeriod(data_df, trade_origin, data["startDate"], data["endDate"])
         res = calBacktest(price, trade, data["getAheadStopTime"])
         performance.append([name, res[0], res[1], res[2]])
-    return jsonify([float_trade, performance])
+        boxplotData.append([name, res[3]])
+    return jsonify([float_trade, performance, boxplotData])
 
 @app.route('/process_stocks', methods=['POST'])
 def process_stocks():

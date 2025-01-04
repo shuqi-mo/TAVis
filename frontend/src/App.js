@@ -6,9 +6,10 @@ import "./App.scss";
 import CodeEditor from "./Views/CodeEditor";
 import { Indicator, Evaluation } from "./utils/ClassDefinitions";
 import IndicatorsTable from "./Views/IndicatorsTable";
-import { Layout, Menu, Flex, Splitter, Radio } from "antd";
+import { Layout, Menu, Flex, Radio } from "antd";
 import StocksTable from "./Views/StocksTable";
 import { SlidersOutlined } from "@ant-design/icons";
+import CurveBoxplot from "./Views/CurveBoxplot";
 
 const { Sider } = Layout;
 
@@ -23,6 +24,7 @@ function App() {
   const [selectStock, setSelectStock] = useState("600893.SH");
   const [stockList, setStockList] = useState(["600893.SH"]);
   const [stockPerformance, setStockPerformance] = useState([]);
+  const [curveBoxplotData, setCurveBoxplotData] = useState(null);
 
   const [collapsed, setCollapsed] = useState(true);
   const [position, setPosition] = useState("current stock");
@@ -123,6 +125,9 @@ function App() {
         singlereturn: indicator[3],
       }));
       setBacktest(newBacktest);
+      // 更新curveBoxplotData
+      setCurveBoxplotData(response.data[2]);
+      console.log(response.data[2])
     } catch (error) {
       console.error("Error:", error);
     }
@@ -229,13 +234,16 @@ function App() {
             </div>
           )}
           <div className="view-title">Inspection View</div>
+          {curveBoxplotData && 
+          curveBoxplotData.map(item => <CurveBoxplot boxplotData={item}/>)
+          }
         </Flex>
         <Flex vertical="true">
           <Flex>
             <CodeEditor code={code} onCodeChange={updateCode} />
             <Flex vertical="true">
               <div className="view-title">Performance</div>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ display: "flex", justifyContent: "center" }}>
                 <Radio.Group
                   size="small"
                   value={position}
@@ -262,11 +270,11 @@ function App() {
               )}
             </Flex>
           </Flex>
-          <div className="view-title">Analysis View</div>
+          <div className="view-title">Pattern Analysis View</div>
         </Flex>
         <Flex vertical="true">
           <div className="view-title">Stock Selection View</div>
-          <div className="view-title">Compare View</div>
+          <div className="view-title">Comparison View</div>
         </Flex>
       </Layout>
     </Layout>
