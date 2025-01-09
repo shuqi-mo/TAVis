@@ -14,9 +14,9 @@ const Exampler = ({ data, legend }) => {
     d3.select(chartRef.current).selectAll("*").remove();
 
     // Set dimensions and margins
-    const width = 400;
+    const width = 350;
     const height = 150;
-    const margin = { top: 20, right: 30, bottom: 50, left: 50 };
+    const margin = { top: 20, right: 30, bottom: 50, left: 20 };
 
     // Create SVG container
     const svg = d3
