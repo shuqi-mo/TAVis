@@ -8,6 +8,7 @@ import time
 from indicator import *
 from process import *
 from evaluation import *
+from pattern import *
 
 app = Flask(__name__)
 CORS(app)
@@ -98,7 +99,6 @@ def process_exampler():
 @app.route('/process_stocks', methods=['POST'])
 def process_stocks():
     data = request.get_json()
-    start_time = time.time()  # 记录开始时间
     res = []
     for item in csv_files:
         stock = pd.read_csv(file_path + item + ".csv")
@@ -117,11 +117,25 @@ def process_stocks():
             totalProfit.append(res_singlestock[1])
             totalReturn.append(res_singlestock[2])
         res.append([item, totalSuccess, totalProfit, totalReturn])
-        print(item)
-    end_time = time.time()  # 记录结束时间
-    elapsed_time = end_time - start_time  # 计算运行时间
-    print(f"程序运行时间：{elapsed_time} 秒")
     return jsonify(res)
+
+@app.route('/process_pattern', methods=['POST'])
+def process_pattern():
+    data = request.get_json()
+    data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
+    mask = (data_df['trade_date'] >= data["startDate"]) & (data_df['trade_date'] <= data["endDate"])
+    update_data_df = data_df[mask].reset_index(drop=True)
+    matcher = PatternMatcher(minsup=data["minsup"])
+    matcher.data = list(update_data_df["close"])
+    matcher.generate_candL2(matcher.pattern)
+    matcher.generate_fre(matcher.pattern, matcher.L2)
+    matcher.Cancalute(matcher.pattern)
+    matcher.process_patterns()
+    pattern_dict = matcher.find_pattern_subsequences()
+    pattern_list = [convert_np_types(item) for item in matcher.fre_pattern_list]
+    trade = [1 if x == -1 else x for x in data["trade"]]
+    trade_counts = matcher.calculate_trade_counts(pattern_dict, trade, pattern_list)
+    return jsonify([pattern_list, trade_counts])
 
 if __name__ == '__main__':
     app.run()

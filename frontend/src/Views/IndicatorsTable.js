@@ -9,7 +9,7 @@ const IndicatorsTable = ({ indicators }) => {
       dataIndex: "name",
       key: "name",
       className: "custom-table",
-      width: 10
+      width: 8
     },
     {
       title: "Total Trades",
@@ -17,7 +17,7 @@ const IndicatorsTable = ({ indicators }) => {
       key: "totalTrades",
       sorter: (a, b) => a.totalTrades - b.totalTrades, // 按照交易次数排序
       className: "custom-table",
-      width: 10
+      width: 8
     },
     {
       title: "Success Rate",
@@ -26,7 +26,7 @@ const IndicatorsTable = ({ indicators }) => {
       render: (successRate) => `${(successRate * 100).toFixed(2)}%`,
       sorter: (a, b) => a.successRate - b.successRate, // 按照成功率排序
       className: "custom-table",
-      width: 10
+      width: 8
     },
     {
       title: "Average Return",
@@ -35,7 +35,7 @@ const IndicatorsTable = ({ indicators }) => {
       render: (avgReturn) => `${(avgReturn * 100).toFixed(2)}%`,
       sorter: (a, b) => a.avgReturn - b.avgReturn, // 按照平均回报率排序
       className: "custom-table",
-      width: 10
+      width: 8
     },
     {
       title: "Total Profit",
@@ -44,7 +44,7 @@ const IndicatorsTable = ({ indicators }) => {
       render: (totalProfit) => totalProfit.toFixed(2),
       sorter: (a, b) => a.totalProfit - b.totalProfit, // 按照总利润排序
       className: "custom-table",
-      width: 10
+      width: 8
     },
   ];
 

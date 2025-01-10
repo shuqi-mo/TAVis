@@ -52,7 +52,7 @@ const StocksTable = ({ stocks }) => {
       dataIndex: "stock",
       key: "stock",
       className: "custom-table",
-      width: 10,
+      width: 8,
     },
     {
       title: "Total Trades",
@@ -60,7 +60,7 @@ const StocksTable = ({ stocks }) => {
       key: "totalTrades",
       sorter: (a, b) => a.totalTrades - b.totalTrades,
       className: "custom-table",
-      width: 10,
+      width: 8,
     },
     {
       title: "Success Rate",
@@ -69,7 +69,7 @@ const StocksTable = ({ stocks }) => {
       render: (successRate) => `${(successRate * 100).toFixed(2)}%`,
       sorter: (a, b) => a.successRate - b.successRate,
       className: "custom-table",
-      width: 10,
+      width: 8,
     },
     {
       title: "Average Return",
@@ -78,7 +78,7 @@ const StocksTable = ({ stocks }) => {
       render: (averageReturn) => `${(averageReturn * 100).toFixed(2)}%`,
       sorter: (a, b) => a.averageReturn - b.averageReturn,
       className: "custom-table",
-      width: 10
+      width: 8
     },
     {
       title: "Total Profit",
@@ -86,7 +86,7 @@ const StocksTable = ({ stocks }) => {
       key: "totalProfit",
       sorter: (a, b) => a.totalProfit - b.totalProfit,
       className: "custom-table",
-      width: 10
+      width: 8
     },
   ];
 

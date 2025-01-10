@@ -11,6 +11,7 @@ import StocksTable from "./Views/StocksTable";
 import { SlidersOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
 import Exampler from "./Views/Exampler";
+import Pattern from "./Views/Pattern";
 
 const { Sider } = Layout;
 
@@ -77,7 +78,7 @@ function App() {
       });
   }, []);
 
-  // 计算指标交易序列和收益
+  // 计算指标交易序列和收益，更新回测和exampler
   async function processStrategies() {
     let indicatorName = [];
     let exprLongList = [];
@@ -151,7 +152,7 @@ function App() {
         startDate,
         endDate,
       });
-      console.log(response.data);
+      // console.log(response.data);
       setExamplerData(response.data);
     } catch (error) {
       console.error("Error:", error);
@@ -251,66 +252,69 @@ function App() {
             onSelect={handleMenuSelect}
           />
         </Sider>
-        <Flex vertical="true">
-          <div className="view-title">Candlestick View</div>
-          {trade && (
-            <div className="candle">
-              <Candle data={data} trade={trade} />
-            </div>
-          )}
-          <div className="view-title">Inspection View</div>
-          <Flex>
-            <Flex vertical="true">
-              {curveBoxplotData &&
-                curveBoxplotData.map((item) => (
-                  <CurveBoxplot boxplotData={item} />
-                ))}
-            </Flex>
-            <Flex vertical="true">
-              {examplerData &&
-                examplerData.map((item) => (
-                  <Exampler data={item[1]} legend={item[2]} />
-                ))}
-            </Flex>
-          </Flex>
-        </Flex>
-        <Flex vertical="true">
-          <Flex>
-            <CodeEditor code={code} onCodeChange={updateCode} />
-            <Flex vertical="true">
-              <div className="view-title">Performance</div>
-              <div style={{ display: "flex", justifyContent: "center" }}>
-                <Radio.Group
-                  size="small"
-                  value={position}
-                  onChange={(e) => setPosition(e.target.value)}
-                >
-                  <Radio.Button value="current stock">current</Radio.Button>
-                  <Radio.Button
-                    value="selected stocks"
-                    onClick={() => handleExecute()}
-                  >
-                    stocks
-                  </Radio.Button>
-                </Radio.Group>
+        <Flex gap="small">
+          <Flex vertical="true">
+            <div className="view-title">Candlestick View</div>
+            {trade && (
+              <div className="candle">
+                <Candle data={data} trade={trade} />
               </div>
-              {backtest && position === "current stock" && (
-                <div style={{ padding: "20px" }}>
-                  <IndicatorsTable indicators={backtest} />
-                </div>
-              )}
-              {backtest && position === "selected stocks" && (
-                <div style={{ padding: "20px" }}>
-                  <StocksTable stocks={stockPerformance} />
-                </div>
-              )}
+            )}
+            <div className="view-title">Inspection View</div>
+            <Flex>
+              <Flex vertical="true">
+                {curveBoxplotData &&
+                  curveBoxplotData.map((item) => (
+                    <CurveBoxplot boxplotData={item} />
+                  ))}
+              </Flex>
+              <Flex vertical="true">
+                {examplerData &&
+                  examplerData.map((item) => (
+                    <Exampler data={item[1]} legend={item[2]} />
+                  ))}
+              </Flex>
             </Flex>
           </Flex>
-          <div className="view-title">Pattern Analysis View</div>
-        </Flex>
-        <Flex vertical="true">
-          <div className="view-title">Stock Selection View</div>
-          <div className="view-title">Comparison View</div>
+          <Flex vertical="true">
+            <Flex gap="small">
+              <CodeEditor code={code} onCodeChange={updateCode} />
+              <Flex vertical="true">
+                <div className="view-title">Performance</div>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Radio.Group
+                    size="small"
+                    value={position}
+                    onChange={(e) => setPosition(e.target.value)}
+                  >
+                    <Radio.Button value="current stock">current</Radio.Button>
+                    <Radio.Button
+                      value="selected stocks"
+                      onClick={() => handleExecute()}
+                    >
+                      stocks
+                    </Radio.Button>
+                  </Radio.Group>
+                </div>
+                {backtest && position === "current stock" && (
+                  <div style={{ padding: "20px" }}>
+                    <IndicatorsTable indicators={backtest} />
+                  </div>
+                )}
+                {backtest && position === "selected stocks" && (
+                  <div style={{ padding: "20px" }}>
+                    <StocksTable stocks={stockPerformance} />
+                  </div>
+                )}
+              </Flex>
+            </Flex>
+            <div className="view-title">Pattern Analysis View</div>
+              {trade && <Pattern selectStock={selectStock} trade={trade} startDate={evaluation.startDate} endDate={evaluation.endDate}/>}
+          </Flex>
+          <Flex vertical="true">
+            <div className="view-title">Stock Selection View</div>
+            <div className="view-title">Comparison View</div>
+          </Flex>
         </Flex>
       </Layout>
     </Layout>
