@@ -1,5 +1,8 @@
 from indicator import *
 import re
+from dtaidistance import dtw
+from sklearn.preprocessing import MinMaxScaler
+import numpy as np
 
 def execute_expr(expr, stock):
     # 处理表达式的函数
@@ -52,3 +55,27 @@ def process_trades(buy, sell):
             buy_status = False
     
     return trades
+
+# 计算欧式距离矩阵的函数
+def compute_euclidean_distance_matrix(data):
+    # 使用广播机制高效计算欧式距离
+    distance_matrix = np.linalg.norm(data[:, np.newaxis] - data[np.newaxis, :], axis=2)
+    return distance_matrix
+
+# 使用 dtaidistance 库内置的高效距离矩阵计算方法
+def compute_dtw_distance_matrix_fast(data):
+    # 计算DTW距离矩阵
+    distance_matrix = dtw.distance_matrix_fast(data, parallel=True, compact=False)
+    return distance_matrix
+
+# 结合两种距离矩阵的函数
+def combine_distance_matrices(euclidean_matrix, dtw_matrix, weight_euclidean=0.5, weight_dtw=0.5):
+    scaler = MinMaxScaler()
+    # 归一化欧式距离
+    euclidean_scaled = scaler.fit_transform(euclidean_matrix)
+    # 归一化DTW距离
+    dtw_scaled = scaler.fit_transform(dtw_matrix)
+    
+    # 加权结合
+    combined_matrix = weight_euclidean * euclidean_scaled + weight_dtw * dtw_scaled
+    return combined_matrix

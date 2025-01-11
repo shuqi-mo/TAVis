@@ -24,7 +24,7 @@ function CodeEditor({ code, onCodeChange }) {
         Code Editor <PlayCircleFilled onClick={() => handleExecute()} />
       </div>
       <MonacoEditor
-        width="300"
+        width="280"
         height="350"
         language="javascript"
         options={options}

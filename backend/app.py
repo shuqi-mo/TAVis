@@ -3,7 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 import numpy as np
 import os
-import time
+from sklearn.manifold import TSNE
 
 from indicator import *
 from process import *
@@ -136,6 +136,35 @@ def process_pattern():
     trade = [1 if x == -1 else x for x in data["trade"]]
     trade_counts = matcher.calculate_trade_counts(pattern_dict, trade, pattern_list)
     return jsonify([pattern_list, trade_counts])
+
+@app.route('/process_scatterplot', methods=['POST'])
+def process_scatterplot():
+    num_series = 500
+    series_length = 100
+    np.random.seed(0)
+    data = np.random.rand(num_series, series_length)
+    # 计算欧式距离矩阵
+    euclidean_distance_matrix = compute_euclidean_distance_matrix(data)
+    # 计算DTW距离矩阵
+    dtw_distance_matrix = compute_dtw_distance_matrix_fast(data)
+    # 结合两种距离矩阵
+    combined_distance_matrix = combine_distance_matrices(
+        euclidean_distance_matrix, 
+        dtw_distance_matrix, 
+        weight_euclidean=0.5, 
+        weight_dtw=0.5
+    )
+    tsne = TSNE(
+        n_components=2, 
+        metric='precomputed', 
+        random_state=42, 
+        perplexity=30, 
+        n_iter=1000, 
+        init='random'  # 修改初始化方法
+    )
+    coords = tsne.fit_transform(combined_distance_matrix)
+    coords_list = coords.tolist()
+    return jsonify(coords_list)
 
 if __name__ == '__main__':
     app.run()

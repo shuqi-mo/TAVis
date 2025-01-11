@@ -65,8 +65,8 @@ function Pattern({ selectStock, trade, startDate, endDate }) {
             ))}
         </Flex>
       </Card>
-      <div style={{ width: 450, height: 450 }}>
-        <div style={{ width: 450, height: 180 }}>
+      <div style={{ width: 390, height: 450 }}>
+        <div style={{ width: 390, height: 180 }}>
           {barchartData && <BarChart data={barchartData} />}
         </div>
       </div>

@@ -12,6 +12,7 @@ import { SlidersOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
 import Exampler from "./Views/Exampler";
 import Pattern from "./Views/Pattern";
+import ScatterPlot from "./Views/ScatterPlot";
 
 const { Sider } = Layout;
 
@@ -28,6 +29,7 @@ function App() {
   const [stockPerformance, setStockPerformance] = useState([]);
   const [curveBoxplotData, setCurveBoxplotData] = useState(null);
   const [examplerData, setExamplerData] = useState(null);
+  const [scatterData, setScatterData] = useState(null);
 
   const [collapsed, setCollapsed] = useState(true);
   const [position, setPosition] = useState("current stock");
@@ -72,6 +74,14 @@ function App() {
       .then((response) => {
         // setData(response.data);
         setStockList(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+    axios
+      .post(`${API_URL}/process_scatterplot`)
+      .then((response) => {
+        setScatterData(response.data);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -279,7 +289,12 @@ function App() {
           <Flex vertical="true">
             <Flex gap="small">
               <CodeEditor code={code} onCodeChange={updateCode} />
-              <Flex vertical="true">
+              <div
+                style={{
+                  width: 280,
+                  height: 380,
+                }}
+              >
                 <div className="view-title">Performance</div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <Radio.Group
@@ -297,22 +312,30 @@ function App() {
                   </Radio.Group>
                 </div>
                 {backtest && position === "current stock" && (
-                  <div style={{ padding: "20px" }}>
+                  <div style={{ padding: "10px", overflowY: "auto" }}>
                     <IndicatorsTable indicators={backtest} />
                   </div>
                 )}
                 {backtest && position === "selected stocks" && (
-                  <div style={{ padding: "20px" }}>
+                  <div style={{ padding: "10px", overflowY: "auto" }}>
                     <StocksTable stocks={stockPerformance} />
                   </div>
                 )}
-              </Flex>
+              </div>
             </Flex>
             <div className="view-title">Pattern Analysis View</div>
-              {trade && <Pattern selectStock={selectStock} trade={trade} startDate={evaluation.startDate} endDate={evaluation.endDate}/>}
+            {trade && (
+              <Pattern
+                selectStock={selectStock}
+                trade={trade}
+                startDate={evaluation.startDate}
+                endDate={evaluation.endDate}
+              />
+            )}
           </Flex>
           <Flex vertical="true">
             <div className="view-title">Stock Selection View</div>
+            {scatterData && <ScatterPlot data={scatterData} />}
             <div className="view-title">Comparison View</div>
           </Flex>
         </Flex>
