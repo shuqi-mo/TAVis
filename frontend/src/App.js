@@ -78,14 +78,6 @@ function App() {
       .catch((error) => {
         console.error("Error:", error);
       });
-    axios
-      .post(`${API_URL}/process_scatterplot`)
-      .then((response) => {
-        setScatterData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
   }, []);
 
   // 计算指标交易序列和收益，更新回测和exampler
@@ -167,6 +159,22 @@ function App() {
     } catch (error) {
       console.error("Error:", error);
     }
+    axios
+      .post(`${API_URL}/process_scatterplot`, {
+        exprLongList,
+        exprShortList,
+        startDate,
+        endDate,
+        getStopLossThreshold,
+        getTakeProfitThreshold,
+        getAheadStopTime,
+      })
+      .then((response) => {
+        setScatterData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   }
 
   // 更新选中股票数据，代码更新时执行策略
@@ -205,6 +213,7 @@ function App() {
         getTakeProfitThreshold,
         getAheadStopTime,
       });
+
       const performance = response.data.map((stock) => ({
         stock: stock[0],
         success: stock[1],

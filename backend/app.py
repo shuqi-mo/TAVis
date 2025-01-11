@@ -139,14 +139,37 @@ def process_pattern():
 
 @app.route('/process_scatterplot', methods=['POST'])
 def process_scatterplot():
-    num_series = 500
-    series_length = 100
-    np.random.seed(0)
-    data = np.random.rand(num_series, series_length)
+    data = request.get_json()
+    stocks_data = []
+    for item in csv_files:
+        stock = pd.read_csv(file_path + item + ".csv")
+        trade_list = []
+        trade_origin = []
+        for i in range(len(data["exprLongList"])):
+            long = execute_expr(data["exprLongList"][i], stock)
+            short = execute_expr(data["exprShortList"][i], stock)
+            long = CustomList(long)
+            short = CustomList(short)
+            trade_list.append(process_trades(long, short)) 
+        n = len(trade_list)
+        for i in range(len(trade_list[0])):
+            count  = 0
+            for j in range(n):
+                count += trade_list[j][i]
+            if count > 0:
+                trade_origin.append(1)
+            elif count < 0:
+                trade_origin.append(-1)
+            else:
+                trade_origin.append(0)
+        price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
+        res_backtest = calBacktest(price, trade, data["getAheadStopTime"])
+        stocks_data.append(np.array(res_backtest[4]))
+    
     # 计算欧式距离矩阵
-    euclidean_distance_matrix = compute_euclidean_distance_matrix(data)
+    euclidean_distance_matrix = compute_euclidean_distance_matrix(np.array(stocks_data))
     # 计算DTW距离矩阵
-    dtw_distance_matrix = compute_dtw_distance_matrix_fast(data)
+    dtw_distance_matrix = compute_dtw_distance_matrix_fast(np.array(stocks_data))
     # 结合两种距离矩阵
     combined_distance_matrix = combine_distance_matrices(
         euclidean_distance_matrix, 
@@ -158,7 +181,7 @@ def process_scatterplot():
         n_components=2, 
         metric='precomputed', 
         random_state=42, 
-        perplexity=30, 
+        perplexity=3, 
         n_iter=1000, 
         init='random'  # 修改初始化方法
     )
