@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 import os
 from sklearn.manifold import TSNE
+import umap
 
 from indicator import *
 from process import *
@@ -21,6 +22,14 @@ for file in os.listdir(file_path):
     # 检查文件是否以.csv结尾
     if file.endswith('.csv'):
         csv_files.append(file[:9])
+
+stock_file_path = "static/stock/"
+stock_csv_files = []
+# 遍历data文件夹中的文件
+for file in os.listdir(stock_file_path):
+    # 检查文件是否以.csv结尾
+    if file.endswith('.csv'):
+        stock_csv_files.append(file[:9])
 
 data_df = pd.read_csv(file_path + file_name)
 app.secret_key = 'secret_key'
@@ -141,10 +150,14 @@ def process_pattern():
 def process_scatterplot():
     data = request.get_json()
     stocks_data = []
-    for item in csv_files:
-        stock = pd.read_csv(file_path + item + ".csv")
+    # results = []
+    for item in stock_csv_files:
+        stock = pd.read_csv(stock_file_path + item + ".csv")
         trade_list = []
         trade_origin = []
+        print(item)
+        if len(stock) == 0 or stock['trade_date'][0] > data["startDate"] or stock['trade_date'][len(stock)-1] < data["endDate"]:
+            continue
         for i in range(len(data["exprLongList"])):
             long = execute_expr(data["exprLongList"][i], stock)
             short = execute_expr(data["exprShortList"][i], stock)
@@ -165,18 +178,41 @@ def process_scatterplot():
         price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
         res_backtest = calBacktest(price, trade, data["getAheadStopTime"])
         stocks_data.append(np.array(res_backtest[4]))
+        # results.append([item, len(res_backtest[4])])
+        # 获取所有数组的长度
+        lengths = [len(arr) for arr in stocks_data]
+
+        # 统计每个长度出现的次数
+        length_counts = {}
+        for length in lengths:
+            if length in length_counts:
+                length_counts[length] += 1
+            else:
+                length_counts[length] = 1
+
+        # 找出出现次数最多的长度
+        max_count_length = max(length_counts, key=length_counts.get)
+
+        # 仅保留长度为出现次数最多的长度的元素
+        filtered_stocks_data = [arr for arr in stocks_data if len(arr) <= max_count_length and len(arr) >= max_count_length * 0.9]
+        
+    # results_df = pd.DataFrame(results, columns=['Stock', 'Length of res_backtest[4]'])
+    # results_df.to_csv('results.csv', index=False)
     
     # 计算欧式距离矩阵
-    euclidean_distance_matrix = compute_euclidean_distance_matrix(np.array(stocks_data))
+    # euclidean_distance_matrix = compute_euclidean_distance_matrix(np.array(filtered_stocks_data))
+    series = []
+    for item in filtered_stocks_data:
+        series.append(np.array(item))
     # 计算DTW距离矩阵
-    dtw_distance_matrix = compute_dtw_distance_matrix_fast(np.array(stocks_data))
+    dtw_distance_matrix = compute_dtw_distance_matrix_fast(series)
     # 结合两种距离矩阵
-    combined_distance_matrix = combine_distance_matrices(
-        euclidean_distance_matrix, 
-        dtw_distance_matrix, 
-        weight_euclidean=0.5, 
-        weight_dtw=0.5
-    )
+    # combined_distance_matrix = combine_distance_matrices(
+    #     euclidean_distance_matrix, 
+    #     dtw_distance_matrix, 
+    #     weight_euclidean=0.5, 
+    #     weight_dtw=0.5
+    # )
     tsne = TSNE(
         n_components=2, 
         metric='precomputed', 
@@ -185,7 +221,10 @@ def process_scatterplot():
         n_iter=1000, 
         init='random'  # 修改初始化方法
     )
-    coords = tsne.fit_transform(combined_distance_matrix)
+    reducer = umap.UMAP(n_components=2, metric='precomputed', random_state=42)
+    # coords = tsne.fit_transform(combined_distance_matrix)
+    # coords = tsne.fit_transform(dtw_distance_matrix)
+    coords = reducer.fit_transform(dtw_distance_matrix)
     coords_list = coords.tolist()
     return jsonify(coords_list)
 

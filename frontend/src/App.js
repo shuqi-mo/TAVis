@@ -13,6 +13,8 @@ import CurveBoxplot from "./Views/CurveBoxplot";
 import Exampler from "./Views/Exampler";
 import Pattern from "./Views/Pattern";
 import ScatterPlot from "./Views/ScatterPlot";
+import { PlayCircleFilled } from "@ant-design/icons";
+import StrategyMap from "./Views/StrategyMap";
 
 const { Sider } = Layout;
 
@@ -159,22 +161,6 @@ function App() {
     } catch (error) {
       console.error("Error:", error);
     }
-    axios
-      .post(`${API_URL}/process_scatterplot`, {
-        exprLongList,
-        exprShortList,
-        startDate,
-        endDate,
-        getStopLossThreshold,
-        getTakeProfitThreshold,
-        getAheadStopTime,
-      })
-      .then((response) => {
-        setScatterData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
   }
 
   // 更新选中股票数据，代码更新时执行策略
@@ -247,6 +233,45 @@ function App() {
       (item) => item.key === Number(event.key)
     );
     setSelectStock(selectedItem.label);
+  };
+
+  const handleExecuteScatter = async () => {
+    let indicatorName = [];
+    let exprLongList = [];
+    let exprShortList = [];
+    let exprVariableList = [];
+    let variableList = [];
+
+    const startDate = evaluation.startDate;
+    const endDate = evaluation.endDate;
+    const getStopLossThreshold = evaluation.getStopLossThreshold();
+    const getTakeProfitThreshold = evaluation.getTakeProfitThreshold();
+    const getAheadStopTime = evaluation.getAheadStopTime();
+
+    for (let i = 0; i < indicators.length; i++) {
+      indicatorName.push(indicators[i].name);
+      exprLongList.push(indicators[i].exprLong);
+      exprShortList.push(indicators[i].exprShort);
+      exprVariableList.push(indicators[i].exprVariable);
+      variableList.push(indicators[i].variable);
+    }
+
+    axios
+      .post(`${API_URL}/process_scatterplot`, {
+        exprLongList,
+        exprShortList,
+        startDate,
+        endDate,
+        getStopLossThreshold,
+        getTakeProfitThreshold,
+        getAheadStopTime,
+      })
+      .then((response) => {
+        setScatterData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   return (
@@ -343,9 +368,14 @@ function App() {
             )}
           </Flex>
           <Flex vertical="true">
-            <div className="view-title">Stock Selection View</div>
+            <div className="view-title">
+              Stock Selection View <PlayCircleFilled onClick={() => handleExecuteScatter()} />
+            </div>
             {scatterData && <ScatterPlot data={scatterData} />}
             <div className="view-title">Comparison View</div>
+            <div style={{width: 460, height: 450}}>
+              <StrategyMap/>
+            </div>
           </Flex>
         </Flex>
       </Layout>

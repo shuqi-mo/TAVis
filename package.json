@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "d3-sankey": "^0.12.3"
+  }
+}
