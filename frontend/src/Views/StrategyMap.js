@@ -1,97 +1,118 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
-// 引入 d3-sankey 布局相关
-import { sankey, sankeyLinkHorizontal, sankeyJustify } from 'd3-sankey';
 
 const StrategyMap = ({ width = 460, height = 450 }) => {
   const svgRef = useRef(null);
 
+  const data = {
+    name: 'Start',
+    value: 10,
+    children: [
+      {
+        name: 'Train',
+        value: 8,
+        children: [
+          { name: 'Quantize', value: 6 },
+          { name: 'Magnitude', value: 4 },
+        ],
+      },
+      {
+        name: 'Gradient',
+        value: 5,
+        children: [
+          { name: 'Prune', value: 3 },
+          { name: 'Calibrate', value: 2 },
+        ],
+      },
+    ],
+  };
+
   useEffect(() => {
-    // 0. 准备示例数据
-    // 你可以根据实际需要将名字改成 "train" / "quantize" / "magnitude prune" 等
-    const data = {
-      nodes: [
-        { name: 'Train' },       // id: 0
-        { name: 'Quantize' },    // id: 1
-        { name: 'Magnitude' },   // id: 2
-        { name: 'Gradient' },    // id: 3
-        { name: 'Calibrate' },   // id: 4
-        { name: 'Final' }        // id: 5
-      ],
-      links: [
-        // source 和 target 是上面 nodes 的下标
-        { source: 0, target: 1, value: 10 },
-        { source: 0, target: 2, value: 8 },
-        { source: 1, target: 3, value: 6 },
-        { source: 2, target: 3, value: 4 },
-        { source: 3, target: 4, value: 5 },
-        { source: 4, target: 5, value: 5 }
-      ]
-    };
+    // 清空之前的内容
+    const svg = d3.select(svgRef.current);
+    svg.selectAll('*').remove();
 
-    // 1. 创建 SVG，并清空之前的内容（防止重复绘制）
-    const svgEl = d3.select(svgRef.current);
-    svgEl.selectAll('*').remove();
+    // 设置 SVG 的宽高
+    svg.attr('width', width).attr('height', height);
 
-    const svg = svgEl
-      .attr('width', width)
-      .attr('height', height);
+    // 创建层级数据
+    const root = d3.hierarchy(data);
 
-    // 2. 创建 Sankey 布局
-    const sankeyGenerator = sankey()
-      .nodeAlign(sankeyJustify)          // 这里可以换成 sankeyLeft / sankeyRight / sankeyCenter 等
-      .nodeWidth(20)                     // 节点的矩形宽度
-      .nodePadding(20)                   // 相邻节点之间的垂直间距
-      .extent([[0, 0], [width, height]]);// Sankey 图在 SVG 内的绘制范围
+    // 创建树形布局（横向）
+    const treeLayout = d3.tree().size([height - 100, width - 200]); // 高度决定节点的纵向分布，宽度决定横向分布
+    treeLayout(root);
 
-    // 3. 把数据传入 sankey 进行布局计算
-    const { nodes, links } = sankeyGenerator({
-      nodes: data.nodes.map(d => Object.assign({}, d)), // 需要深拷贝
-      links: data.links.map(d => Object.assign({}, d))
+    // 获取所有节点和连线
+    const nodes = root.descendants();
+    const links = root.links();
+
+    // 颜色比例尺，根据节点的 value 映射颜色
+    const maxValue = d3.max(nodes, d => d.data.value) || 1;
+    const colorScale = d3.scaleSequential(d3.interpolateBlues).domain([0, maxValue]);
+
+    // 定义渐变
+    const defs = svg.append('defs');
+
+    links.forEach((link, index) => {
+      const gradientId = `gradient-${index}`;
+
+      const gradient = defs.append('linearGradient')
+        .attr('id', gradientId)
+        .attr('gradientUnits', 'userSpaceOnUse')
+        .attr('x1', link.source.x)
+        .attr('y1', link.source.y)
+        .attr('x2', link.target.x)
+        .attr('y2', link.target.y);
+
+      gradient.append('stop')
+        .attr('offset', '0%')
+        .attr('stop-color', colorScale(link.source.data.value));
+
+      gradient.append('stop')
+        .attr('offset', '100%')
+        .attr('stop-color', colorScale(link.target.data.value));
+
+      link.gradientId = gradientId;
     });
 
-    // 4. 绘制 link
-    svg
-      .append('g')
-      .attr('fill', 'none')
+    // 绘制连线
+    svg.append('g')
       .selectAll('path')
       .data(links)
       .join('path')
-      .attr('d', sankeyLinkHorizontal()) // sankey 提供的贝塞尔曲线生成器
-      .attr('stroke', d => '#555')
-      .attr('stroke-width', d => Math.max(1, d.width))   // d.width 是 sankey 计算好的连线宽度
-      .attr('opacity', 0.7);
-
-    // 5. 绘制 node
-    const node = svg
-      .append('g')
-      .selectAll('g')
-      .data(nodes)
-      .join('g');
-
-    // 节点矩形
-    node
-      .append('rect')
-      .attr('x', d => d.x0)
-      .attr('y', d => d.y0)
-      .attr('width', d => d.x1 - d.x0) 
-      .attr('height', d => d.y1 - d.y0)
-      .attr('fill', '#222')
+      .attr('d', d3.linkHorizontal()
+        .x(d => d.y + 100) // 平移以留出边距（横向）
+        .y(d => d.x))
+      .attr('fill', 'none')
+      .attr('stroke', d => `url(#${d.gradientId})`)
+      .attr('stroke-width', 2)
       .attr('opacity', 0.8);
 
-    // 节点文字
-    node
-      .append('text')
-      .attr('x', d => d.x0 < width / 2 ? d.x1 + 6 : d.x0 - 6) // 如果节点在左边，就把文本放在右侧，否则放左侧
-      .attr('y', d => (d.y1 + d.y0) / 2)
-      .attr('dy', '0.35em')
-      .attr('text-anchor', d => d.x0 < width / 2 ? 'start' : 'end')
-      .attr('fill', '#000')
-      .text(d => d.name);
+    // 绘制节点
+    const nodeGroup = svg.append('g')
+      .selectAll('g')
+      .data(nodes)
+      .join('g')
+      .attr('transform', d => `translate(${d.y + 100},${d.x})`); // 平移以留出边距
+
+    // 节点圆形
+    nodeGroup.append('circle')
+      .attr('r', d => 20) // 固定半径，或根据需要调整
+      .attr('fill', d => colorScale(d.data.value))
+      .attr('stroke', '#333')
+      .attr('stroke-width', 1.5);
+
+    // 节点标签
+    nodeGroup.append('text')
+      .attr('dy', 4)
+      .attr('x', d => d.children ? -25 : 25) // 如果有子节点，标签在左侧，否则在右侧
+      .attr('text-anchor', d => d.children ? 'end' : 'start')
+      .text(d => d.data.name)
+      .style('font-size', '12px');
 
   }, [width, height]);
 
-  return <svg ref={svgRef} />;
+  return <svg ref={svgRef}></svg>;
 };
 
 export default StrategyMap;
