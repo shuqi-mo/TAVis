@@ -1,31 +1,15 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const StrategyMap = ({ data, width = 460, height = 450, onNodeClick }) => {
+const StrategyMap = ({
+  data,
+  width = 460,
+  height = 450,
+  onNodeClick,
+  valueKey = "value1",
+  selectedNode,
+}) => {
   const svgRef = useRef(null);
-
-  // const data = {
-  //   name: 'Start',
-  //   value: 10,
-  //   children: [
-  //     {
-  //       name: 'Train',
-  //       value: 8,
-  //       children: [
-  //         { name: 'Quantize', value: 6 },
-  //         { name: 'Magnitude', value: 4 },
-  //       ],
-  //     },
-  //     {
-  //       name: 'Gradient',
-  //       value: 5,
-  //       children: [
-  //         { name: 'Prune', value: 3 },
-  //         { name: 'Calibrate', value: 2 },
-  //       ],
-  //     },
-  //   ],
-  // };
 
   useEffect(() => {
     // 清空之前的内容
@@ -47,7 +31,7 @@ const StrategyMap = ({ data, width = 460, height = 450, onNodeClick }) => {
     const links = root.links();
 
     // 颜色比例尺，根据节点的 value 映射颜色
-    const maxValue = d3.max(nodes, (d) => d.data.value) || 1;
+    const maxValue = d3.max(nodes, (d) => d.data[valueKey]) || 1;
     const colorScale = d3
       .scaleSequential(d3.interpolateBlues)
       .domain([0, maxValue]);
@@ -70,12 +54,12 @@ const StrategyMap = ({ data, width = 460, height = 450, onNodeClick }) => {
       gradient
         .append("stop")
         .attr("offset", "0%")
-        .attr("stop-color", colorScale(link.source.data.value));
+        .attr("stop-color", colorScale(link.source.data[valueKey]));
 
       gradient
         .append("stop")
         .attr("offset", "100%")
-        .attr("stop-color", colorScale(link.target.data.value));
+        .attr("stop-color", colorScale(link.target.data[valueKey]));
 
       link.gradientId = gradientId;
     });
@@ -95,7 +79,7 @@ const StrategyMap = ({ data, width = 460, height = 450, onNodeClick }) => {
       )
       .attr("fill", "none")
       .attr("stroke", (d) => `url(#${d.gradientId})`)
-      .attr("stroke-width", 2)
+      .attr("stroke-width", 8)
       .attr("opacity", 0.8);
 
     // 绘制节点
@@ -109,10 +93,22 @@ const StrategyMap = ({ data, width = 460, height = 450, onNodeClick }) => {
     // 节点圆形
     nodeGroup
       .append("circle")
-      .attr("r", (d) => 20) // 固定半径，或根据需要调整
-      .attr("fill", (d) => colorScale(d.data.value))
-      .attr("stroke", "#333")
-      .attr("stroke-width", 1.5)
+      .attr("r", (d) => 16) // 固定半径，或根据需要调整
+      .attr("fill", (d) => colorScale(d.data[valueKey]))
+      .attr("stroke", (d) => {
+        // 如果是选中节点，则显示明显的红色外框
+        if (selectedNode && selectedNode.data.code === d.data.code) {
+          return "#f00";
+        }
+        return "#333";
+      })
+      .attr("stroke-width", (d) => {
+        // 选中节点加粗，否则正常
+        if (selectedNode && selectedNode.data.code === d.data.code) {
+          return 3;
+        }
+        return 1;
+      })
       .attr("cursor", "pointer")
       .on("click", (event, d) => {
         event.stopPropagation();
@@ -133,7 +129,7 @@ const StrategyMap = ({ data, width = 460, height = 450, onNodeClick }) => {
         event.stopPropagation();
         onNodeClick?.(d);
       });
-  }, [data, width, height, onNodeClick]);
+  }, [data, width, height, onNodeClick, valueKey, selectedNode]);
 
   return <svg ref={svgRef}></svg>;
 };
