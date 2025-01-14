@@ -14,7 +14,7 @@ import Exampler from "./Views/Exampler";
 import Pattern from "./Views/Pattern";
 import ScatterPlot from "./Views/ScatterPlot";
 import { PlayCircleFilled } from "@ant-design/icons";
-import StrategyMap from "./Views/StrategyMap";
+import Comparison from "./Views/Comparison";
 
 const { Sider } = Layout;
 
@@ -374,7 +374,7 @@ function App() {
             {scatterData && <ScatterPlot data={scatterData} />}
             <div className="view-title">Comparison View</div>
             <div style={{width: 460, height: 450}}>
-              <StrategyMap/>
+              <Comparison/>
             </div>
           </Flex>
         </Flex>
