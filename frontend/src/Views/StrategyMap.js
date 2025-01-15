@@ -1,15 +1,22 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
 
 const StrategyMap = ({
   data,
   width = 460,
-  height = 450,
+  height = 350,
   onNodeClick,
   valueKey = "value1",
   selectedNode,
 }) => {
   const svgRef = useRef(null);
+  const containerRef = useRef(null);
+  const [tooltip, setTooltip] = useState({
+    show: false,
+    x: 0,
+    y: 0,
+    content: "",
+  });
 
   useEffect(() => {
     // 清空之前的内容
@@ -90,6 +97,42 @@ const StrategyMap = ({
       .join("g")
       .attr("transform", (d) => `translate(${d.y + 100},${d.x})`); // 平移以留出边距
 
+    // 定义鼠标事件处理函数
+    const handleMouseOver = () => {
+      setTooltip((t) => ({ ...t, show: true }));
+    };
+
+    const handleMouseOut = () => {
+      setTooltip((t) => ({ ...t, show: false }));
+    };
+
+    const handleMouseMove = (event, d) => {
+      if (!containerRef.current) return;
+
+      // 计算容器相对于页面的偏移
+      const rect = containerRef.current.getBoundingClientRect();
+
+      // 让 tooltip 跟随鼠标，但要减去容器的 left/top
+      const x = event.clientX - rect.left + 10;
+      const y = event.clientY - rect.top + 10;
+
+      // 你想显示的内容，比如节点的 name、value1、value2、value3
+      const { name, code, value1, value2, value3 } = d.data;
+      const content = `
+        <div><strong>${name ?? code ?? "Node"}</strong></div>
+        <div>value1: ${value1 ?? "-"}</div>
+        <div>value2: ${value2 ?? "-"}</div>
+        <div>value3: ${value3 ?? "-"}</div>
+      `;
+
+      setTooltip({
+        show: true,
+        x,
+        y,
+        content,
+      });
+    };
+
     // 节点圆形
     nodeGroup
       .append("circle")
@@ -113,7 +156,10 @@ const StrategyMap = ({
       .on("click", (event, d) => {
         event.stopPropagation();
         onNodeClick?.(d);
-      });
+      })
+      .on("mouseover", handleMouseOver)
+      .on("mousemove", handleMouseMove)
+      .on("mouseout", handleMouseOut);
 
     // 节点标签
     nodeGroup
@@ -131,7 +177,30 @@ const StrategyMap = ({
       });
   }, [data, width, height, onNodeClick, valueKey, selectedNode]);
 
-  return <svg ref={svgRef}></svg>;
+  return (
+    <div ref={containerRef} style={{ position: "relative", width, height }}>
+      <svg ref={svgRef} width={width} height={height} />
+
+      {tooltip.show && (
+        <div
+          style={{
+            position: "absolute",
+            top: tooltip.y,
+            left: tooltip.x,
+            background: "rgba(0,0,0,0.7)",
+            color: "#fff",
+            pointerEvents: "none",
+            borderRadius: 4,
+            padding: "4px 8px",
+            fontSize: "12px",
+            maxWidth: 200,
+            zIndex: 999,
+          }}
+          dangerouslySetInnerHTML={{ __html: tooltip.content }}
+        />
+      )}
+    </div>
+  );
 };
 
 export default StrategyMap;

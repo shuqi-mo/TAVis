@@ -147,21 +147,21 @@ const Comparison = () => {
 
   return (
     <div style={{ padding: 20 }}>
-      <Select
-        value={valueKey}
-        onChange={(val) => setValueKey(val)}
-        style={{ width: 120, marginBottom: 20 }}
-      >
-        <Option value="value1">Value1</Option>
-        <Option value="value2">Value2</Option>
-        <Option value="value3">Value3</Option>
-      </Select>
       <Space>
+        <Select
+          value={valueKey}
+          onChange={(val) => setValueKey(val)}
+          style={{ width: 80 }}
+        >
+          <Option value="value1">Value1</Option>
+          <Option value="value2">Value2</Option>
+          <Option value="value3">Value3</Option>
+        </Select>
         <Input
           placeholder="节点 code"
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          style={{ width: 100 }}
+          style={{ width: 50 }}
         />
         <Button type="primary" onClick={handleSave}>
           Save
@@ -169,16 +169,14 @@ const Comparison = () => {
         <Button danger onClick={handleDelete}>
           Delete
         </Button>
+        <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
       </Space>
-
-      {/* 一个小的颜色示意图/图例 */}
-      <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
 
       <div style={{ marginTop: 20, border: "1px solid #ddd" }}>
         <StrategyMap
           data={treeData}
           width={460}
-          height={400}
+          height={350}
           onNodeClick={handleNodeClick}
           valueKey={valueKey}
           selectedNode={selectedNode}
@@ -189,7 +187,7 @@ const Comparison = () => {
 };
 
 function ColorLegend({ minVal, maxVal, valueKey }) {
-  const legendWidth = 200;
+  const legendWidth = 100;
   const legendHeight = 15;
   const colorScale = d3
     .scaleSequential(d3.interpolateBlues)
@@ -199,9 +197,7 @@ function ColorLegend({ minVal, maxVal, valueKey }) {
 
   return (
     <div style={{ marginBottom: 10 }}>
-      <div style={{ fontWeight: "bold", marginBottom: 4 }}>
-        当前属性: {valueKey} (min={minVal}, max={maxVal})
-      </div>
+      <div style={{ fontWeight: "bold", marginBottom: 4 }}>{valueKey}</div>
       <div
         style={{
           position: "relative",
