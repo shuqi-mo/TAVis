@@ -5,7 +5,6 @@ import Candle from "./Views/Candle";
 import "./App.scss";
 import CodeEditor from "./Views/CodeEditor";
 import { Indicator, Evaluation } from "./utils/ClassDefinitions";
-import IndicatorsTable from "./Views/IndicatorsTable";
 import { Layout, Menu, Flex, Radio } from "antd";
 import StocksTable from "./Views/StocksTable";
 import { SlidersOutlined } from "@ant-design/icons";
@@ -15,6 +14,7 @@ import Pattern from "./Views/Pattern";
 import ScatterPlot from "./Views/ScatterPlot";
 import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
+import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
 
 const { Sider } = Layout;
 
@@ -347,7 +347,7 @@ function App() {
                 </div>
                 {backtest && position === "current stock" && (
                   <div style={{ padding: "10px", overflowY: "auto" }}>
-                    <IndicatorsTable indicators={backtest} />
+                    <ParallelCoordinatesChart indicators={backtest} />
                   </div>
                 )}
                 {backtest && position === "selected stocks" && (
