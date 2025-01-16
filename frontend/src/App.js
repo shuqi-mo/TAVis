@@ -15,6 +15,7 @@ import ScatterPlot from "./Views/ScatterPlot";
 import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
 import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
+import StocksParallelChart from "./Views/StocksParallelChart";
 
 const { Sider } = Layout;
 
@@ -201,7 +202,7 @@ function App() {
       });
 
       const performance = response.data.map((stock) => ({
-        stock: stock[0],
+        name: stock[0],
         success: stock[1],
         totalprofit: stock[2],
         singlereturn: stock[3],
@@ -352,7 +353,8 @@ function App() {
                 )}
                 {backtest && position === "selected stocks" && (
                   <div style={{ padding: "10px", overflowY: "auto" }}>
-                    <StocksTable stocks={stockPerformance} />
+                    {/* <StocksTable stocks={stockPerformance} /> */}
+                    <StocksParallelChart stocks={stockPerformance} />
                   </div>
                 )}
               </div>

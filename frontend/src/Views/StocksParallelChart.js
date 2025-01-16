@@ -1,56 +1,74 @@
-import React, { useRef, useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const ParallelCoordinatesChart = ({ indicators }) => {
-  const svgRef = useRef(null);
+const StocksParallelChart = ({ stocks }) => {
+  const svgRef = useRef();
+
+  const calculatePerformance = (stock) => {
+    const totalTrades = stock.success.reduce(
+      (sum, successArray) => sum + successArray.length,
+      0
+    );
+
+    const totalSuccessCount = stock.success.reduce(
+      (sum, successArray) =>
+        sum + successArray.filter((val) => val === 1).length,
+      0
+    );
+    const successRate = totalSuccessCount / totalTrades;
+
+    const totalReturnSum = stock.singlereturn.reduce(
+      (sum, returnArray) =>
+        sum + returnArray.reduce((innerSum, val) => innerSum + val, 0),
+      0
+    );
+    const totalReturnCount = stock.singlereturn.reduce(
+      (sum, returnArray) => sum + returnArray.length,
+      0
+    );
+    const avgReturn = totalReturnSum / totalReturnCount;
+
+    const totalProfit = stock.totalprofit[stock.totalprofit.length - 1].reduce(
+      (sum, profit) => sum + profit,
+      0
+    );
+
+    return {
+      name: stock.name,
+      totalTrades,
+      successRate,
+      avgReturn,
+      totalProfit,
+    };
+  };
 
   useEffect(() => {
-    // 如果没有数据则不进行渲染
-    if (!indicators || indicators.length === 0) return;
+    const data = stocks.map((stock) => calculatePerformance(stock));
 
-    // 1. 先将数据格式化，提取与表格对应的指标：totalTrades, successRate, avgReturn, totalProfit
-    const data = indicators.map((indicator) => {
-      const successCount = indicator.success.filter((s) => s === 1).length;
-      const successRate = successCount / indicator.success.length;
-      const avgReturn =
-        indicator.singlereturn.reduce((sum, value) => sum + value, 0) /
-        indicator.singlereturn.length;
-      const totalProfit =
-        indicator.totalprofit[indicator.totalprofit.length - 1];
-
-      return {
-        name: indicator.name,         // 虽然 name 不用于平行坐标的绘图轴，但可以在鼠标悬停时显示
-        totalTrades: indicator.success.length,
-        successRate: successRate,
-        avgReturn: avgReturn,
-        totalProfit: totalProfit,
-      };
-    });
-
-    // 2. 设置画布尺寸和边距
     const width = 250;
     const height = 300;
     const margin = { top: 30, right: 10, bottom: 10, left: 10 };
 
-    // 3. 获取 SVG，并清空之前的内容（以便重复渲染时不叠加）
+    const dimensions = [
+      "totalTrades",
+      "successRate",
+      "avgReturn",
+      "totalProfit",
+    ];
+
+    const colorScale = d3
+          .scaleOrdinal(d3.schemeCategory10)
+          .domain(data.map((d) => d.name));
+
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    // 4. 定义需要绘制的维度（不包含 name，因为 name 是字符串，不适合作为坐标轴）
-    const dimensions = ["totalTrades", "successRate", "avgReturn", "totalProfit"];
-
-    const colorScale = d3
-      .scaleOrdinal(d3.schemeCategory10)
-      .domain(data.map((d) => d.name));
-
-    // 5. 为每个维度定义一个 yScale
-    //    根据各维度的值域动态生成比例尺
     const yScales = {};
     dimensions.forEach((dim) => {
       yScales[dim] = d3
         .scaleLinear()
         .domain(d3.extent(data, (d) => d[dim])) // 取该维度的最小值和最大值
-        .range([height - margin.bottom, margin.top]); 
+        .range([height - margin.bottom, margin.top]);
     });
 
     // 6. 定义 xScale，用来分布各个维度在水平方向的位置
@@ -60,9 +78,6 @@ const ParallelCoordinatesChart = ({ indicators }) => {
       .padding(0.5)
       .domain(dimensions);
 
-    // 7. 在平行坐标中，通常每一条线代表一条数据
-    //    定义画路径的函数 path(d)
-    //    把每个维度映射到 (xScale(维度), yScales[该维度](d[该维度])) 上，再用 line 连接起来
     const lineGenerator = d3.line();
     const path = (d) => {
       return lineGenerator(
@@ -96,12 +111,15 @@ const ParallelCoordinatesChart = ({ indicators }) => {
         .attr("fill", "black")
         .text(dim);
     });
-    // 10. 添加图例 (Legend)
+
     const uniqueNames = [...new Set(data.map((d) => d.name))];
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width - margin.right + 20}, ${margin.top})`);
+      .attr(
+        "transform",
+        `translate(${width - margin.right + 20}, ${margin.top})`
+      );
 
     uniqueNames.forEach((name, i) => {
       legend
@@ -121,13 +139,13 @@ const ParallelCoordinatesChart = ({ indicators }) => {
         .attr("alignment-baseline", "middle")
         .text(name);
     });
-  }, [indicators]);
+  }, [stocks]);
 
   return (
     <div style={{ textAlign: "center" }}>
-      <svg ref={svgRef} width={320} height={300} />
+      <svg ref={svgRef} width={350} height={300} />
     </div>
   );
 };
 
-export default ParallelCoordinatesChart;
+export default StocksParallelChart;

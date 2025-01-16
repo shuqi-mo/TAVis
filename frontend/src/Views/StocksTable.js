@@ -2,6 +2,7 @@ import React from "react";
 import { Table } from "antd";
 
 const StocksTable = ({ stocks }) => {
+  console.log(stocks);
   const calculatePerformance = (stock) => {
     // 计算 Total Trades: totalSuccess 数组的总长度
     const totalTrades = stock.success.reduce(
