@@ -329,7 +329,7 @@ function App() {
                   height: 380,
                 }}
               >
-                <div className="view-title">Performance</div>
+                <div className="view-title">Performance View</div>
                 <div style={{ display: "flex", justifyContent: "center" }}>
                   <Radio.Group
                     size="small"

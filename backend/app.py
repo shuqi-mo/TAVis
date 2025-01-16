@@ -196,34 +196,13 @@ def process_scatterplot():
         # 仅保留长度为出现次数最多的长度的元素
         filtered_stocks_data = [arr for arr in stocks_data if len(arr) <= max_count_length and len(arr) >= max_count_length * 0.9]
         
-    # results_df = pd.DataFrame(results, columns=['Stock', 'Length of res_backtest[4]'])
-    # results_df.to_csv('results.csv', index=False)
-    
-    # 计算欧式距离矩阵
-    # euclidean_distance_matrix = compute_euclidean_distance_matrix(np.array(filtered_stocks_data))
     series = []
     for item in filtered_stocks_data:
         series.append(np.array(item))
     # 计算DTW距离矩阵
     dtw_distance_matrix = compute_dtw_distance_matrix_fast(series)
-    # 结合两种距离矩阵
-    # combined_distance_matrix = combine_distance_matrices(
-    #     euclidean_distance_matrix, 
-    #     dtw_distance_matrix, 
-    #     weight_euclidean=0.5, 
-    #     weight_dtw=0.5
-    # )
-    tsne = TSNE(
-        n_components=2, 
-        metric='precomputed', 
-        random_state=42, 
-        perplexity=3, 
-        n_iter=1000, 
-        init='random'  # 修改初始化方法
-    )
+
     reducer = umap.UMAP(n_components=2, metric='precomputed', random_state=42)
-    # coords = tsne.fit_transform(combined_distance_matrix)
-    # coords = tsne.fit_transform(dtw_distance_matrix)
     coords = reducer.fit_transform(dtw_distance_matrix)
     coords_list = coords.tolist()
     return jsonify(coords_list)

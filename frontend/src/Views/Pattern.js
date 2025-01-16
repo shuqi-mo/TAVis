@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Flex, Slider, Card, Tag, Typography } from "antd";
 import axios from "axios";
-import BarChart from "./BarChart";
+import SunburstChart from "./SunburstChart";
 
 const { Text } = Typography;
 
@@ -9,7 +9,6 @@ function Pattern({ selectStock, trade, startDate, endDate }) {
   const API_URL = "http://localhost:5000";
   const [minsup, setMinsup] = useState(25);
   const [patterns, setPatterns] = useState(null);
-  const [barchartData, setBarchartData] = useState(null);
 
   const handleSliderChange = (value) => {
     setMinsup(value); // 更新minsup值
@@ -26,13 +25,6 @@ function Pattern({ selectStock, trade, startDate, endDate }) {
       })
       .then((response) => {
         setPatterns(response.data[0]);
-        const barchart = Object.entries(response.data[1]).map(
-          ([key, value]) => ({
-            key,
-            value,
-          })
-        );
-        setBarchartData(barchart);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -66,8 +58,8 @@ function Pattern({ selectStock, trade, startDate, endDate }) {
         </Flex>
       </Card>
       <div style={{ width: 390, height: 450 }}>
-        <div style={{ width: 390, height: 180 }}>
-          {barchartData && <BarChart data={barchartData} />}
+        <div style={{ width: 390, height: 400 }}>
+          <SunburstChart/>
         </div>
       </div>
     </Flex>
