@@ -77,7 +77,11 @@ def process_single_stock():
         float_trade.append([float(x) for x in trade_origin])
         price, trade = updatePeriod(data_df, trade_origin, data["startDate"], data["endDate"])
         res = calBacktest(price, trade, data["getAheadStopTime"])
-        performance.append([name, res[0], res[1], res[2]])
+        totalTrade = len(res[0])
+        successRate = sum(res[0]) / totalTrade
+        totalProfit = res[1][-1]
+        averProfit = sum(res[2]) / len(res[2])
+        performance.append([name, totalTrade, successRate, averProfit, totalProfit])
         boxplotData.append([name, res[3]])
     return jsonify([float_trade, performance, boxplotData])
 
@@ -111,9 +115,10 @@ def process_stocks():
     res = []
     for item in csv_files:
         stock = pd.read_csv(file_path + item + ".csv")
-        totalSuccess = []
-        totalProfit = []
-        totalReturn = []
+        tradeCount = 0
+        successCount = 0
+        profitCount = 0
+        avgReturnList = []
         for i in range(len(data["exprLongList"])):
             long = execute_expr(data["exprLongList"][i], stock)
             short = execute_expr(data["exprShortList"][i], stock)
@@ -122,10 +127,12 @@ def process_stocks():
             trade_origin = process_trades(long, short)
             price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
             res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
-            totalSuccess.append(res_singlestock[0])
-            totalProfit.append(res_singlestock[1])
-            totalReturn.append(res_singlestock[2])
-        res.append([item, totalSuccess, totalProfit, totalReturn])
+            tradeCount += len(res_singlestock[0])
+            successCount += sum(res_singlestock[0])
+            profitCount += res_singlestock[1][-1]
+            for r in res_singlestock[2]:
+                avgReturnList.append(r)
+        res.append([item, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
     return jsonify(res)
 
 @app.route('/process_pattern', methods=['POST'])

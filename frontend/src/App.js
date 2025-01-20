@@ -137,9 +137,10 @@ function App() {
       // 提取 indicators 中的必要字段并更新 backtest
       const newBacktest = response.data[1].map((indicator) => ({
         name: indicator[0],
-        success: indicator[1],
-        totalprofit: indicator[2],
-        singlereturn: indicator[3],
+        totalTrades: indicator[1],
+        successRate: indicator[2],
+        avgReturn: indicator[3],
+        totalProfit: indicator[4],
       }));
       setBacktest(newBacktest);
       // 更新curveBoxplotData
@@ -203,9 +204,10 @@ function App() {
 
       const performance = response.data.map((stock) => ({
         name: stock[0],
-        success: stock[1],
-        totalprofit: stock[2],
-        singlereturn: stock[3],
+        totalTrades: stock[1],
+        successRate: stock[2],
+        avgReturn: stock[3],
+        totalProfit: stock[4],
       }));
       // console.log(performance);
       setStockPerformance(performance);
@@ -320,13 +322,12 @@ function App() {
               <Flex>
                 {backtest && position === "current stock" && (
                   <div style={{ padding: "10px", overflowY: "auto" }}>
-                    <ParallelCoordinatesChart indicators={backtest} />
+                    <ParallelCoordinatesChart data={backtest} />
                   </div>
                 )}
                 {backtest && position === "selected stocks" && (
                   <div style={{ padding: "10px", overflowY: "auto" }}>
-                    {/* <StocksTable stocks={stockPerformance} /> */}
-                    <StocksParallelChart stocks={stockPerformance} />
+                    <ParallelCoordinatesChart data={stockPerformance} />
                   </div>
                 )}
               </Flex>

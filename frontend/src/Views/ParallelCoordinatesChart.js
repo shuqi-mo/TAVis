@@ -1,31 +1,10 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const ParallelCoordinatesChart = ({ indicators }) => {
+const ParallelCoordinatesChart = ({ data }) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
-    // 如果没有数据则不进行渲染
-    if (!indicators || indicators.length === 0) return;
-
-    // 1. 先将数据格式化，提取与表格对应的指标：totalTrades, successRate, avgReturn, totalProfit
-    const data = indicators.map((indicator) => {
-      const successCount = indicator.success.filter((s) => s === 1).length;
-      const successRate = successCount / indicator.success.length;
-      const avgReturn =
-        indicator.singlereturn.reduce((sum, value) => sum + value, 0) /
-        indicator.singlereturn.length;
-      const totalProfit =
-        indicator.totalprofit[indicator.totalprofit.length - 1];
-
-      return {
-        name: indicator.name,         // 虽然 name 不用于平行坐标的绘图轴，但可以在鼠标悬停时显示
-        totalTrades: indicator.success.length,
-        successRate: successRate,
-        avgReturn: avgReturn,
-        totalProfit: totalProfit,
-      };
-    });
 
     // 2. 设置画布尺寸和边距
     const width = 250;
@@ -121,7 +100,7 @@ const ParallelCoordinatesChart = ({ indicators }) => {
         .attr("alignment-baseline", "middle")
         .text(name);
     });
-  }, [indicators]);
+  }, [data]);
 
   return (
     <div style={{ textAlign: "center" }}>
