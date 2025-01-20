@@ -6,7 +6,6 @@ import "./App.scss";
 import CodeEditor from "./Views/CodeEditor";
 import { Indicator, Evaluation } from "./utils/ClassDefinitions";
 import { Layout, Menu, Flex, Radio } from "antd";
-import StocksTable from "./Views/StocksTable";
 import { SlidersOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
 import Exampler from "./Views/Exampler";
@@ -16,6 +15,7 @@ import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
 import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
 import StocksParallelChart from "./Views/StocksParallelChart";
+import TreeComponent from "./Views/TreeComponent";
 
 const { Sider } = Layout;
 
@@ -299,53 +299,25 @@ function App() {
         </Sider>
         <Flex gap="small">
           <Flex vertical="true">
-            <div className="view-title">Candlestick View</div>
-            {trade && (
-              <div className="candle">
-                <Candle data={data} trade={trade} />
-              </div>
-            )}
-            <div className="view-title">Inspection View</div>
-            <Flex>
-              <Flex vertical="true">
-                {curveBoxplotData &&
-                  curveBoxplotData.map((item) => (
-                    <CurveBoxplot boxplotData={item} />
-                  ))}
-              </Flex>
-              <Flex vertical="true">
-                {examplerData &&
-                  examplerData.map((item) => (
-                    <Exampler data={item[1]} legend={item[2]} />
-                  ))}
-              </Flex>
-            </Flex>
-          </Flex>
-          <Flex vertical="true">
-            <Flex gap="small">
-              <CodeEditor code={code} onCodeChange={updateCode} />
-              <div
-                style={{
-                  width: 280,
-                  height: 380,
-                }}
+            <div className="view-title">Evaluation View</div>
+            {trade && <Candle data={data} trade={trade} />}
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <Radio.Group
+                size="small"
+                value={position}
+                onChange={(e) => setPosition(e.target.value)}
               >
-                <div className="view-title">Performance View</div>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <Radio.Group
-                    size="small"
-                    value={position}
-                    onChange={(e) => setPosition(e.target.value)}
-                  >
-                    <Radio.Button value="current stock">current</Radio.Button>
-                    <Radio.Button
-                      value="selected stocks"
-                      onClick={() => handleExecute()}
-                    >
-                      stocks
-                    </Radio.Button>
-                  </Radio.Group>
-                </div>
+                <Radio.Button value="current stock">indicators</Radio.Button>
+                <Radio.Button
+                  value="selected stocks"
+                  onClick={() => handleExecute()}
+                >
+                  stocks
+                </Radio.Button>
+              </Radio.Group>
+            </div>
+            <Flex>
+              <Flex>
                 {backtest && position === "current stock" && (
                   <div style={{ padding: "10px", overflowY: "auto" }}>
                     <ParallelCoordinatesChart indicators={backtest} />
@@ -357,9 +329,26 @@ function App() {
                     <StocksParallelChart stocks={stockPerformance} />
                   </div>
                 )}
-              </div>
+              </Flex>
+              <Flex vertical="true">
+                {curveBoxplotData &&
+                  curveBoxplotData.map((item) => (
+                    <CurveBoxplot boxplotData={item} />
+                  ))}
+              </Flex>
             </Flex>
-            <div className="view-title">Pattern Analysis View</div>
+          </Flex>
+          <Flex vertical="true">
+            <div className="view-title">Construction View</div>
+            <Flex>
+              <Flex vertical="true">
+                {/* {examplerData &&
+                  examplerData.map((item) => (
+                    <Exampler data={item[1]} legend={item[2]} />
+                  ))} */}
+                  <TreeComponent/>
+              </Flex>
+            </Flex>
             {trade && (
               <Pattern
                 selectStock={selectStock}
@@ -370,14 +359,24 @@ function App() {
             )}
           </Flex>
           <Flex vertical="true">
-            <div className="view-title">
-              Stock Selection View <PlayCircleFilled onClick={() => handleExecuteScatter()} />
+            {/* <div className="view-title">
+              Stock Selection View{" "}
+              <PlayCircleFilled onClick={() => handleExecuteScatter()} />
             </div>
-            {scatterData && <ScatterPlot data={scatterData} />}
+            {scatterData && <ScatterPlot data={scatterData} />} */}
             <div className="view-title">Comparison View</div>
-            <div style={{width: 460, height: 450}}>
-              <Comparison/>
+            <div style={{ width: 300, height: 450 }}>
+              <Comparison />
             </div>
+          </Flex>
+          <Flex>
+            <CodeEditor code={code} onCodeChange={updateCode} />
+            <div
+              style={{
+                width: 280,
+                height: 380,
+              }}
+            ></div>
           </Flex>
         </Flex>
       </Layout>

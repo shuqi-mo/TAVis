@@ -1,0 +1,42 @@
+.node {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    background-color: #4a90e2;
+    color: white;
+    margin: 5px;
+    box-sizing: border-box;
+  }
+  
+  .children {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .node-root {
+    width: 400px;
+    height: 200px;
+  }
+  
+  .node-child1 {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .node-child2 {
+    width: 200px;
+    height: 100px;
+  }
+  
+  .node-child3 {
+    width: 200px;
+    height: 100px;
+  }
+  
+  .node-grandchild {
+    width: 80px;
+    height: 80px;
+  }  

@@ -106,7 +106,7 @@ const data = {
   ],
 };
 
-const SunburstChart = ({ width = 390, height = 400 }) => {
+const SunburstChart = ({ width = 300, height = 350 }) => {
   const ref = useRef(null);
 
   useEffect(() => {

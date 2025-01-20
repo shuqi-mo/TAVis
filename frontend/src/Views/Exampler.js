@@ -16,7 +16,7 @@ const Exampler = ({ data, legend }) => {
     // Set dimensions and margins
     const width = 350;
     const height = 150;
-    const margin = { top: 20, right: 30, bottom: 50, left: 20 };
+    const margin = { top: 20, right: 5, bottom: 50, left: 20 };
 
     // Create SVG container
     const svg = d3

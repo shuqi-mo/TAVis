@@ -3,8 +3,8 @@ import * as d3 from "d3";
 
 const StrategyMap = ({
   data,
-  width = 460,
-  height = 350,
+  width,
+  height,
   onNodeClick,
   valueKey = "value1",
   selectedNode,

@@ -46,8 +46,8 @@ const StocksParallelChart = ({ stocks }) => {
     const data = stocks.map((stock) => calculatePerformance(stock));
 
     const width = 250;
-    const height = 300;
-    const margin = { top: 30, right: 10, bottom: 10, left: 10 };
+    const height = 400;
+    const margin = { top: 30, right: 10, bottom: 10, left: 5 };
 
     const dimensions = [
       "totalTrades",
@@ -118,7 +118,7 @@ const StocksParallelChart = ({ stocks }) => {
       .attr("class", "legend")
       .attr(
         "transform",
-        `translate(${width - margin.right + 20}, ${margin.top})`
+        `translate(${width - margin.right}, ${margin.top})`
       );
 
     uniqueNames.forEach((name, i) => {
@@ -143,7 +143,7 @@ const StocksParallelChart = ({ stocks }) => {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <svg ref={svgRef} width={350} height={300} />
+      <svg ref={svgRef} width={300} height={400} />
     </div>
   );
 };

@@ -172,11 +172,11 @@ const Comparison = () => {
         <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
       </Space>
 
-      <div style={{ marginTop: 20, border: "1px solid #ddd" }}>
+      <div style={{ marginTop: 10, border: "1px solid #ddd" }}>
         <StrategyMap
           data={treeData}
-          width={460}
-          height={350}
+          width={300}
+          height={250}
           onNodeClick={handleNodeClick}
           valueKey={valueKey}
           selectedNode={selectedNode}

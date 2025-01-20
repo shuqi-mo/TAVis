@@ -29,8 +29,8 @@ const ParallelCoordinatesChart = ({ indicators }) => {
 
     // 2. 设置画布尺寸和边距
     const width = 250;
-    const height = 300;
-    const margin = { top: 30, right: 10, bottom: 10, left: 10 };
+    const height = 400;
+    const margin = { top: 30, right: 10, bottom: 10, left: 5 };
 
     // 3. 获取 SVG，并清空之前的内容（以便重复渲染时不叠加）
     const svg = d3.select(svgRef.current);
@@ -101,7 +101,7 @@ const ParallelCoordinatesChart = ({ indicators }) => {
     const legend = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width - margin.right + 20}, ${margin.top})`);
+      .attr("transform", `translate(${width - margin.right}, ${margin.top})`);
 
     uniqueNames.forEach((name, i) => {
       legend
@@ -125,7 +125,7 @@ const ParallelCoordinatesChart = ({ indicators }) => {
 
   return (
     <div style={{ textAlign: "center" }}>
-      <svg ref={svgRef} width={320} height={300} />
+      <svg ref={svgRef} width={300} height={400} />
     </div>
   );
 };

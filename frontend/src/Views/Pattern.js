@@ -36,8 +36,8 @@ function Pattern({ selectStock, trade, startDate, endDate }) {
       <Card
         style={{
           width: 180,
-          height: 450,
-          maxHeight: 450,
+          height: 350,
+          maxHeight: 350,
           overflowY: "auto",
         }}
       >
@@ -57,8 +57,8 @@ function Pattern({ selectStock, trade, startDate, endDate }) {
             ))}
         </Flex>
       </Card>
-      <div style={{ width: 390, height: 450 }}>
-        <div style={{ width: 390, height: 400 }}>
+      <div style={{ width: 300, height: 350 }}>
+        <div style={{ width: 300, height: 300 }}>
           <SunburstChart/>
         </div>
       </div>

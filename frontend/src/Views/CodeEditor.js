@@ -25,7 +25,7 @@ function CodeEditor({ code, onCodeChange }) {
       </div>
       <MonacoEditor
         width="280"
-        height="350"
+        height="650"
         language="javascript"
         options={options}
         value={code}

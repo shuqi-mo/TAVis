@@ -2,10 +2,10 @@ import { useEffect, useRef } from "react";
 import _ from "lodash";
 import * as d3 from "d3";
 
-const width = 550;
+const width = 500;
 const height = 350;
-const margin = { top: 20, right: 10, bottom: 120, left: 40 };
-const margin2 = { top: 260, right: 10, bottom: 50, left: 40 };
+const margin = { top: 20, right: 5, bottom: 120, left: 40 };
+const margin2 = { top: 260, right: 5, bottom: 50, left: 40 };
 const height2 = height - margin2.bottom - margin2.top;
 const dealHeight = 20;
 
@@ -198,91 +198,6 @@ function Candle({ data, trade }) {
       .attr("stroke-width", 0.3)
       .attr("fill", handleStrokeColor);
 
-    // candlestick
-    //   .selectAll("candle-bar1")
-    //   .data(stackData)
-    //   .enter()
-    //   .append("rect")
-    //   .attr("class", "candle-bar1")
-    //   .attr("width", candlestickWidth)
-    //   .attr("height", (v) => {
-    //     return (
-    //       Math.abs(yScale(v["open"]) - yScale(v["close"])) * v["percentage3"]
-    //     );
-    //   })
-    //   .attr("x", (v, i) => {
-    //     return xScale(i);
-    //   })
-    //   .attr("y", (v, i) => {
-    //     return yScale(d3.max([v["open"], v["close"]]));
-    //   })
-    //   .attr("rx", 1)
-    //   // .attr("stroke", handleStrokeColor)
-    //   // .attr("stroke-width", 0.3)
-    //   .attr("fill", "rgb(20,68,106)")
-    //   .attr("fill-opacity", (v) =>
-    //     String(v["extend3"] ? v["extend3"] : v["extend3"] + 0.2)
-    //   );
-
-    // candlestick
-    //   .selectAll("candle-bar2")
-    //   .data(stackData)
-    //   .enter()
-    //   .append("rect")
-    //   .attr("class", "candle-bar2")
-    //   .attr("width", candlestickWidth)
-    //   .attr("height", (v) => {
-    //     return (
-    //       Math.abs(yScale(v["open"]) - yScale(v["close"])) * v["percentage2"]
-    //     );
-    //   })
-    //   .attr("x", (v, i) => {
-    //     return xScale(i);
-    //   })
-    //   .attr("y", (v, i) => {
-    //     return yScale(
-    //       d3.max([v["open"], v["close"]]) -
-    //         Math.abs(v["open"] - v["close"]) * v["percentage3"]
-    //     );
-    //   })
-    //   .attr("rx", 1)
-    //   // .attr("stroke", handleStrokeColor)
-    //   // .attr("stroke-width", 0.3)
-    //   .attr("fill", "rgb(222,125,44)")
-    //   .attr("fill-opacity", (v) =>
-    //     String(v["extend2"] ? v["extend2"] : v["extend2"] + 0.2)
-    //   );
-
-    // candlestick
-    //   .selectAll("candle-bar3")
-    //   .data(stackData)
-    //   .enter()
-    //   .append("rect")
-    //   .attr("class", "candle-bar3")
-    //   .attr("width", candlestickWidth)
-    //   .attr("height", (v) => {
-    //     return (
-    //       Math.abs(yScale(v["open"]) - yScale(v["close"])) * v["percentage1"]
-    //     );
-    //   })
-    //   .attr("x", (v, i) => {
-    //     return xScale(i);
-    //   })
-    //   .attr("y", (v, i) => {
-    //     return yScale(
-    //       d3.max([v["open"], v["close"]]) -
-    //         Math.abs(v["open"] - v["close"]) *
-    //           (v["percentage3"] + v["percentage2"])
-    //     );
-    //   })
-    //   .attr("rx", 1)
-    //   // .attr("stroke", handleStrokeColor)
-    //   // .attr("stroke-width", 0.3)
-    //   .attr("fill", "rgb(179,168,150)")
-    //   .attr("fill-opacity", (v) =>
-    //     String(v["extend1"] ? v["extend1"] : v["extend1"] + 0.2)
-    //   );
-
     candlestick
       .selectAll("deal")
       .data(stackData)
@@ -424,65 +339,10 @@ function Candle({ data, trade }) {
           return yScale(d3.max([v["open"], v["close"]]));
         })
         .attr("width", getCandlestickWidth(end - start));
-      // focus
-      //   .selectAll(".candle-bar1")
-      //   .attr("height", (v, i) => {
-      //     if (xScale(i) >= 0 && xScale(i) <= xScale2(data.data.length))
-      //       return (
-      //         Math.abs(yScale(v["open"]) - yScale(v["close"])) *
-      //         v["percentage3"]
-      //       );
-      //   })
-      //   .attr("x", (v, i) => {
-      //     return xScale(i);
-      //   })
-      //   .attr("y", (v, i) => {
-      //     return yScale(d3.max([v["open"], v["close"]]));
-      //   })
-      //   .attr("width", getCandlestickWidth(end - start));
-      // focus
-      //   .selectAll(".candle-bar2")
-      //   .attr("height", (v, i) => {
-      //     if (xScale(i) >= 0 && xScale(i) <= xScale2(data.data.length))
-      //       return (
-      //         Math.abs(yScale(v["open"]) - yScale(v["close"])) *
-      //         v["percentage2"]
-      //       );
-      //   })
-      //   .attr("x", (v, i) => {
-      //     return xScale(i);
-      //   })
-      //   .attr("y", (v, i) => {
-      //     return yScale(
-      //       d3.max([v["open"], v["close"]]) -
-      //         Math.abs(v["open"] - v["close"]) * v["percentage3"]
-      //     );
-      //   })
-      //   .attr("width", getCandlestickWidth(end - start));
-      // focus
-      //   .selectAll(".candle-bar3")
-      //   .attr("height", (v, i) => {
-      //     if (xScale(i) >= 0 && xScale(i) <= xScale2(data.data.length))
-      //       return (
-      //         Math.abs(yScale(v["open"]) - yScale(v["close"])) *
-      //         v["percentage1"]
-      //       );
-      //   })
-      //   .attr("x", (v, i) => {
-      //     return xScale(i);
-      //   })
-      //   .attr("y", (v, i) => {
-      //     return yScale(
-      //       d3.max([v["open"], v["close"]]) -
-      //         Math.abs(v["open"] - v["close"]) *
-      //           (v["percentage3"] + v["percentage2"])
-      //     );
-      //   })
-      //   .attr("width", getCandlestickWidth(end - start));
+
       focus
         .selectAll(".deal")
         .attr("height", (v, i) => {
-          // return yScale(0.5) * Math.abs(v["trade"]);
           if (xScale(i) >= 0 && xScale(i) <= xScale2(data.data.length))
             return dealHeight * Math.abs(v["trade"]);
         })
