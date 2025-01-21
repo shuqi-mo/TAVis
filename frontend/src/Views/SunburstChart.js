@@ -6,7 +6,7 @@ const data = {
   children: [
     {
       name: "MACD",
-      value: 0,
+      value: -1,
       children: [
         {
           name: "p1",
@@ -39,7 +39,7 @@ const data = {
     },
     {
       name: "RSI",
-      value: 2,
+      value: -2,
       children: [
         {
           name: "p1",
@@ -66,7 +66,7 @@ const data = {
     },
     {
       name: "BOLL",
-      value: 1,
+      value: -1,
       children: [
         {
           name: "p1",
@@ -149,7 +149,7 @@ const SunburstChart = ({ width = 300, height = 350 }) => {
       .endAngle((d) => d.x1)
       .innerRadius((d) => {
         if (d.depth === 1) {
-          return d.y0;
+          return d.y0 * 1.5;
         } else if (d.depth === 2) {
           const ps = d.data.profitStats || {};
           const offset = singleScale(ps.q1 - ps.min || 0);

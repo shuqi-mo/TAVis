@@ -8,6 +8,63 @@ def convert_np_types(item):
         return [convert_np_types(i) for i in item]
     return item
 
+def convert_tuple_keys(data):
+    if isinstance(data, dict):
+        return {f"p{i+1}": convert_tuple_keys(value) if isinstance(key, tuple) else value for i, (key, value) in enumerate(data.items())}
+    elif isinstance(data, list):
+        return [convert_tuple_keys(item) for item in data]
+    elif isinstance(data, tuple):
+        return tuple(f"p{i+1}" for i in range(len(data)))
+    else:
+        return data
+
+def analyze_signals(pattern_dict, indicator_performance):
+    results = {
+        "name": "root",
+        "children": []
+    }
+
+    # 遍历每个指标
+    for indicator, signals in indicator_performance:
+        indicator_node = {
+            "name": indicator,
+            "value": 0,  # 默认值，可以根据需求调整
+            "children": []
+        }
+
+        # 遍历每个 pattern
+        for pattern, ranges in pattern_dict.items():
+            pattern_profits = []
+
+            # 遍历信号
+            for signal_position, profit in signals:
+                # 检查信号是否属于当前 pattern
+                for start, end in ranges:
+                    if signal_position == end:
+                        pattern_profits.append(profit)
+                        break
+
+            # 如果该 pattern 有匹配的信号，统计结果
+            if pattern_profits:
+                pattern_profits = np.array(pattern_profits)
+                pattern_node = {
+                    "name": pattern,
+                    "value": len(pattern_profits),
+                    "profitStats": {
+                        "min": float(np.min(pattern_profits)),
+                        "q1": float(np.percentile(pattern_profits, 25)),
+                        "median": float(np.median(pattern_profits)),
+                        "q3": float(np.percentile(pattern_profits, 75)),
+                        "max": float(np.max(pattern_profits))
+                    }
+                }
+                indicator_node["children"].append(pattern_node)
+
+        results["children"].append(indicator_node)
+
+    return results
+
+
 class PatternMatcher:
     def __init__(self, pattern_size=10000, txt_size=50000, max_val=256, minsup=25):
         self.count = 0
@@ -295,16 +352,16 @@ class PatternMatcher:
                     pattern_dict[pattern].append([i, i+n-1])
         return dict(pattern_dict)
     
-    def calculate_trade_counts(self, pattern_dict, trade, patterns):
-        trade_dict = {}
-        for idx, pattern in enumerate(patterns, 1):
-            key = f'p{idx}'
-            pattern_tuple = tuple(pattern)
-            matches = pattern_dict.get(pattern_tuple, [])
-            total_ones = 0
-            for match in matches:
-                start, end = match
-                # 计算trade[start:end+1]中1的个数
-                total_ones += sum(trade[start:end+1])
-            trade_dict[key] = total_ones
-        return trade_dict
+    # def calculate_trade_counts(self, pattern_dict, trade, patterns):
+    #     trade_dict = {}
+    #     for idx, pattern in enumerate(patterns, 1):
+    #         key = f'p{idx}'
+    #         pattern_tuple = tuple(pattern)
+    #         matches = pattern_dict.get(pattern_tuple, [])
+    #         total_ones = 0
+    #         for match in matches:
+    #             start, end = match
+    #             # 计算trade[start:end+1]中1的个数
+    #             total_ones += sum(trade[start:end+1])
+    #         trade_dict[key] = total_ones
+    #     return trade_dict

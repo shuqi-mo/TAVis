@@ -14,6 +14,7 @@ def calBacktest(price, trade, ahead = -1):
     boxplotData = []
     totalprofit = 0
     scatterData = []
+    positionAndProfit = []
     for i in range(len(trade)):
         if i == 0:
             scatterData.append(0)
@@ -42,6 +43,7 @@ def calBacktest(price, trade, ahead = -1):
                         profit.append(totalprofit)
                         profitpent.append((price[j]-price[i])/price[i])
                         boxplotData.append(item)
+                        positionAndProfit.append([i, price[j] - price[i]])
                         break
             else:
                 if i + ahead >= len(trade):
@@ -53,6 +55,7 @@ def calBacktest(price, trade, ahead = -1):
                 totalprofit += price[i+ahead] - price[i]
                 profit.append(totalprofit)
                 profitpent.append((price[i+ahead]-price[i])/price[i])
+                positionAndProfit.append([i, price[i+ahead] - price[i]])
                 for j in range(1,ahead+1):
                     item.append((price[j]-price[i])/price[i])
                     scatterData.append(scatterData[i-1] + price[j] - price[i])
@@ -77,6 +80,7 @@ def calBacktest(price, trade, ahead = -1):
                         totalprofit += price[i] - price[j]
                         profit.append(totalprofit)
                         profitpent.append((price[i]-price[j])/price[i])
+                        positionAndProfit.append([i, price[i] - price[j]])
                         boxplotData.append(item)
                         break
             else:
@@ -89,8 +93,9 @@ def calBacktest(price, trade, ahead = -1):
                 totalprofit += price[i] - price[i+ahead]
                 profit.append(totalprofit)
                 profitpent.append((price[i]-price[i+ahead])/price[i])
+                positionAndProfit.append([i, price[i] - price[i+ahead]])
                 for j in range(1,ahead+1):
                     item.append((price[i]-price[j])/price[i])
                     scatterData.append(scatterData[i-1] + price[i] - price[j])
                 boxplotData.append(item)
-    return [success,profit,profitpent,boxplotData,scatterData]
+    return [success,profit,profitpent,boxplotData,scatterData,positionAndProfit]

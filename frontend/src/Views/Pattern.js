@@ -5,7 +5,7 @@ import SunburstChart from "./SunburstChart";
 
 const { Text } = Typography;
 
-function Pattern({ selectStock, trade, startDate, endDate }) {
+function Pattern({ selectStock, trade, startDate, endDate, indicatorPerformance }) {
   const API_URL = "http://localhost:5000";
   const [minsup, setMinsup] = useState(25);
   const [patterns, setPatterns] = useState(null);
@@ -22,14 +22,16 @@ function Pattern({ selectStock, trade, startDate, endDate }) {
         trade,
         startDate,
         endDate,
+        indicatorPerformance
       })
       .then((response) => {
         setPatterns(response.data[0]);
+        console.log(response.data[1]);
       })
       .catch((error) => {
         console.error("Error:", error);
       });
-  }, [selectStock, minsup, startDate, endDate, trade]);
+  }, [selectStock, minsup, startDate, endDate, trade, indicatorPerformance]);
 
   return (
     <Flex>

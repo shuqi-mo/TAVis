@@ -14,7 +14,6 @@ import ScatterPlot from "./Views/ScatterPlot";
 import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
 import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
-import StocksParallelChart from "./Views/StocksParallelChart";
 import TreeComponent from "./Views/TreeComponent";
 
 const { Sider } = Layout;
@@ -33,6 +32,7 @@ function App() {
   const [curveBoxplotData, setCurveBoxplotData] = useState(null);
   const [examplerData, setExamplerData] = useState(null);
   const [scatterData, setScatterData] = useState(null);
+  const [indicatorPerformance, setIndicatorPerformance] = useState(null);
 
   const [collapsed, setCollapsed] = useState(true);
   const [position, setPosition] = useState("current stock");
@@ -145,6 +145,8 @@ function App() {
       setBacktest(newBacktest);
       // 更新curveBoxplotData
       setCurveBoxplotData(response.data[2]);
+      setIndicatorPerformance(response.data[3]);
+      // console.log(response.data[3]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -350,12 +352,13 @@ function App() {
                   <TreeComponent/>
               </Flex>
             </Flex>
-            {trade && (
+            {trade && indicatorPerformance && (
               <Pattern
                 selectStock={selectStock}
                 trade={trade}
                 startDate={evaluation.startDate}
                 endDate={evaluation.endDate}
+                indicatorPerformance={indicatorPerformance}
               />
             )}
           </Flex>

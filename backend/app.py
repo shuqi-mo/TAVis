@@ -5,6 +5,7 @@ import numpy as np
 import os
 from sklearn.manifold import TSNE
 import umap
+import json
 
 from indicator import *
 from process import *
@@ -67,6 +68,7 @@ def process_single_stock():
     float_trade = []
     performance = []
     boxplotData = []
+    indiatorPerformance = []
     for i in range(len(data["indicatorName"])):
         name = data["indicatorName"][i]
         long = execute_expr(data["exprLongList"][i], data_df)
@@ -83,7 +85,8 @@ def process_single_stock():
         averProfit = sum(res[2]) / len(res[2])
         performance.append([name, totalTrade, successRate, averProfit, totalProfit])
         boxplotData.append([name, res[3]])
-    return jsonify([float_trade, performance, boxplotData])
+        indiatorPerformance.append([name, res[5]])
+    return jsonify([float_trade, performance, boxplotData, indiatorPerformance])
 
 @app.route('/process_exampler', methods=['POST'])
 def process_exampler():
@@ -138,6 +141,7 @@ def process_stocks():
 @app.route('/process_pattern', methods=['POST'])
 def process_pattern():
     data = request.get_json()
+    # print(data["indicatorPerformance"])
     data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
     mask = (data_df['trade_date'] >= data["startDate"]) & (data_df['trade_date'] <= data["endDate"])
     update_data_df = data_df[mask].reset_index(drop=True)
@@ -147,11 +151,10 @@ def process_pattern():
     matcher.generate_fre(matcher.pattern, matcher.L2)
     matcher.Cancalute(matcher.pattern)
     matcher.process_patterns()
-    pattern_dict = matcher.find_pattern_subsequences()
+    pattern_dict = convert_tuple_keys(matcher.find_pattern_subsequences())
     pattern_list = [convert_np_types(item) for item in matcher.fre_pattern_list]
-    trade = [1 if x == -1 else x for x in data["trade"]]
-    trade_counts = matcher.calculate_trade_counts(pattern_dict, trade, pattern_list)
-    return jsonify([pattern_list, trade_counts])
+    pattern_analysis = analyze_signals(pattern_dict, data["indicatorPerformance"])
+    return jsonify([pattern_list, pattern_analysis])
 
 @app.route('/process_scatterplot', methods=['POST'])
 def process_scatterplot():
