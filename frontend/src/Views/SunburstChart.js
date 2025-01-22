@@ -1,113 +1,114 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const data = {
-  name: "root",
-  children: [
-    {
-      name: "MACD",
-      value: -1,
-      children: [
-        {
-          name: "p1",
-          value: 11,
-          profitStats: {
-            min: -9.5,
-            q1: -2.49,
-            median: -0.05,
-            q3: 6.4,
-            max: 7.95,
-          },
-        },
-        {
-          name: "p2",
-          value: 7,
-          profitStats: { min: -1, q1: 0, median: 1.5, q3: 2, max: 4 },
-        },
-        {
-          name: "p3",
-          value: 13,
-          profitStats: {
-            min: -2.52,
-            q1: 2.155,
-            median: 6.83,
-            q3: 8.275,
-            max: 9.72,
-          },
-        },
-      ],
-    },
-    {
-      name: "RSI",
-      value: -2,
-      children: [
-        {
-          name: "p1",
-          value: 13,
-          profitStats: { min: -3, q1: -2, median: 0, q3: 1, max: 3 },
-        },
-        {
-          name: "p2",
-          value: 7,
-          profitStats: { min: -4, q1: -1, median: 0, q3: 2, max: 6 },
-        },
-        {
-          name: "p3",
-          value: 8,
-          profitStats: {
-            min: -2.51,
-            q1: 0.14,
-            median: 6.25,
-            q3: 6.55,
-            max: 6.88,
-          },
-        },
-      ],
-    },
-    {
-      name: "BOLL",
-      value: -1,
-      children: [
-        {
-          name: "p1",
-          value: 3,
-          profitStats: {
-            min: -3.5,
-            q1: -2.105,
-            median: -0.71,
-            q3: 3.085,
-            max: 6.88,
-          },
-        },
-        {
-          name: "p2",
-          value: 7,
-          profitStats: {
-            min: -5.18,
-            q1: -1.8375,
-            median: 1.505,
-            q3: 4.8475,
-            max: 8.19,
-          },
-        },
-        {
-          name: "p3",
-          value: 5,
-          profitStats: {
-            min: -8.42,
-            q1: -8.42,
-            median: -8.42,
-            q3: -8.42,
-            max: -8.42,
-          },
-        },
-      ],
-    },
-  ],
-};
+// const data = {
+//   name: "root",
+//   children: [
+//     {
+//       name: "MACD",
+//       value: -1,
+//       children: [
+//         {
+//           name: "p1",
+//           value: 11,
+//           profitStats: {
+//             min: -9.5,
+//             q1: -2.49,
+//             median: -0.05,
+//             q3: 6.4,
+//             max: 7.95,
+//           },
+//         },
+//         {
+//           name: "p2",
+//           value: 7,
+//           profitStats: { min: -1, q1: 0, median: 1.5, q3: 2, max: 4 },
+//         },
+//         {
+//           name: "p3",
+//           value: 13,
+//           profitStats: {
+//             min: -2.52,
+//             q1: 2.155,
+//             median: 6.83,
+//             q3: 8.275,
+//             max: 9.72,
+//           },
+//         },
+//       ],
+//     },
+//     {
+//       name: "RSI",
+//       value: -2,
+//       children: [
+//         {
+//           name: "p1",
+//           value: 13,
+//           profitStats: { min: -3, q1: -2, median: 0, q3: 1, max: 3 },
+//         },
+//         {
+//           name: "p2",
+//           value: 7,
+//           profitStats: { min: -4, q1: -1, median: 0, q3: 2, max: 6 },
+//         },
+//         {
+//           name: "p3",
+//           value: 8,
+//           profitStats: {
+//             min: -2.51,
+//             q1: 0.14,
+//             median: 6.25,
+//             q3: 6.55,
+//             max: 6.88,
+//           },
+//         },
+//       ],
+//     },
+//     {
+//       name: "BOLL",
+//       value: -1,
+//       children: [
+//         {
+//           name: "p1",
+//           value: 3,
+//           profitStats: {
+//             min: -3.5,
+//             q1: -2.105,
+//             median: -0.71,
+//             q3: 3.085,
+//             max: 6.88,
+//           },
+//         },
+//         {
+//           name: "p2",
+//           value: 7,
+//           profitStats: {
+//             min: -5.18,
+//             q1: -1.8375,
+//             median: 1.505,
+//             q3: 4.8475,
+//             max: 8.19,
+//           },
+//         },
+//         {
+//           name: "p3",
+//           value: 5,
+//           profitStats: {
+//             min: -8.42,
+//             q1: -8.42,
+//             median: -8.42,
+//             q3: -8.42,
+//             max: -8.42,
+//           },
+//         },
+//       ],
+//     },
+//   ],
+// };
 
-const SunburstChart = ({ width = 300, height = 350 }) => {
+const SunburstChart = ({ data, width, height }) => {
   const ref = useRef(null);
+  console.log(data);
 
   useEffect(() => {
     if (!data) return;
@@ -141,7 +142,7 @@ const SunburstChart = ({ width = 300, height = 350 }) => {
     const singleScale = d3
       .scaleLinear()
       .domain([globalDiffMin, globalDiffMax])
-      .range([0, 30]);
+      .range([0, 50]);
 
     const arc = d3
       .arc()

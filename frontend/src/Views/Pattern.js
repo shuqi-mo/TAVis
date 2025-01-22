@@ -9,6 +9,7 @@ function Pattern({ selectStock, trade, startDate, endDate, indicatorPerformance 
   const API_URL = "http://localhost:5000";
   const [minsup, setMinsup] = useState(25);
   const [patterns, setPatterns] = useState(null);
+  const [patternPerformance, setPatternPerformance] = useState(null);
 
   const handleSliderChange = (value) => {
     setMinsup(value); // 更新minsup值
@@ -26,7 +27,7 @@ function Pattern({ selectStock, trade, startDate, endDate, indicatorPerformance 
       })
       .then((response) => {
         setPatterns(response.data[0]);
-        console.log(response.data[1]);
+        setPatternPerformance(response.data[1]);
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -61,7 +62,7 @@ function Pattern({ selectStock, trade, startDate, endDate, indicatorPerformance 
       </Card>
       <div style={{ width: 300, height: 350 }}>
         <div style={{ width: 300, height: 300 }}>
-          <SunburstChart/>
+          {patternPerformance && <SunburstChart data={patternPerformance}  width={300} height={350}/>}
         </div>
       </div>
     </Flex>
