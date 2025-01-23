@@ -1,42 +1,60 @@
-.node {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid black;
-    background-color: #4a90e2;
-    color: white;
-    margin: 5px;
-    box-sizing: border-box;
-  }
-  
-  .children {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  
-  .node-root {
-    width: 350px;
-    height: 200px;
-  }
-  
-  .node-child1 {
-    width: 100px;
-    height: 100px;
-  }
-  
-  .node-child2 {
-    width: 200px;
-    height: 100px;
-  }
-  
-  .node-child3 {
-    width: 200px;
-    height: 100px;
-  }
-  
-  .node-grandchild {
-    width: 80px;
-    height: 80px;
-  }  
+.node-box {
+  border: 1px solid #333;
+  padding: 2px;
+  margin: 2px;
+  position: relative;
+  min-width: 50px;
+  text-align: center;
+}
+
+/* 如果 type = "value"，用虚线替代实线 */
+.node-box.dashed {
+  border-style: dashed;
+}
+
+.node-title {
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+/* 用于容纳从子节点收集到的 circle */
+.circle-container {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  display: flex;
+  gap: 4px;
+}
+
+/* 小圆 */
+.circle {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #87CEEB;
+  cursor: pointer;
+  position: relative;
+}
+
+/* 鼠标悬浮时，显示 tooltip */
+.circle:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  left: 20px;
+  top: 0;
+  background: #333;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 999;
+  font-size: 0.85rem;
+}
+
+.children-wrapper {
+  display: flex;
+  gap: 2px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
