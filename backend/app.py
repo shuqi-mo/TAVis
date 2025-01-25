@@ -209,8 +209,10 @@ def process_scatterplot():
     series = []
     for item in filtered_stocks_data:
         series.append(np.array(item))
+    print("Distance calculating...")
     # 计算DTW距离矩阵
     dtw_distance_matrix = compute_dtw_distance_matrix_fast(series)
+    print("Finish distance calculation! Data reducing...")
 
     reducer = umap.UMAP(n_components=2, metric='precomputed', random_state=42)
     coords = reducer.fit_transform(dtw_distance_matrix)

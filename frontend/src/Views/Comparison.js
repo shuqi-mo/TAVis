@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { Button, Input, Space, Select } from "antd";
+import { Button, Input, Space, Select, Flex } from "antd";
 import StrategyMap from "./StrategyMap";
 import * as d3 from "d3";
 
@@ -146,42 +146,46 @@ const Comparison = () => {
   };
 
   return (
-    <div style={{ padding: 20 }}>
-      <Space>
-        <Select
-          value={valueKey}
-          onChange={(val) => setValueKey(val)}
-          style={{ width: 80 }}
-        >
-          <Option value="value1">Value1</Option>
-          <Option value="value2">Value2</Option>
-          <Option value="value3">Value3</Option>
-        </Select>
-        <Input
-          placeholder="节点 code"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          style={{ width: 50 }}
-        />
-        <Button type="primary" onClick={handleSave}>
-          Save
-        </Button>
-        <Button danger onClick={handleDelete}>
-          Delete
-        </Button>
-        <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
-      </Space>
+    <div>
+      <Flex gap="small">
+        <div style={{width: 100, height: 220}}>
+          <Flex vertical gap="small">
+            <Select
+              value={valueKey}
+              onChange={(val) => setValueKey(val)}
+              style={{ width: 80 }}
+            >
+              <Option value="value1">Value1</Option>
+              <Option value="value2">Value2</Option>
+              <Option value="value3">Value3</Option>
+            </Select>
+            <Input
+              placeholder="节点 code"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              style={{ width: 60 }}
+            />
+            <Button type="primary" onClick={handleSave}>
+              Save
+            </Button>
+            <Button danger onClick={handleDelete}>
+              Delete
+            </Button>
+            <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
+          </Flex>
+        </div>
 
-      <div style={{ marginTop: 10, border: "1px solid #ddd" }}>
-        <StrategyMap
-          data={treeData}
-          width={300}
-          height={250}
-          onNodeClick={handleNodeClick}
-          valueKey={valueKey}
-          selectedNode={selectedNode}
-        />
-      </div>
+        <div style={{ border: "1px solid #ddd" }}>
+          <StrategyMap
+            data={treeData}
+            width={620}
+            height={220}
+            onNodeClick={handleNodeClick}
+            valueKey={valueKey}
+            selectedNode={selectedNode}
+          />
+        </div>
+      </Flex>
     </div>
   );
 };

@@ -38,9 +38,9 @@ function Pattern({ selectStock, trade, startDate, endDate, indicatorPerformance 
     <Flex>
       <Card
         style={{
-          width: 180,
-          height: 350,
-          maxHeight: 350,
+          width: 120,
+          height: 360,
+          maxHeight: 360,
           overflowY: "auto",
         }}
       >
@@ -60,9 +60,9 @@ function Pattern({ selectStock, trade, startDate, endDate, indicatorPerformance 
             ))}
         </Flex>
       </Card>
-      <div style={{ width: 300, height: 350 }}>
-        <div style={{ width: 300, height: 300 }}>
-          {patternPerformance && <SunburstChart data={patternPerformance}  width={300} height={350}/>}
+      <div style={{ width: 280, height: 360 }}>
+        <div style={{ width: 280, height: 300 }}>
+          {patternPerformance && <SunburstChart data={patternPerformance}  width={300} height={360}/>}
         </div>
       </div>
     </Flex>

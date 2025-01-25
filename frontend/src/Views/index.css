@@ -3,13 +3,23 @@
   padding: 2px;
   margin: 2px;
   position: relative;
-  min-width: 50px;
+  min-width: 40px;
+  min-height: 40px;
   text-align: center;
 }
 
 /* 如果 type = "value"，用虚线替代实线 */
 .node-box.dashed {
   border-style: dashed;
+}
+
+/* 没有子节点时，让文字在盒子里水平+垂直居中 */
+.node-box.no-children {
+  display: flex;
+  align-items: center;   /* 垂直居中 */
+  justify-content: center; /* 水平居中 */
+  text-align: center;   /* 如果标题有多行，则也居中 */
+  min-height: 60px;     /* 你可以加一个高度或最小高度，方便看出居中效果 */
 }
 
 .node-title {
@@ -57,4 +67,8 @@
   gap: 2px;
   flex-wrap: wrap;
   margin-top: 2px;
+}
+
+.my-collapse .ant-collapse-header {
+  color: #fff;
 }

@@ -1,5 +1,5 @@
 import React from "react";
-import "./TreeComponent.css";
+import "./index.css";
 
 const data = {
   name: "indicators",
@@ -11,13 +11,23 @@ const data = {
       children: {
         name: "cross",
         type: "operation",
-        circle: {
-          value: "2",
-          node: ["EMA", "close"],
-        },
         children: [
-          { name: "12", type: "operation" },
-          { name: "26", type: "operation" },
+          {
+            name: "12",
+            type: "operation",
+            circle: {
+              value: "2",
+              node: ["EMA", "close"],
+            },
+          },
+          {
+            name: "26",
+            type: "operation",
+            circle: {
+              value: "2",
+              node: ["EMA", "close"],
+            },
+          },
         ],
       },
     },
@@ -40,10 +50,6 @@ const data = {
       children: {
         name: "cross",
         type: "operation",
-        circle: {
-          value: "2",
-          node: ["SMA(close, 9)", "movingstd(close, 9)"],
-        },
         children: [
           { name: "close", type: "value" },
           {
@@ -51,11 +57,32 @@ const data = {
             type: "operation",
             circle: {
               value: "2",
-              node: ["close", "9"],
+              node: ["SMA(close, 9)", "movingstd(close, 9)"],
             },
             children: [
-              { name: "SMA", type: "operation" },
-              { name: "movingstd", type: "operation" },
+              {
+                name: "SMA",
+                type: "operation",
+                circle: {
+                  value: "2",
+                  node: ["close", "9"],
+                },
+              },
+              {
+                name: "*",
+                type: "operation",
+                children: [
+                  { name: "2", type: "value" },
+                  {
+                    name: "movingstd",
+                    type: "operation",
+                    circle: {
+                      value: "2",
+                      node: ["close", "9"],
+                    },
+                  },
+                ],
+              },
             ],
           },
           {
@@ -63,11 +90,32 @@ const data = {
             type: "operation",
             circle: {
               value: "2",
-              node: ["close", "9"],
+              node: ["SMA(close, 9)", "movingstd(close, 9)"],
             },
             children: [
-              { name: "SMA", type: "operation" },
-              { name: "movingstd", type: "operation" },
+              {
+                name: "SMA",
+                type: "operation",
+                circle: {
+                  value: "2",
+                  node: ["close", "9"],
+                },
+              },
+              {
+                name: "*",
+                type: "operation",
+                children: [
+                  { name: "2", type: "value" },
+                  {
+                    name: "movingstd",
+                    type: "operation",
+                    circle: {
+                      value: "2",
+                      node: ["close", "9"],
+                    },
+                  },
+                ],
+              },
             ],
           },
         ],
@@ -86,6 +134,9 @@ function NodeBox({ node }) {
     childrenArray = [node.children];
   }
 
+  // 判断有没有子节点
+  const hasChildren = childrenArray.length > 0;
+
   // 如果节点自带 circle，则渲染对应数量的小圆
   const hasCircle = !!node.circle;
   let circleCount = 0;
@@ -96,7 +147,11 @@ function NodeBox({ node }) {
   }
 
   return (
-    <div className={`node-box ${node.type === "value" ? "dashed" : ""}`}>
+    <div
+      className={`node-box ${node.type === "value" ? "dashed" : ""} ${
+        !hasChildren ? "no-children" : ""
+      }`}
+    >
       {/* 在节点左上角渲染自己的 circle (如果有的话) */}
       {hasCircle && (
         <div className="circle-container">
@@ -130,7 +185,7 @@ function NodeBox({ node }) {
 export default function TreeComponent() {
   return (
     <div id="tree">
-      <NodeBox node={data}/>
+      <NodeBox node={data} />
     </div>
   );
 }

@@ -1,14 +1,13 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const ParallelCoordinatesChart = ({ data }) => {
+const ParallelCoordinatesChart = ({ data, width, height }) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
-
     // 2. 设置画布尺寸和边距
-    const width = 250;
-    const height = 400;
+    const width = 300;
+    const height = 350;
     const margin = { top: 30, right: 10, bottom: 10, left: 5 };
 
     // 3. 获取 SVG，并清空之前的内容（以便重复渲染时不叠加）
@@ -16,7 +15,12 @@ const ParallelCoordinatesChart = ({ data }) => {
     svg.selectAll("*").remove();
 
     // 4. 定义需要绘制的维度（不包含 name，因为 name 是字符串，不适合作为坐标轴）
-    const dimensions = ["totalTrades", "successRate", "avgReturn", "totalProfit"];
+    const dimensions = [
+      "totalTrades",
+      "successRate",
+      "avgReturn",
+      "totalProfit",
+    ];
 
     const colorScale = d3
       .scaleOrdinal(d3.schemeCategory10)
@@ -29,7 +33,7 @@ const ParallelCoordinatesChart = ({ data }) => {
       yScales[dim] = d3
         .scaleLinear()
         .domain(d3.extent(data, (d) => d[dim])) // 取该维度的最小值和最大值
-        .range([height - margin.bottom, margin.top]); 
+        .range([height - margin.bottom, margin.top]);
     });
 
     // 6. 定义 xScale，用来分布各个维度在水平方向的位置
@@ -77,34 +81,80 @@ const ParallelCoordinatesChart = ({ data }) => {
     });
     // 10. 添加图例 (Legend)
     const uniqueNames = [...new Set(data.map((d) => d.name))];
-    const legend = svg
+    // 根据文本宽度进行动态换行
+    const legendG = svg
       .append("g")
       .attr("class", "legend")
-      .attr("transform", `translate(${width - margin.right}, ${margin.top})`);
+      .attr(
+        "transform",
+        `translate(${margin.left}, ${height - margin.bottom + 20})`
+      );
+
+    // 为了测量文本宽度，需要一个临时的测量容器
+    const measureG = svg
+      .append("g")
+      .attr("class", "measure-temp")
+      .attr("opacity", 0);
+
+    let currentX = 0;
+    let currentY = 0;
+    const lineHeight = 20; // 每一行的高度
+    const maxLegendWidth = width - margin.left - margin.right; // 图例可使用的最大宽度
 
     uniqueNames.forEach((name, i) => {
-      legend
+      // 先创建一个临时文本来测量宽度
+      const tempText = measureG.append("text").attr("font-size", 12).text(name);
+
+      // 测量后获取 bounding box
+      const bbox = tempText.node().getBBox();
+      const textWidth = bbox.width;
+
+      // 再加上颜色方块 + 间隔等宽度 (假设方块 12px + 间距 8px)
+      const itemWidth = textWidth + 12 + 8 + 10; // 额外留一些余量
+
+      // 如果放不下，换行
+      if (currentX + itemWidth > maxLegendWidth) {
+        currentX = 0;
+        currentY += lineHeight;
+      }
+
+      // 在 legendG 中添加图例项
+      const itemG = legendG
+        .append("g")
+        .attr("transform", `translate(${currentX}, ${currentY})`);
+
+      // 颜色方块
+      itemG
         .append("rect")
         .attr("x", 0)
-        .attr("y", i * 20)
+        .attr("y", -6)
         .attr("width", 12)
         .attr("height", 12)
-        .style("fill", colorScale(name))
-        .style("stroke", "#333");
+        .style("fill", colorScale(name));
 
-      legend
+      // 文本
+      itemG
         .append("text")
         .attr("x", 20)
-        .attr("y", i * 20 + 10)
+        .attr("y", 0)
         .attr("font-size", 12)
         .attr("alignment-baseline", "middle")
         .text(name);
+
+      // 更新 currentX，使下一个图例项紧接着放在后面
+      currentX += itemWidth;
+
+      // 移除临时文本节点，准备测量下一个图例项
+      tempText.remove();
     });
+
+    // 最后移除测量容器
+    measureG.remove();
   }, [data]);
 
   return (
     <div style={{ textAlign: "center" }}>
-      <svg ref={svgRef} width={300} height={400} />
+      <svg ref={svgRef} width={width} height={height} />
     </div>
   );
 };

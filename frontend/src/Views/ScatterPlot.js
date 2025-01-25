@@ -1,15 +1,13 @@
 import React, { useRef, useEffect } from 'react';
 import * as d3 from 'd3';
 
-const ScatterPlot = ({ data }) => {
+const ScatterPlot = ({ data, width, height }) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
     if (!data || data.length === 0) return;
 
     // --- 1. 基础设置 ---
-    const width = 460;
-    const height = 350;
     const margin = { top: 20, right: 20, bottom: 30, left: 30 };
 
     // 选择并初始化 SVG

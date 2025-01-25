@@ -142,7 +142,7 @@ const SunburstChart = ({ data, width, height }) => {
     const singleScale = d3
       .scaleLinear()
       .domain([globalDiffMin, globalDiffMax])
-      .range([0, 50]);
+      .range([0, 40]);
 
     const arc = d3
       .arc()

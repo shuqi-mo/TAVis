@@ -6,7 +6,7 @@ import "./App.scss";
 import CodeEditor from "./Views/CodeEditor";
 import { Indicator, Evaluation } from "./utils/ClassDefinitions";
 import { Layout, Menu, Flex, Radio } from "antd";
-import { SlidersOutlined } from "@ant-design/icons";
+import { SelectOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
 import Exampler from "./Views/Exampler";
 import Pattern from "./Views/Pattern";
@@ -230,7 +230,7 @@ function App() {
   const stockItems = stockList.map((code, index) => getItem(code, index + 2));
 
   const items = [
-    getItem("Selected stocks", "1", <SlidersOutlined />, stockItems),
+    getItem("Stock Selection", "1", <SelectOutlined />, stockItems),
   ];
 
   const handleMenuSelect = (event) => {
@@ -324,12 +324,20 @@ function App() {
               <Flex>
                 {backtest && position === "current stock" && (
                   <div style={{ padding: "10px", overflowY: "auto" }}>
-                    <ParallelCoordinatesChart data={backtest} />
+                    <ParallelCoordinatesChart
+                      data={backtest}
+                      width={300}
+                      height={400}
+                    />
                   </div>
                 )}
                 {backtest && position === "selected stocks" && (
                   <div style={{ padding: "10px", overflowY: "auto" }}>
-                    <ParallelCoordinatesChart data={stockPerformance} />
+                    <ParallelCoordinatesChart
+                      data={stockPerformance}
+                      width={300}
+                      height={400}
+                    />
                   </div>
                 )}
               </Flex>
@@ -342,37 +350,45 @@ function App() {
             </Flex>
           </Flex>
           <Flex vertical="true">
-            <div className="view-title">Construction View</div>
+            <div className="view-title">Comparison View</div>
             <Flex>
               <Flex vertical="true">
                 {/* {examplerData &&
                   examplerData.map((item) => (
                     <Exampler data={item[1]} legend={item[2]} />
                   ))} */}
-                  <TreeComponent/>
+                <div
+                  style={{
+                    width: 780,
+                    height: 220,
+                    maxHeight: 220,
+                    overflowY: "auto",
+                  }}
+                >
+                  <TreeComponent />
+                </div>
+                <div style={{ width: 780, height: 220 }}>
+                  <Comparison />
+                </div>
               </Flex>
             </Flex>
-            {trade && indicatorPerformance && (
-              <Pattern
-                selectStock={selectStock}
-                trade={trade}
-                startDate={evaluation.startDate}
-                endDate={evaluation.endDate}
-                indicatorPerformance={indicatorPerformance}
-              />
-            )}
-          </Flex>
-          <Flex vertical="true">
-            {/* <div className="view-title">
-              Stock Selection View{" "}
+            <Flex>
+              {trade && indicatorPerformance && (
+                <Pattern
+                  selectStock={selectStock}
+                  trade={trade}
+                  startDate={evaluation.startDate}
+                  endDate={evaluation.endDate}
+                  indicatorPerformance={indicatorPerformance}
+                />
+              )}
               <PlayCircleFilled onClick={() => handleExecuteScatter()} />
-            </div>
-            {scatterData && <ScatterPlot data={scatterData} />} */}
-            <div className="view-title">Comparison View</div>
-            <div style={{ width: 300, height: 450 }}>
-              <Comparison />
-            </div>
+              {scatterData && (
+                <ScatterPlot data={scatterData} width={350} height={350} />
+              )}
+            </Flex>
           </Flex>
+          <Flex vertical="true"></Flex>
           <Flex>
             <CodeEditor code={code} onCodeChange={updateCode} />
             <div
