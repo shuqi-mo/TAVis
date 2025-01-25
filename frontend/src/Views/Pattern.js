@@ -60,8 +60,8 @@ function Pattern({ selectStock, trade, startDate, endDate, indicatorPerformance 
             ))}
         </Flex>
       </Card>
-      <div style={{ width: 280, height: 360 }}>
-        <div style={{ width: 280, height: 300 }}>
+      <div style={{ width: 300, height: 360 }}>
+        <div style={{ width: 300, height: 300 }}>
           {patternPerformance && <SunburstChart data={patternPerformance}  width={300} height={360}/>}
         </div>
       </div>

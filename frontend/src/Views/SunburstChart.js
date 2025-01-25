@@ -127,6 +127,23 @@ const SunburstChart = ({ data, width, height }) => {
       .descendants()
       .filter((d) => d.depth === 2 && d.data.profitStats);
 
+    // 找到 (max - min) 最大的那个 pattern
+    let referenceNode = null;
+    let maxRange = -Infinity;
+    patternNodes.forEach((node) => {
+      const ps = node.data.profitStats;
+      if (ps) {
+        const range = ps.max - ps.min;
+        if (range > maxRange) {
+          maxRange = range;
+          referenceNode = node;
+        }
+      }
+    });
+
+    // 如果意外没有找到任何 referenceNode，就直接退出
+    if (!referenceNode) return;
+
     const differences = [];
     patternNodes.forEach((d) => {
       const ps = d.data.profitStats;
@@ -142,7 +159,14 @@ const SunburstChart = ({ data, width, height }) => {
     const singleScale = d3
       .scaleLinear()
       .domain([globalDiffMin, globalDiffMax])
-      .range([0, 40]);
+      .range([0, 30]);
+    // 基准节点的 min 半径，即“0 位置”
+    const psRef = referenceNode.data.profitStats;
+    const zeroVal = 0 - psRef.min;
+    const zeroOffset = singleScale(zeroVal);
+    const zeroRadius = referenceNode.y0 + zeroOffset;
+
+    let dashedCircle = null;
 
     const arc = d3
       .arc()
@@ -151,22 +175,46 @@ const SunburstChart = ({ data, width, height }) => {
       .innerRadius((d) => {
         if (d.depth === 1) {
           return d.y0 * 1.5;
-        } else if (d.depth === 2) {
-          const ps = d.data.profitStats || {};
-          const offset = singleScale(ps.q1 - ps.min || 0);
-          return d.y0 + offset;
         }
-        return d.y0;
+        const ps = d.data.profitStats;
+        if (!ps) return d.y0;
+
+        if (d === referenceNode) {
+          // 基准 pattern => 保留原逻辑 offset
+          const offset = singleScale(ps.q1 - ps.min);
+          return d.y0 + offset;
+        } else {
+          // 其它 pattern => 让 profit=0 对齐 zeroRadius
+          // => zeroValP = 0 - minP
+          const zeroValP = 0 - ps.min;
+          const zeroOffsetP = singleScale(zeroValP);
+          // baseRadius = zeroRadius - zeroOffsetP => "min" for this pattern
+          const baseRadius = zeroRadius - zeroOffsetP;
+          // q1 => baseRadius + singleScale(q1 - minP)
+          const offsetQ1 = singleScale(ps.q1 - ps.min);
+          return baseRadius + offsetQ1;
+        }
       })
       .outerRadius((d) => {
         if (d.depth === 1) {
           return d.y1;
-        } else {
-          const ps = d.data.profitStats || {};
-          const offset = singleScale(ps.q1 - ps.min || 0);
-          const thickness = singleScale(ps.q3 - ps.q1 || 0);
-          return d.y0 + offset + thickness;
         }
+        const ps = d.data.profitStats;
+        if (!ps) return d.y1;
+
+        let inR; // inner radius
+        if (d === referenceNode) {
+          const offset = singleScale(ps.q1 - ps.min);
+          inR = d.y0 + offset;
+        } else {
+          const zeroValP = 0 - ps.min;
+          const zeroOffsetP = singleScale(zeroValP);
+          const baseRadius = zeroRadius - zeroOffsetP;
+          const offsetQ1 = singleScale(ps.q1 - ps.min);
+          inR = baseRadius + offsetQ1;
+        }
+        const thickness = singleScale(ps.q3 - ps.q1);
+        return inR + thickness;
       })
       // 圆角
       .cornerRadius(6);
@@ -231,6 +279,14 @@ const SunburstChart = ({ data, width, height }) => {
         }
       });
 
+    dashedCircle = gMain
+      .append("circle")
+      .attr("r", zeroRadius)
+      .attr("stroke", "#666")
+      .attr("stroke-width", 1)
+      .attr("fill", "none")
+      .style("stroke-dasharray", "4 2");
+
     const gPatternLines = gMain
       .selectAll(".pattern-line")
       .data(patternNodes)
@@ -250,7 +306,15 @@ const SunburstChart = ({ data, width, height }) => {
 
       const lineVal = ps.max - ps.min; // 线段代表 (max-min)
       const lineLen = singleScale(lineVal);
-      const innerR = d.y0; // 底端半径
+      let minRadius;
+      if (d === referenceNode) {
+        minRadius = d.y0;
+      }
+      else {
+        const zeroValP = 0 - ps.min;
+        const zeroOffsetP = singleScale(zeroValP);
+        minRadius = zeroRadius - zeroOffsetP;
+      }
       const strokeColor = patternColorScale(d.data.name);
       const sel = d3.select(this);
 
@@ -258,9 +322,9 @@ const SunburstChart = ({ data, width, height }) => {
       sel
         .append("line")
         .attr("x1", 0)
-        .attr("y1", -innerR)
+        .attr("y1", -minRadius)
         .attr("x2", 0)
-        .attr("y2", -innerR-lineLen)
+        .attr("y2", -minRadius - lineLen)
         .attr("stroke", strokeColor)
         .attr("stroke-width", 2);
 
@@ -269,9 +333,9 @@ const SunburstChart = ({ data, width, height }) => {
       sel
         .append("line")
         .attr("x1", -barLen / 2)
-        .attr("y1", -innerR-lineLen)
+        .attr("y1", -minRadius - lineLen)
         .attr("x2", barLen / 2)
-        .attr("y2", -innerR-lineLen)
+        .attr("y2", -minRadius - lineLen)
         .attr("stroke", strokeColor)
         .attr("stroke-width", 2);
 
@@ -279,9 +343,9 @@ const SunburstChart = ({ data, width, height }) => {
       sel
         .append("line")
         .attr("x1", -barLen / 2)
-        .attr("y1", -innerR)
+        .attr("y1", -minRadius)
         .attr("x2", barLen / 2)
-        .attr("y2", -innerR)
+        .attr("y2", -minRadius)
         .attr("stroke", strokeColor)
         .attr("stroke-width", 2);
     });
