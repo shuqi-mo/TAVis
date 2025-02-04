@@ -108,7 +108,7 @@ import * as d3 from "d3";
 
 const SunburstChart = ({ data, width, height }) => {
   const ref = useRef(null);
-  console.log(data);
+  // console.log(data);
 
   useEffect(() => {
     if (!data) return;

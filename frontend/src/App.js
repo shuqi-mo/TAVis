@@ -31,6 +31,7 @@ function App() {
   const [stockList, setStockList] = useState(["600893.SH"]);
   const [stockPerformance, setStockPerformance] = useState([]);
   const [curveBoxplotData, setCurveBoxplotData] = useState(null);
+  const [curveBoxplotDataForStocks, setCurveBoxplotDataForStocks] = useState(null);
   const [examplerData, setExamplerData] = useState(null);
   const [scatterData, setScatterData] = useState(null);
   const [indicatorPerformance, setIndicatorPerformance] = useState(null);
@@ -205,7 +206,7 @@ function App() {
         getAheadStopTime,
       });
 
-      const performance = response.data.map((stock) => ({
+      const performance = response.data[0].map((stock) => ({
         name: stock[0],
         totalTrades: stock[1],
         successRate: stock[2],
@@ -214,6 +215,7 @@ function App() {
       }));
       // console.log(performance);
       setStockPerformance(performance);
+      setCurveBoxplotDataForStocks(response.data[1]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -324,30 +326,36 @@ function App() {
             <Flex>
               <Flex>
                 {backtest && position === "current stock" && (
-                  <div style={{ padding: "10px", overflowY: "auto" }}>
+                  <div style={{ padding: "5px", overflowY: "auto" }}>
                     <ParallelCoordinatesChart
                       data={backtest}
-                      width={300}
+                      width={280}
                       height={400}
                     />
                   </div>
                 )}
-                {backtest && position === "selected stocks" && (
-                  <div style={{ padding: "10px", overflowY: "auto" }}>
+                {stockPerformance && position === "selected stocks" && (
+                  <div style={{ padding: "5px", overflowY: "auto" }}>
                     <ParallelCoordinatesChart
                       data={stockPerformance}
-                      width={300}
+                      width={280}
                       height={400}
                     />
                   </div>
                 )}
               </Flex>
-              <Flex vertical="true">
+              <div style={{ maxHeight: 450, overflowY: "auto" }}>
                 {curveBoxplotData &&
+                  position === "current stock" &&
                   curveBoxplotData.map((item) => (
                     <CurveBoxplot boxplotData={item} />
                   ))}
-              </Flex>
+                {curveBoxplotDataForStocks &&
+                  position === "selected stocks" &&
+                  curveBoxplotDataForStocks.map((item) => (
+                    <CurveBoxplot boxplotData={item} />
+                  ))}
+              </div>
             </Flex>
           </Flex>
           <Flex vertical="true">

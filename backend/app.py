@@ -116,12 +116,14 @@ def process_exampler():
 def process_stocks():
     data = request.get_json()
     res = []
+    res_curve = []
     for item in csv_files:
         stock = pd.read_csv(file_path + item + ".csv")
         tradeCount = 0
         successCount = 0
         profitCount = 0
         avgReturnList = []
+        curve = []
         for i in range(len(data["exprLongList"])):
             long = execute_expr(data["exprLongList"][i], stock)
             short = execute_expr(data["exprShortList"][i], stock)
@@ -135,8 +137,11 @@ def process_stocks():
             profitCount += res_singlestock[1][-1]
             for r in res_singlestock[2]:
                 avgReturnList.append(r)
+            for r in res_singlestock[3]:
+                curve.append(r)
         res.append([item, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
-    return jsonify(res)
+        res_curve.append([item, curve])
+    return jsonify([res, res_curve])
 
 @app.route('/process_pattern', methods=['POST'])
 def process_pattern():
