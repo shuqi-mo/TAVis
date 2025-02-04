@@ -46,7 +46,7 @@
   position: relative;
 }
 
-/* 鼠标悬浮时，显示 tooltip */
+/* 鼠标悬浮时，显示 tooltip (circle.node[i] ) */
 .circle:hover::after {
   content: attr(data-tooltip);
   position: absolute;
@@ -60,6 +60,12 @@
   pointer-events: none;
   z-index: 999;
   font-size: 0.85rem;
+}
+
+/* 高亮时，如变成黄色或加阴影等 */
+.circle.highlight {
+  background: gold;
+  box-shadow: 0 0 6px rgba(255, 215, 0, 0.8);
 }
 
 .children-wrapper {

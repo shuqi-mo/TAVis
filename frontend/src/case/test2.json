@@ -1,0 +1,20 @@
+{
+    "indicators": [
+      {
+        "name": "MACD",
+        "long": "cross(EMA(close, 12), EMA(close, 26))",
+        "short": "cross(EMA(close, 26), EMA(close, 12))"
+      },
+      {
+        "name": "rsi",
+        "long": "cross(rsi(close, 14), 30)",
+        "short": "cross(70, rsi(close, 14))"
+      },
+      {
+        "name": "boll",
+        "long": "cross(close, EMA(close, 20) - 2 * movingstd(mid, 20))",
+        "short": "cross(EMA(close, 20) + 2 * movingstd(mid, 20), close)"
+      }
+    ]
+}
+
