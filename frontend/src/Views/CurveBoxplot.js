@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
 const CurveBoxplot = ({ boxplotData }) => {
-  console.log(boxplotData);
+  // console.log(boxplotData);
   const svgRef = useRef();
   const title = boxplotData[0];
   const data = boxplotData[1];

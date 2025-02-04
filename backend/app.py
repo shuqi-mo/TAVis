@@ -11,6 +11,7 @@ from indicator import *
 from process import *
 from evaluation import *
 from pattern import *
+from parser import *
 
 app = Flask(__name__)
 CORS(app)
@@ -223,6 +224,13 @@ def process_scatterplot():
     coords = reducer.fit_transform(dtw_distance_matrix)
     coords_list = coords.tolist()
     return jsonify(coords_list)
+
+@app.route('/process_code', methods=['POST'])
+def process_code():
+    data = request.get_json()
+    output_tree = build_output(data["input_data"]["indicators"])
+    output_dict = output_tree.to_dict()
+    return jsonify(output_dict)
 
 if __name__ == '__main__':
     app.run()

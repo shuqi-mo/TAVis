@@ -1,136 +1,6 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./index.css";
-
-const data = {
-  name: "indicators",
-  type: "operation",
-  children: [
-    {
-      name: "MACD",
-      type: "operation",
-      children: {
-        name: "cross",
-        type: "operation",
-        children: [
-          {
-            name: "12",
-            type: "operation",
-            circle: {
-              value: "2",
-              node: ["EMA", "close"],
-              group: "MACD_EMA_close",
-            },
-          },
-          {
-            name: "26",
-            type: "operation",
-            circle: {
-              value: "2",
-              node: ["EMA", "close"],
-              group: "MACD_EMA_close",
-            },
-          },
-        ],
-      },
-    },
-    {
-      name: "RSI",
-      type: "operation",
-      children: {
-        name: "cross",
-        type: "operation",
-        children: [
-          { name: "30", type: "value" },
-          { name: "rsi(close,9)", type: "operation" },
-          { name: "70", type: "value" },
-        ],
-      },
-    },
-    {
-      name: "boll",
-      type: "operation",
-      children: {
-        name: "cross",
-        type: "operation",
-        children: [
-          { name: "close", type: "value" },
-          {
-            name: "+",
-            type: "operation",
-            circle: {
-              value: "2",
-              node: ["SMA(close, 9)", "movingstd(close, 9)"],
-              group: "boll_plus_minus",
-            },
-            children: [
-              {
-                name: "SMA",
-                type: "operation",
-                circle: {
-                  value: "2",
-                  node: ["close", "9"],
-                  group: "boll_sma_std",
-                },
-              },
-              {
-                name: "*",
-                type: "operation",
-                children: [
-                  { name: "2", type: "value" },
-                  {
-                    name: "movingstd",
-                    type: "operation",
-                    circle: {
-                      value: "2",
-                      node: ["close", "9"],
-                      group: "boll_sma_std",
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: "-",
-            type: "operation",
-            circle: {
-              value: "2",
-              node: ["SMA(close, 9)", "movingstd(close, 9)"],
-              group: "boll_plus_minus",
-            },
-            children: [
-              {
-                name: "SMA",
-                type: "operation",
-                circle: {
-                  value: "2",
-                  node: ["close", "9"],
-                  group: "boll_sma_std",
-                },
-              },
-              {
-                name: "*",
-                type: "operation",
-                children: [
-                  { name: "2", type: "value" },
-                  {
-                    name: "movingstd",
-                    type: "operation",
-                    circle: {
-                      value: "2",
-                      node: ["close", "9"],
-                      group: "boll_sma_std",
-                    },
-                  },
-                ],
-              },
-            ],
-          },
-        ],
-      },
-    },
-  ],
-};
+import axios from "axios";
 
 // 2. 递归组件：渲染当前节点，并对其所有子节点进行递归渲染
 function NodeBox({ node, hoveredGroup, setHoveredGroup }) {
@@ -216,17 +86,42 @@ function NodeBox({ node, hoveredGroup, setHoveredGroup }) {
 }
 
 // 3. 主组件：渲染整个树
-export default function TreeComponent() {
+export default function TreeComponent({indicators}) {
+  const API_URL = "http://localhost:5000";
   // 用于存储当前悬浮 circle 的 group，默认为 null
   const [hoveredGroup, setHoveredGroup] = useState(null);
+  const [treeData, setTreeData] = useState(null);
+
+  const input_data = {
+    indicators: indicators.map(item => ({
+      name: item.name,
+      long: item.exprLong,
+      short: item.exprShort
+    }))
+  };
+
+  useEffect(()=>{
+    axios
+      .post(`${API_URL}/process_code`, {
+        input_data
+      })
+      .then((response) => {
+        console.log(response.data);
+        setTreeData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  },[indicators]);
 
   return (
     <div id="tree">
+      {treeData && 
       <NodeBox
-        node={data}
+        node={treeData}
         hoveredGroup={hoveredGroup}
         setHoveredGroup={setHoveredGroup}
-      />
+      />}
     </div>
   );
 }

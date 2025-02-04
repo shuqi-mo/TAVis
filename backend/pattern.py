@@ -351,17 +351,3 @@ class PatternMatcher:
                 if rank == list(pattern):
                     pattern_dict[pattern].append([i, i+n-1])
         return dict(pattern_dict)
-    
-    # def calculate_trade_counts(self, pattern_dict, trade, patterns):
-    #     trade_dict = {}
-    #     for idx, pattern in enumerate(patterns, 1):
-    #         key = f'p{idx}'
-    #         pattern_tuple = tuple(pattern)
-    #         matches = pattern_dict.get(pattern_tuple, [])
-    #         total_ones = 0
-    #         for match in matches:
-    #             start, end = match
-    #             # 计算trade[start:end+1]中1的个数
-    #             total_ones += sum(trade[start:end+1])
-    #         trade_dict[key] = total_ones
-    #     return trade_dict

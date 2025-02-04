@@ -374,7 +374,7 @@ function App() {
                     overflowY: "auto",
                   }}
                 >
-                  <TreeComponent />
+                  <TreeComponent indicators={indicators}/>
                 </div>
                 <div style={{ width: 780, height: 220 }}>
                   <Comparison />
