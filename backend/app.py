@@ -232,5 +232,29 @@ def process_code():
     output_dict = output_tree.to_dict()
     return jsonify(output_dict)
 
+@app.route('/process_strategy', methods=['POST'])
+def process_strategy():
+    data = request.get_json()
+    tradeCount = 0
+    successCount = 0
+    profitCount = 0
+    avgReturnList = []
+    for item in csv_files:
+        stock = pd.read_csv(file_path + item + ".csv")
+        for i in range(len(data["exprLongList"])):
+            long = execute_expr(data["exprLongList"][i], stock)
+            short = execute_expr(data["exprShortList"][i], stock)
+            long = CustomList(long)
+            short = CustomList(short)
+            trade_origin = process_trades(long, short)
+            price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
+            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
+            tradeCount += len(res_singlestock[0])
+            successCount += sum(res_singlestock[0])
+            profitCount += res_singlestock[1][-1]
+            for r in res_singlestock[2]:
+                avgReturnList.append(r)
+    return jsonify([tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
+
 if __name__ == '__main__':
     app.run()

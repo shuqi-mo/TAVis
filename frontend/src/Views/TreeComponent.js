@@ -106,7 +106,7 @@ export default function TreeComponent({indicators}) {
         input_data
       })
       .then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         setTreeData(response.data);
       })
       .catch((error) => {

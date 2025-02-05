@@ -31,7 +31,8 @@ function App() {
   const [stockList, setStockList] = useState(["600893.SH"]);
   const [stockPerformance, setStockPerformance] = useState([]);
   const [curveBoxplotData, setCurveBoxplotData] = useState(null);
-  const [curveBoxplotDataForStocks, setCurveBoxplotDataForStocks] = useState(null);
+  const [curveBoxplotDataForStocks, setCurveBoxplotDataForStocks] =
+    useState(null);
   const [examplerData, setExamplerData] = useState(null);
   const [scatterData, setScatterData] = useState(null);
   const [indicatorPerformance, setIndicatorPerformance] = useState(null);
@@ -374,10 +375,17 @@ function App() {
                     overflowY: "auto",
                   }}
                 >
-                  <TreeComponent indicators={indicators}/>
+                  <TreeComponent indicators={indicators} />
                 </div>
                 <div style={{ width: 780, height: 220 }}>
-                  <Comparison />
+                  <Comparison
+                    initialCode={code}
+                    indicators={indicators}
+                    evaluation={evaluation}
+                    onSelectCode={(code) => {
+                      setCode(code);
+                    }}
+                  />
                 </div>
               </Flex>
             </Flex>

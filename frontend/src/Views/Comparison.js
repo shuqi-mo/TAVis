@@ -1,37 +1,10 @@
-import React, { useState, useMemo } from "react";
-import { Button, Input, Space, Select, Flex } from "antd";
+import React, { useState, useMemo, useEffect } from "react";
+import { Button, Select, Flex } from "antd";
 import StrategyMap from "./StrategyMap";
 import * as d3 from "d3";
+import axios from "axios";
 
 const { Option } = Select;
-
-const initialData = {
-  name: "Root Node",
-  code: "root",
-  value1: 0.8,
-  value2: 0.5,
-  value3: 0.3,
-  children: [
-    {
-      name: "Node A",
-      code: "A",
-      value1: 0.2,
-      value2: 0.7,
-      value3: 0.4,
-    },
-    {
-      name: "Node B",
-      code: "B",
-      value1: 0.6,
-      value2: 0.1,
-      value3: 0.9,
-      children: [
-        { name: "Node C", code: "C", value1: 0.4, value2: 0.8, value3: 0.2 },
-        { name: "Node D", code: "D", value1: 0.1, value2: 0.3, value3: 0.85 },
-      ],
-    },
-  ],
-};
 
 function traverseTree(root, targetCode, callback, parent = null) {
   if (!root) return;
@@ -44,17 +17,6 @@ function traverseTree(root, targetCode, callback, parent = null) {
       traverseTree(child, targetCode, callback, root);
     }
   }
-}
-
-function addChildNode(node, newCode) {
-  if (!node.children) {
-    node.children = [];
-  }
-  node.children.push({
-    name: `Node ${newCode}`,
-    code: newCode,
-    value: Math.floor(Math.random() * 10) + 1, // 用随机值做示例
-  });
 }
 
 function removeNode(root, targetCode) {
@@ -74,11 +36,56 @@ function removeNode(root, targetCode) {
   return root;
 }
 
-const Comparison = () => {
-  const [treeData, setTreeData] = useState(initialData);
+const Comparison = ({ initialCode, indicators, evaluation, onSelectCode }) => {
+  const API_URL = "http://localhost:5000";
+
+  const [treeData, setTreeData] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
-  const [valueKey, setValueKey] = useState("value1");
-  const [code, setCode] = useState("");
+  const [valueKey, setValueKey] = useState("totalTrades");
+
+  useEffect(() => {
+    if (!initialCode) return;
+    const fetchInitialData = async () => {
+      let exprLongList = [];
+      let exprShortList = [];
+      const startDate = evaluation.startDate;
+      const endDate = evaluation.endDate;
+      const getStopLossThreshold = evaluation.getStopLossThreshold();
+      const getTakeProfitThreshold = evaluation.getTakeProfitThreshold();
+      const getAheadStopTime = evaluation.getAheadStopTime();
+      for (let i = 0; i < indicators.length; i++) {
+        exprLongList.push(indicators[i].exprLong);
+        exprShortList.push(indicators[i].exprShort);
+      }
+      try {
+        const response = await axios.post(`${API_URL}/process_strategy`, {
+          exprLongList,
+          exprShortList,
+          startDate,
+          endDate,
+          getStopLossThreshold,
+          getTakeProfitThreshold,
+          getAheadStopTime,
+        });
+        // 假设后端返回的数据格式为：
+        // { totalTrades, successRate, avgReturn, totalProfit }
+        const initialNode = {
+          code: initialCode,
+          totalTrades: response.data[0],
+          successRate: response.data[1],
+          avgReturn: response.data[2],
+          totalProfit: response.data[3],
+          children: [], // 单节点，无子节点
+        };
+        // console.log(initialNode);
+        setTreeData(initialNode);
+      } catch (error) {
+        console.error("Error fetching initial node data:", error);
+      }
+    };
+
+    fetchInitialData();
+  }, []);
 
   const { minVal, maxVal } = useMemo(() => {
     // 1) 将树拍平(或用 d3.hierarchy 也行)
@@ -101,33 +108,55 @@ const Comparison = () => {
   // 点击节点时触发
   const handleNodeClick = (node) => {
     setSelectedNode(node);
-    setCode(node.data.code || "");
+    // setCode(node.data.code || "");
+    onSelectCode(node.data.code);
   };
 
-  // Save：在原节点下新增一个子节点，其 code = 用户输入的新 code
-  const handleSave = () => {
+  // Save：根据 initialCode 调用后端接口获取最新数据，并更新节点
+  const handleSave = async () => {
     if (!selectedNode) return;
-
-    const oldCode = selectedNode.data.code;
-    if (!oldCode) return;
-
-    // 如果用户没有改动 code 或者新 code 为空，就不做事
-    if (code === oldCode || !code.trim()) {
-      return;
+    let exprLongList = [];
+    let exprShortList = [];
+    const startDate = evaluation.startDate;
+    const endDate = evaluation.endDate;
+    const getStopLossThreshold = evaluation.getStopLossThreshold();
+    const getTakeProfitThreshold = evaluation.getTakeProfitThreshold();
+    const getAheadStopTime = evaluation.getAheadStopTime();
+    for (let i = 0; i < indicators.length; i++) {
+      exprLongList.push(indicators[i].exprLong);
+      exprShortList.push(indicators[i].exprShort);
     }
-
-    // 克隆一份 treeData
-    let newTree = structuredClone(treeData);
-
-    // 找到 oldCode 对应的节点
-    traverseTree(newTree, oldCode, (node, parent) => {
-      // 在该节点下新增一个子节点
-      addChildNode(node, code);
-    });
-
-    setTreeData(newTree);
-    setSelectedNode(null);
-    setCode("");
+    try {
+      // 等待axios请求完成并获取响应数据
+      const response = await axios.post(`${API_URL}/process_strategy`, {
+        exprLongList,
+        exprShortList,
+        startDate,
+        endDate,
+        getStopLossThreshold,
+        getTakeProfitThreshold,
+        getAheadStopTime,
+      });
+      const newNode = {
+        code: initialCode, // 节点的 code 使用父组件传入的 initialCode
+        totalTrades: response.data[0],
+        successRate: response.data[1],
+        avgReturn: response.data[2],
+        totalProfit: response.data[3],
+        children: [],
+      };
+      let newTree = structuredClone(treeData);
+      traverseTree(newTree, selectedNode.data.code, (node) => {
+        if (!node.children) {
+          node.children = [];
+        }
+        node.children.push(newNode);
+      });
+      setTreeData(newTree);
+      setSelectedNode(null);
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   // Delete：删除当前节点及其所有子节点
@@ -142,29 +171,24 @@ const Comparison = () => {
 
     setTreeData(newTree || {});
     setSelectedNode(null);
-    setCode("");
+    // setCode("");
   };
 
   return (
     <div>
       <Flex gap="small">
-        <div style={{width: 100, height: 220}}>
+        <div style={{ width: 100, height: 220 }}>
           <Flex vertical gap="small">
             <Select
               value={valueKey}
               onChange={(val) => setValueKey(val)}
-              style={{ width: 80 }}
+              style={{ width: 100 }}
             >
-              <Option value="value1">Value1</Option>
-              <Option value="value2">Value2</Option>
-              <Option value="value3">Value3</Option>
+              <Option value="totalTrades">totalTrades</Option>
+              <Option value="successRate">successRate</Option>
+              <Option value="avgReturn">avgReturn</Option>
+              <Option value="totalProfit">totalProfit</Option>
             </Select>
-            <Input
-              placeholder="节点 code"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              style={{ width: 60 }}
-            />
             <Button type="primary" onClick={handleSave}>
               Save
             </Button>
@@ -199,6 +223,18 @@ function ColorLegend({ minVal, maxVal, valueKey }) {
   const leftColor = colorScale(minVal);
   const rightColor = colorScale(maxVal);
 
+   // 格式化数值，根据指标做不同处理
+   const formatValue = (value, key) => {
+    if (value === undefined || value === null) return "-";
+    if (key === "successRate" || key === "avgReturn") {
+      return (value * 100).toFixed(2) + "%";
+    } else if (key === "totalProfit") {
+      return value.toFixed(2);
+    } else {
+      return value;
+    }
+  };
+
   return (
     <div style={{ marginBottom: 10 }}>
       <div style={{ fontWeight: "bold", marginBottom: 4 }}>{valueKey}</div>
@@ -217,8 +253,8 @@ function ColorLegend({ minVal, maxVal, valueKey }) {
           width: legendWidth,
         }}
       >
-        <span>{minVal}</span>
-        <span>{maxVal}</span>
+        <span>{formatValue(minVal, valueKey)}</span>
+        <span>{formatValue(maxVal, valueKey)}</span>
       </div>
     </div>
   );

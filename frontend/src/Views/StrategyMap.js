@@ -6,7 +6,7 @@ const StrategyMap = ({
   width,
   height,
   onNodeClick,
-  valueKey = "value1",
+  valueKey = "totalTrades",
   selectedNode,
 }) => {
   const svgRef = useRef(null);
@@ -19,6 +19,7 @@ const StrategyMap = ({
   });
 
   useEffect(() => {
+    if (!data) return;
     // 清空之前的内容
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
@@ -117,14 +118,19 @@ const StrategyMap = ({
       const y = event.clientY - rect.top + 10;
 
       // 你想显示的内容，比如节点的 name、value1、value2、value3
-      const { name, code, value1, value2, value3 } = d.data;
+      const { totalTrades, successRate, avgReturn, totalProfit } = d.data;
       const content = `
-        <div><strong>${name ?? code ?? "Node"}</strong></div>
-        <div>value1: ${value1 ?? "-"}</div>
-        <div>value2: ${value2 ?? "-"}</div>
-        <div>value3: ${value3 ?? "-"}</div>
+        <div>totalTrades: ${totalTrades ?? "-"}</div>
+        <div>successRate: ${
+          successRate != null ? (successRate * 100).toFixed(2) + "%" : "-"
+        }</div>
+        <div>avgReturn: ${
+          avgReturn != null ? (avgReturn * 100).toFixed(2) + "%" : "-"
+        }</div>
+        <div>totalProfit: ${
+          totalProfit != null ? totalProfit.toFixed(2) : "-"
+        }</div>
       `;
-
       setTooltip({
         show: true,
         x,
