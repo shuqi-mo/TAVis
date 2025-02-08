@@ -15,7 +15,7 @@ import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
 import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
 import TreeComponent from "./Views/TreeComponent";
-import BarcodeTree from "./Views/BarcodeTree";
+import MultiBarcodeTree from "./Views/MultiBarcodeTree";
 
 const { Sider } = Layout;
 
@@ -409,7 +409,7 @@ function App() {
           <Flex>
             <CodeEditor code={code} onCodeChange={updateCode} />
             <div>
-              <BarcodeTree />
+              <MultiBarcodeTree/>
             </div>
           </Flex>
         </Flex>
