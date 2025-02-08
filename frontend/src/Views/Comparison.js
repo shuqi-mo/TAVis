@@ -108,7 +108,6 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode }) => {
   // 点击节点时触发
   const handleNodeClick = (node) => {
     setSelectedNode(node);
-    // setCode(node.data.code || "");
     onSelectCode(node.data.code);
   };
 
