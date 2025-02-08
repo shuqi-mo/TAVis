@@ -106,7 +106,7 @@ const evaluationData = [
     type: "extend",
     children: [
       {
-        name: "from 2023-07-01 to 2024-07-01",
+        name: "[2023-07-01,2024-07-01]",
         type: "context",
       },
     ],
@@ -117,6 +117,7 @@ const evaluationData = [
     children: [
       {
         name: "ahead",
+        type: "extend",
         children: [
           {
             name: "-1",
@@ -141,50 +142,24 @@ function initTree(node) {
   return node;
 }
 
-// 计算节点“可见”大小  
-// 若 extend 节点处于折叠状态，则只计算自身；  
-// 对于 link 节点，仅统计自身（不复制目标子树），避免重复复制
-function computeVisibleSize(node, trees) {
-  let size = 1;
-  if (node.type === "extend" && node.collapsed) {
-    node.visibleSize = 1;
-    return 1;
-  }
-  if (node.children && node.children.length > 0) {
-    node.children.forEach((child) => {
-      if (child.type === "link") {
-        // 仅统计 link 节点本身，不累加目标子树
-        size += 1;
-      } else {
-        size += computeVisibleSize(child, trees);
-      }
-    });
-  }
-  node.visibleSize = size;
-  return size;
-}
-
-// 返回按深度优先顺序的可见节点数组  
-// 对于 link 节点，仅返回该节点本身，不展开目标节点的子节点
-function getVisibleNodes(node, trees) {
+// 根据层级设置权重，根节点层级为 0
+function getVisibleNodes(node, level = 0) {
+  const BASE_WEIGHT = 5; // 可根据需要调整基准权重
+  node.level = level;
+  node.weight = Math.max(1, BASE_WEIGHT - level);
   let arr = [node];
   if (node.type === "extend" && node.collapsed) {
     return arr;
   }
   if (node.children && node.children.length > 0) {
     node.children.forEach((child) => {
-      if (child.type === "link") {
-        arr.push(child);
-      } else {
-        arr = arr.concat(getVisibleNodes(child, trees));
-      }
+      arr = arr.concat(getVisibleNodes(child, level + 1));
     });
   }
   return arr;
 }
 
-// 在整个树集合中查找名称相同且 type 不为 link 的目标节点  
-// 注意：此处可传入局部数组，如 [tree]，以限定搜索范围
+// 在整个树集合中查找名称相同且 type 不为 link 的目标节点
 function findTargetNode(trees, name) {
   let target = null;
   const search = (node) => {
@@ -208,12 +183,10 @@ function findTargetNode(trees, name) {
 // ============ BarcodeTree 组件 ==============
 const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
   const svgRef = useRef(null);
-  // 分别保存 indicators 与 evaluation 部分的树数据（数组）
   const [indTrees, setIndTrees] = useState(null);
   const [evalTrees, setEvalTrees] = useState(null);
-  const tooltipRef = useRef(null);
 
-  // 初始化数据：深拷贝输入数组，并对每棵树（包括根节点）调用 initTree
+  // 初始化数据
   useEffect(() => {
     const indTreesCopy = indicatorsData.map((tree) => {
       const t = JSON.parse(JSON.stringify(tree));
@@ -233,27 +206,10 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    // 创建 tooltip（以 div 形式）
-    let tooltip = d3.select(tooltipRef.current);
-    if (tooltip.empty()) {
-      tooltip = d3
-        .select("body")
-        .append("div")
-        .attr("class", "tooltip")
-        .style("position", "absolute")
-        .style("pointer-events", "none")
-        .style("background", "lightgray")
-        .style("padding", "4px")
-        .style("border-radius", "4px")
-        .style("opacity", 0);
-      tooltipRef.current = tooltip.node();
-    }
-
     // 总体布局设置
     const totalHeight = height - margin * 2;
     const separatorHeight = 20;
     const gapBetweenGroup = 10; // 指标组与横线之间预留间隔
-    // 两组占用 (totalHeight - separatorHeight - gapBetweenGroup)
     const groupHeight = (totalHeight - separatorHeight - gapBetweenGroup) / 2;
     const treeWidth = width - margin * 2;
 
@@ -264,24 +220,26 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
     // ======== 绘制 indicators 部分 ========
     const numIndTrees = indTrees.length;
     const rowHeightInd = groupHeight / numIndTrees;
-    const gInd = svg.append("g").attr("transform", `translate(${margin}, ${margin})`);
+    const gInd = svg
+      .append("g")
+      .attr("transform", `translate(${margin}, ${margin})`);
 
     indTrees.forEach((tree, treeIndex) => {
-      computeVisibleSize(tree, indTrees);
-      const visibleNodes = getVisibleNodes(tree, indTrees);
-      const totalSize = d3.sum(visibleNodes, (d) => d.visibleSize);
+      const visibleNodes = getVisibleNodes(tree);
+      const totalWeight = d3.sum(visibleNodes, (d) => d.weight);
       const n = visibleNodes.length;
-      const xScale = d3.scaleLinear().domain([0, totalSize]).range([0, treeWidth - (n - 1) * gap]);
+      const xScale = d3
+        .scaleLinear()
+        .domain([0, totalWeight])
+        .range([0, treeWidth - (n - 1) * gap]);
       let cumulative = 0;
-      // 每棵树所在行的分组
       const treeGroup = gInd
         .append("g")
         .attr("transform", `translate(0, ${treeIndex * rowHeightInd})`);
 
       visibleNodes.forEach((node, i) => {
         const start = cumulative;
-        cumulative += node.visibleSize;
-        // 节点在该行中的水平位置
+        cumulative += node.weight;
         const x = xScale(start) + i * gap;
         const rectWidth = xScale(cumulative) - xScale(start);
         const gNode = treeGroup.append("g").attr("class", "node");
@@ -290,14 +248,15 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
         let fill = "none";
 
         if (node.type === "extend") {
-          fill = "#ADD8E6"; // 实线边框 + 统一背景色
+          fill = "#ADD8E6";
         } else if (node.type === "function") {
-          // 无背景；内部后续绘制柱状图
+          // 无背景；后续内部绘制柱状图
         } else if (node.type === "constant") {
           dash = "4,2";
           const num = parseFloat(node.name);
-          // 修改：将 density 转为整数，避免 id 中出现小数点
-          const density = isNaN(num) ? 5 : Math.max(2, Math.floor(10 - num / 10));
+          const density = isNaN(num)
+            ? 5
+            : Math.max(2, Math.floor(10 - num / 10));
           const patternId = `diagonalPattern-${density}`;
           if (svg.select(`#${patternId}`).empty()) {
             const pattern = svg
@@ -325,7 +284,6 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
           dash = "4,2";
         }
 
-        // 修改 onClick 交互逻辑
         gNode
           .append("rect")
           .attr("x", x)
@@ -337,43 +295,23 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
           .attr("stroke-dasharray", dash)
           .on("click", (event) => {
             if (node.type === "extend") {
-              // 针对 boll 树中 down 节点的特殊交互：
-              // 如果当前树为 boll 且 node.name 为 "down"，且其子节点中存在 link 类型，则查找当前 boll 树中
-              // 名称与 link 节点相同（例如 "up"）的目标节点，并展开该目标节点的子树
+              // 若存在 link 类型子节点，则查找目标节点展开其子树
               if (
-                tree.name === "boll" &&
-                node.name === "down" &&
                 node.children &&
                 node.children.some((child) => child.type === "link")
               ) {
-                const linkChild = node.children.find((child) => child.type === "link");
+                const linkChild = node.children.find(
+                  (child) => child.type === "link"
+                );
                 const target = findTargetNode([tree], linkChild.name);
                 if (target) {
-                  target.collapsed = false; // 展开 up 节点的子树
+                  target.collapsed = false;
                   setIndTrees([...indTrees]);
                   return;
                 }
-              } else {
-                node.collapsed = !node.collapsed;
-                setIndTrees([...indTrees]);
               }
-            }
-          })
-          .on("mouseover", (event) => {
-            if (node.type === "context") {
-              tooltip
-                .transition()
-                .duration(200)
-                .style("opacity", 0.9);
-              tooltip
-                .html(node.name)
-                .style("left", event.pageX + 5 + "px")
-                .style("top", event.pageY - 28 + "px");
-            }
-          })
-          .on("mouseout", () => {
-            if (node.type === "context") {
-              tooltip.transition().duration(500).style("opacity", 0);
+              node.collapsed = !node.collapsed;
+              setIndTrees([...indTrees]);
             }
           });
 
@@ -414,8 +352,7 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
       });
     });
 
-    // 绘制 indicators 与 evaluation 部分之间的分隔横线  
-    // 横线绘制在 indicators 部分底部预留 gapBetweenGroup 后的位置
+    // 绘制 indicators 与 evaluation 部分之间的分隔横线
     const separatorY = margin + groupHeight + gapBetweenGroup;
     svg
       .append("line")
@@ -429,14 +366,18 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
     const numEvalTrees = evalTrees.length;
     const rowHeightEval = groupHeight / numEvalTrees;
     const evalTop = margin + groupHeight + gapBetweenGroup + separatorHeight;
-    const gEval = svg.append("g").attr("transform", `translate(${margin}, ${evalTop})`);
+    const gEval = svg
+      .append("g")
+      .attr("transform", `translate(${margin}, ${evalTop})`);
 
     evalTrees.forEach((tree, treeIndex) => {
-      computeVisibleSize(tree, evalTrees);
-      const visibleNodes = getVisibleNodes(tree, evalTrees);
-      const totalSize = d3.sum(visibleNodes, (d) => d.visibleSize);
+      const visibleNodes = getVisibleNodes(tree);
+      const totalWeight = d3.sum(visibleNodes, (d) => d.weight);
       const n = visibleNodes.length;
-      const xScale = d3.scaleLinear().domain([0, totalSize]).range([0, treeWidth - (n - 1) * gap]);
+      const xScale = d3
+        .scaleLinear()
+        .domain([0, totalWeight])
+        .range([0, treeWidth - (n - 1) * gap]);
       let cumulative = 0;
       const treeGroup = gEval
         .append("g")
@@ -444,7 +385,7 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
 
       visibleNodes.forEach((node, i) => {
         const start = cumulative;
-        cumulative += node.visibleSize;
+        cumulative += node.weight;
         const x = xScale(start) + i * gap;
         const rectWidth = xScale(cumulative) - xScale(start);
         const gNode = treeGroup.append("g").attr("class", "node");
@@ -455,11 +396,13 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
         if (node.type === "extend") {
           fill = "#ADD8E6";
         } else if (node.type === "function") {
-          // 无背景；内部后续绘制柱状图
+          // 无背景
         } else if (node.type === "constant") {
           dash = "4,2";
           const num = parseFloat(node.name);
-          const density = isNaN(num) ? 5 : Math.max(2, Math.floor(10 - num / 10));
+          const density = isNaN(num)
+            ? 5
+            : Math.max(2, Math.floor(10 - num / 10));
           const patternId = `diagonalPattern-${density}`;
           if (svg.select(`#${patternId}`).empty()) {
             const pattern = svg
@@ -500,23 +443,6 @@ const BarcodeTree = ({ width = 600, height = 400, margin = 20, gap = 4 }) => {
             if (node.type === "extend") {
               node.collapsed = !node.collapsed;
               setEvalTrees([...evalTrees]);
-            }
-          })
-          .on("mouseover", (event) => {
-            if (node.type === "context") {
-              tooltip
-                .transition()
-                .duration(200)
-                .style("opacity", 0.9);
-              tooltip
-                .html(node.name)
-                .style("left", event.pageX + 5 + "px")
-                .style("top", event.pageY - 28 + "px");
-            }
-          })
-          .on("mouseout", () => {
-            if (node.type === "context") {
-              tooltip.transition().duration(500).style("opacity", 0);
             }
           });
 
