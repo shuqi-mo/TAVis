@@ -278,7 +278,7 @@ function App() {
         <Flex gap="small">
           <Flex vertical="true">
             <div className="view-title">Candlestick View</div>
-            {trade && <Candle data={data} trade={trade} />}
+            {trade && <Candle data={data} trade={trade} startDate={evaluation.startDate} endDate={evaluation.endDate} width={500} height={350}/>}
             {/* <div style={{ display: "flex", justifyContent: "center" }}>
               <Radio.Group
                 size="small"
