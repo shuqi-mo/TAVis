@@ -1,6 +1,7 @@
 import MonacoEditor from "react-monaco-editor";
 import { useState } from "react";
-import { PlayCircleFilled } from "@ant-design/icons";
+import { Button, Flex } from "antd";
+import { PlayCircleOutlined } from "@ant-design/icons";
 
 function CodeEditor({ code, onCodeChange }) {
   const [tempcode, setTempcode] = useState(null);
@@ -10,28 +11,32 @@ function CodeEditor({ code, onCodeChange }) {
   };
 
   const options = {
-    fontSize: 10,
+    fontSize: 12,
     lineNumbersMinChars: 3,
-    lineHeight: 12,
+    lineHeight: 14,
     minimap: {
       enabled: false, // 关闭迷你地图
     },
   };
 
   return (
-    <div>
-      <div className="view-title">
-        Code Editor <PlayCircleFilled onClick={() => handleExecute()} />
-      </div>
+    <Flex gap="small" vertical>
+      <Button
+        type="primary"
+        icon={<PlayCircleOutlined />}
+        onClick={() => handleExecute()}
+      >
+        Update Code
+      </Button>
       <MonacoEditor
-        width="280"
-        height="650"
+        width="350"
+        height="750"
         language="javascript"
         options={options}
         value={code}
         onChange={(v) => setTempcode(v)}
       />
-    </div>
+    </Flex>
   );
 }
 

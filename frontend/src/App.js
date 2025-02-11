@@ -5,8 +5,8 @@ import Candle from "./Views/Candle";
 import "./App.scss";
 import CodeEditor from "./Views/CodeEditor";
 import { Indicator, Evaluation } from "./utils/ClassDefinitions";
-import { Layout, Menu, Flex, Radio } from "antd";
-import { SelectOutlined } from "@ant-design/icons";
+import { Layout, Button, Flex, Radio } from "antd";
+import { CloseOutlined, CodeOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
 import Exampler from "./Views/Exampler";
 import Pattern from "./Views/Pattern";
@@ -37,7 +37,7 @@ function App() {
   const [scatterData, setScatterData] = useState(null);
   const [indicatorPerformance, setIndicatorPerformance] = useState(null);
 
-  const [collapsed, setCollapsed] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState("current stock");
 
   // 创建策略实例并计算
@@ -222,28 +222,6 @@ function App() {
     }
   };
 
-  function getItem(label, key, icon, children) {
-    return {
-      key,
-      icon,
-      children,
-      label,
-    };
-  }
-
-  const stockItems = stockList.map((code, index) => getItem(code, index + 2));
-
-  const items = [
-    getItem("Stock Selection", "1", <SelectOutlined />, stockItems),
-  ];
-
-  const handleMenuSelect = (event) => {
-    const selectedItem = stockItems.find(
-      (item) => item.key === Number(event.key)
-    );
-    setSelectStock(selectedItem.label);
-  };
-
   const handleExecuteScatter = async () => {
     let indicatorName = [];
     let exprLongList = [];
@@ -283,6 +261,11 @@ function App() {
       });
   };
 
+  // 切换 CodeEditor 展开/收起状态
+  const toggleEditor = () => {
+    setVisible(!visible);
+  };
+
   return (
     <Layout>
       <div className="page-title">TAVis</div>
@@ -292,24 +275,11 @@ function App() {
           background: "white",
         }}
       >
-        <Sider
-          collapsible
-          collapsed={collapsed}
-          onCollapse={(value) => setCollapsed(value)}
-        >
-          <Menu
-            theme="dark"
-            defaultSelectedKeys={["6"]}
-            mode="inline"
-            items={items}
-            onSelect={handleMenuSelect}
-          />
-        </Sider>
         <Flex gap="small">
           <Flex vertical="true">
-            <div className="view-title">Evaluation View</div>
+            <div className="view-title">Candlestick View</div>
             {trade && <Candle data={data} trade={trade} />}
-            <div style={{ display: "flex", justifyContent: "center" }}>
+            {/* <div style={{ display: "flex", justifyContent: "center" }}>
               <Radio.Group
                 size="small"
                 value={position}
@@ -323,8 +293,8 @@ function App() {
                   stocks
                 </Radio.Button>
               </Radio.Group>
-            </div>
-            <Flex>
+            </div> */}
+            {/* <Flex>
               <Flex>
                 {backtest && position === "current stock" && (
                   <div style={{ padding: "5px", overflowY: "auto" }}>
@@ -357,17 +327,17 @@ function App() {
                     <CurveBoxplot boxplotData={item} />
                   ))}
               </div>
-            </Flex>
+            </Flex> */}
           </Flex>
           <Flex vertical="true">
-            <div className="view-title">Comparison View</div>
+            {/* <div className="view-title">Comparison View</div> */}
             <Flex>
               <Flex vertical="true">
                 {/* {examplerData &&
                   examplerData.map((item) => (
                     <Exampler data={item[1]} legend={item[2]} />
                   ))} */}
-                <div
+                {/* <div
                   style={{
                     width: 780,
                     height: 220,
@@ -376,21 +346,21 @@ function App() {
                   }}
                 >
                   <TreeComponent indicators={indicators} />
-                </div>
+                </div> */}
                 <div style={{ width: 780, height: 220 }}>
-                  <Comparison
+                  {/* <Comparison
                     initialCode={code}
                     indicators={indicators}
                     evaluation={evaluation}
                     onSelectCode={(code) => {
                       setCode(code);
                     }}
-                  />
+                  /> */}
                 </div>
               </Flex>
             </Flex>
             <Flex>
-              {trade && indicatorPerformance && (
+              {/* {trade && indicatorPerformance && (
                 <Pattern
                   selectStock={selectStock}
                   trade={trade}
@@ -402,15 +372,45 @@ function App() {
               <PlayCircleFilled onClick={() => handleExecuteScatter()} />
               {scatterData && (
                 <ScatterPlot data={scatterData} width={350} height={350} />
-              )}
+              )} */}
             </Flex>
           </Flex>
           <Flex vertical="true"></Flex>
           <Flex>
-            <CodeEditor code={code} onCodeChange={updateCode} />
-            <div>
+            {visible && (
+              <div
+                style={{
+                  position: "fixed",
+                  right: 20, // 与页面右侧距离，可根据需要调整
+                  bottom: 80, // 离底部留出一定距离，避免与按钮重叠
+                  zIndex: 1000,
+                  background: "#fff",
+                  border: "1px solid #e8e8e8",
+                  padding: "10px",
+                  borderRadius: "4px",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.15)",
+                }}
+              >
+                <CodeEditor code={code} onCodeChange={updateCode} />
+              </div>
+            )}
+            <Button
+              type="primary"
+              shape="circle"
+              size="large"
+              style={{
+                position: "fixed",
+                right: 20,
+                bottom: 20,
+                zIndex: 1001,
+              }}
+              onClick={toggleEditor}
+            >
+              {visible ? <CloseOutlined /> : <CodeOutlined />}
+            </Button>
+            {/* <div>
               <MultiBarcodeTree/>
-            </div>
+            </div> */}
           </Flex>
         </Flex>
       </Layout>
