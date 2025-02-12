@@ -8,7 +8,6 @@ import { Indicator, Evaluation } from "./utils/ClassDefinitions";
 import { Layout, Button, Flex, Radio } from "antd";
 import { CloseOutlined, CodeOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
-import Exampler from "./Views/Exampler";
 import Pattern from "./Views/Pattern";
 import ScatterPlot from "./Views/ScatterPlot";
 import { PlayCircleFilled } from "@ant-design/icons";
@@ -26,6 +25,7 @@ function App() {
   const [data, setData] = useState(null);
   const [code, setCode] = useState(JSON.stringify(test1, null, 2));
   const [trade, setTrade] = useState(null);
+  const [tradeByIndicators, setTradeByIndicators] = useState(null);
   const [backtest, setBacktest] = useState(null);
   const [selectStock, setSelectStock] = useState("600893.SH");
   const [stockList, setStockList] = useState(["600893.SH"]);
@@ -122,6 +122,7 @@ function App() {
         getAheadStopTime,
       });
       // console.log(response.data);
+      setTradeByIndicators(response.data[0]);
       var t = [];
       for (let i = 0; i < response.data[0][0].length; i++) {
         var cur = 0;
@@ -271,14 +272,13 @@ function App() {
       <div className="page-title">TAVis</div>
       <Layout
         style={{
-          minHeight: "100vh",
           background: "white",
         }}
       >
         <Flex gap="small">
           <Flex vertical="true">
             <div className="view-title">Candlestick View</div>
-            {trade && <Candle data={data} trade={trade} startDate={evaluation.startDate} endDate={evaluation.endDate} width={500} height={350}/>}
+            {trade && examplerData && <Candle data={data} trade={trade} indicatorsTrade={tradeByIndicators} startDate={evaluation.startDate} endDate={evaluation.endDate} width={550} height={840} examplerData={examplerData}/>}
             {/* <div style={{ display: "flex", justifyContent: "center" }}>
               <Radio.Group
                 size="small"
@@ -333,10 +333,6 @@ function App() {
             {/* <div className="view-title">Comparison View</div> */}
             <Flex>
               <Flex vertical="true">
-                {/* {examplerData &&
-                  examplerData.map((item) => (
-                    <Exampler data={item[1]} legend={item[2]} />
-                  ))} */}
                 {/* <div
                   style={{
                     width: 780,
@@ -347,7 +343,7 @@ function App() {
                 >
                   <TreeComponent indicators={indicators} />
                 </div> */}
-                <div style={{ width: 780, height: 220 }}>
+                {/* <div style={{ width: 780, height: 220 }}> */}
                   {/* <Comparison
                     initialCode={code}
                     indicators={indicators}
@@ -356,7 +352,7 @@ function App() {
                       setCode(code);
                     }}
                   /> */}
-                </div>
+                {/* </div> */}
               </Flex>
             </Flex>
             <Flex>

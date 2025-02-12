@@ -19,7 +19,7 @@
       "name": "boll",
       "price": "close",
       "mid": "EMA(close, 20)",
-      "band": "movingstd(mid, 20)",
+      "band": "movingstd(price, 20)",
       "multiplier": 2,
       "up": "mid + multiplier * band",
       "down": "mid - multiplier * band",

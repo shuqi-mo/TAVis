@@ -1,11 +1,38 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-function Candle({ data, trade, startDate, endDate, width, height }) {
-  // 主图与刷选（上下文）区域的边距设置
-  const margin = { top: 20, right: 5, bottom: 120, left: 40 };
-  const margin2 = { top: 260, right: 5, bottom: 50, left: 40 };
-  const height2 = height - margin2.bottom - margin2.top; // 上下文区域高度
+function Candle({
+  data,
+  trade,
+  indicatorsTrade,
+  startDate,
+  endDate,
+  width,
+  height,
+  examplerData,
+}) {
+  // 原主图边距
+  const margin = { top: 20, right: 5, bottom: 20, left: 20 };
+  // 副图（Exampler）边距
+  const subMargin = { top: 20, right: 5, bottom: 20, left: 20 };
+  // --- 新布局参数 --- //
+  // 固定主图区域高度
+  const mainChartHeight = 250;
+  // 固定刷选区域（上下文区域）高度
+  const brushChartHeight = 40;
+  // 主图与刷选区域之间的间隔
+  const gapBetweenMainAndBrush = 20;
+  // 刷选区域与副图区域之间的间隔
+  const gapBetweenBrushAndExampler = 20;
+  // 副图区域起始 y 坐标
+  const examplerRegionY =
+    margin.top +
+    mainChartHeight +
+    gapBetweenMainAndBrush +
+    brushChartHeight +
+    gapBetweenBrushAndExampler;
+  // 副图区域可用总高度
+  const examplerTotalHeight = height - examplerRegionY - margin.bottom;
 
   const d3Node = useRef(null);
   const getSvg = () => d3.select(d3Node.current);
@@ -35,6 +62,51 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
 
   useEffect(() => {
     checkElementExist(getSvg().selectAll("svg"));
+
+    let selectedIndicator = null; // 当前选中的副图指标索引
+
+    function highlightMainChart(selectedIndex) {
+      // 更新主图交易标记：对于买入标记
+      d3.selectAll(".buy-marker-rect").each(function (d) {
+        // 如果对应指标交易信号为 1，则恢复橙色，否则改为灰色
+        if (indicatorsTrade[selectedIndex][d.index] === 1) {
+          d3.select(this).attr("fill", "orange");
+        } else {
+          d3.select(this).attr("fill", "gray");
+        }
+      });
+      d3.selectAll(".buy-marker-triangle").each(function (d) {
+        if (indicatorsTrade[selectedIndex][d.index] === 1) {
+          d3.select(this).attr("fill", "orange");
+        } else {
+          d3.select(this).attr("fill", "gray");
+        }
+      });
+      // 对于卖出标记
+      d3.selectAll(".sell-marker-rect").each(function (d) {
+        if (indicatorsTrade[selectedIndex][d.index] === -1) {
+          d3.select(this).attr("fill", "blue");
+        } else {
+          d3.select(this).attr("fill", "gray");
+        }
+      });
+      d3.selectAll(".sell-marker-triangle").each(function (d) {
+        if (indicatorsTrade[selectedIndex][d.index] === -1) {
+          d3.select(this).attr("fill", "blue");
+        } else {
+          d3.select(this).attr("fill", "gray");
+        }
+      });
+    }
+
+    function resetMainChartMarkers() {
+      // 恢复主图所有交易标记的原始颜色
+      d3.selectAll(".buy-marker-rect").attr("fill", "orange");
+      d3.selectAll(".buy-marker-triangle").attr("fill", "orange");
+      d3.selectAll(".sell-marker-rect").attr("fill", "blue");
+      d3.selectAll(".sell-marker-triangle").attr("fill", "blue");
+    }
+
     let svg = getSvg()
       .append("svg")
       .attr("width", width)
@@ -91,9 +163,7 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
         ticks.unshift(leftValue);
       }
       if (isMultiYear) {
-        xAxis
-        .tickValues(ticks)
-        .tickFormat((v, i) => {
+        xAxis.tickValues(ticks).tickFormat((v, i) => {
           const idx = Math.round(v);
           const d = new Date(dates[idx]);
           // 第一个 tick 始终显示年份（以1月1日为基础）
@@ -136,9 +206,7 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
         ticks.unshift(leftValue);
       }
       if (isMultiYear) {
-        xAxis2
-        .tickValues(ticks)
-        .tickFormat((v, i) => {
+        xAxis2.tickValues(ticks).tickFormat((v, i) => {
           const idx = Math.round(v);
           const d = new Date(dates[idx]);
           // 第一个 tick 始终显示年份（以1月1日为基础）
@@ -183,14 +251,14 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
         d3.min(lowPrices) - pricePending,
         d3.max(highPrices) + pricePending,
       ])
-      .range([height - margin.bottom - margin.top, 0]);
+      .range([mainChartHeight, 0]);
     const yScale2 = d3
       .scaleLinear()
       .domain([
         d3.min(lowPrices) - pricePending,
         d3.max(highPrices) + pricePending,
       ])
-      .range([height2, 0]);
+      .range([brushChartHeight, 0]);
     const yAxis = d3.axisLeft(yScale).ticks(10);
 
     // 绘制 y 轴（显示在图的左侧）
@@ -205,7 +273,7 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
       .area()
       .curve(d3.curveMonotoneX)
       .x((d, i) => xScale2(i))
-      .y0(height2)
+      .y0(brushChartHeight)
       .y1((d, i) => yScale2(d[2]));
 
     // 定义刷选（brush），使用 xScale2 的区间
@@ -213,7 +281,7 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
       .brushX()
       .extent([
         [0, 0],
-        [width - margin.left - margin.right, height2],
+        [width - margin.left - margin.right, brushChartHeight],
       ])
       .on("brush end", brushed);
 
@@ -221,7 +289,10 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
     svg
       .append("g")
       .attr("class", "axis--x")
-      .attr("transform", `translate(${margin.left}, ${height - margin.bottom})`)
+      .attr(
+        "transform",
+        `translate(${margin.left}, ${margin.top + mainChartHeight})`
+      )
       .call(xAxis);
 
     updateXAxis();
@@ -233,7 +304,7 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
       .attr("id", "clip")
       .append("rect")
       .attr("width", width - margin.left - margin.right)
-      .attr("height", height - margin.top - margin.bottom);
+      .attr("height", mainChartHeight);
 
     // 创建主图区域，并应用 clipPath
     const focus = svg
@@ -345,12 +416,17 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
     const context = svg
       .append("g")
       .attr("class", "context")
-      .attr("transform", `translate(${margin2.left}, ${margin2.top})`);
+      .attr(
+        "transform",
+        `translate(${margin.left}, ${
+          margin.top + mainChartHeight + gapBetweenMainAndBrush
+        })`
+      );
 
     context
       .append("g")
       .attr("class", "axis axis--x")
-      .attr("transform", `translate(0, ${height2})`)
+      .attr("transform", `translate(0, ${brushChartHeight})`)
       .call(xAxis2);
 
     updateXAxis2();
@@ -372,9 +448,14 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
       .append("polygon")
       .attr("class", "deal-triangle-bottom")
       .attr("points", (d) => {
-        const x1 = margin2.left + xScale2(d.index) - 2;
-        const x2 = margin2.left + xScale2(d.index) + candlestickWidth() + 2;
-        const tipY = margin2.top + height2 + textOffset;
+        const x1 = margin.left + xScale2(d.index) - 2;
+        const x2 = margin.left + xScale2(d.index) + candlestickWidth() + 2;
+        const tipY =
+          margin.top +
+          mainChartHeight +
+          gapBetweenMainAndBrush +
+          brushChartHeight +
+          textOffset;
         const baseY = tipY + triangleHeight;
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
@@ -397,7 +478,7 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
       .append("rect")
       .attr("class", "overlay")
       .attr("width", width - margin.left - margin.right)
-      .attr("height", height - margin.top - margin.bottom)
+      .attr("height", mainChartHeight)
       .style("fill", "none")
       .style("pointer-events", "all")
       .on("mouseover", () => {
@@ -460,6 +541,255 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
       .attr("alignment-baseline", "middle")
       .style("font-size", "12px");
 
+    // ===============================
+    // 绘制副图区域（exampler）—— 在刷选区域下方
+    // ===============================
+    // 若 examplerData 存在，计算每个副图的高度（若有多个指标，则均分）
+    const numExamplers = examplerData ? examplerData.length : 0;
+    // 如果指标个数<=4，则显示全部，否则只显示4个，剩余部分需要滚动查看
+    const visibleCount = numExamplers <= 4 ? numExamplers : 4;
+    // 当指标个数<=4时，每个副图高度均分 examplerTotalHeight；当大于4时，固定每个副图高度 = examplerTotalHeight/4
+    const eachExamplerHeightFixed = examplerTotalHeight / visibleCount;
+    // 总内容高度
+    const totalExamplerContentHeight = eachExamplerHeightFixed * numExamplers;
+
+    // 定义 clipPath 用于副图容器
+    svg
+      .append("defs")
+      .append("clipPath")
+      .attr("id", "clip-exampler-container")
+      .append("rect")
+      .attr("x", -margin.left)
+      .attr("y", 0)
+      .attr("width", width - margin.right)
+      .attr("height", eachExamplerHeightFixed * visibleCount);
+
+    // 创建副图容器组，应用 clipPath
+    const examplerContainer = svg
+      .append("g")
+      .attr("class", "exampler-container")
+      .attr("clip-path", "url(#clip-exampler-container)")
+      .attr("transform", `translate(${margin.left}, ${examplerRegionY})`);
+
+    // 在容器内再创建一个内容组，用于承载所有副图
+    const examplerContentGroup = examplerContainer
+      .append("g")
+      .attr("class", "exampler-content-group")
+      .attr("transform", `translate(0,0)`);
+
+    // 创建滚动条组（与内容组同级，不受 clipPath 裁剪），放在容器内右侧
+    const containerWidth = width - margin.left - margin.right;
+    const visibleHeight = eachExamplerHeightFixed * visibleCount;
+    const scrollbarWidth = 10;
+    // 如果总内容高度大于可见高度，则显示滚动条
+    if (totalExamplerContentHeight > visibleHeight) {
+      const thumbHeight =
+        visibleHeight * (visibleHeight / totalExamplerContentHeight);
+      const scrollbarGroup = examplerContainer
+        .append("g")
+        .attr("class", "scrollbar")
+        .attr("transform", `translate(${containerWidth - scrollbarWidth}, 0)`);
+      // 滚动条轨道
+      scrollbarGroup
+        .append("rect")
+        .attr("class", "scrollbar-track")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", scrollbarWidth)
+        .attr("height", visibleHeight)
+        .attr("fill", "#eee");
+      // 滚动条滑块
+      const thumb = scrollbarGroup
+        .append("rect")
+        .attr("class", "scrollbar-thumb")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", scrollbarWidth)
+        .attr("height", thumbHeight)
+        .attr("fill", "#999")
+        .call(
+          d3.drag().on("drag", function (event) {
+            let newY = +d3.select(this).attr("y") + event.dy;
+            // 限制 newY 在 [0, visibleHeight - thumbHeight]
+            newY = Math.max(0, Math.min(visibleHeight - thumbHeight, newY));
+            d3.select(this).attr("y", newY);
+            // 根据滚动条位置计算内容组偏移量：
+            // 最大平移量 = totalExamplerContentHeight - visibleHeight
+            const maxScroll = totalExamplerContentHeight - visibleHeight;
+            // 当前偏移量 = - newY / (visibleHeight - thumbHeight) * maxScroll
+            const scrollY = -(newY / (visibleHeight - thumbHeight)) * maxScroll;
+            examplerContentGroup.attr("transform", `translate(0, ${scrollY})`);
+          })
+        );
+    }
+
+    if (examplerData && numExamplers > 0) {
+      examplerData.forEach((indicator, i) => {
+        // indicator 格式：[指标名称, 折线数据数组, 折线名称数组]
+        const title = indicator[0];
+        const linesData = indicator[1]; // 数组：每个元素是一条折线的数据（长度与主图相同）
+        const lineNames = indicator[2]; // 数组：每条折线的名称
+        // 针对当前指标的每条折线，取刷选区间 [startIndex, endIndex]
+        const slicedLinesData = linesData.map((line) =>
+          line.slice(startIndex, endIndex + 1)
+        );
+        const allValues = slicedLinesData.flat();
+        const yMin = d3.min(allValues);
+        const yMax = d3.max(allValues);
+        const yScaleSub = d3
+          .scaleLinear()
+          .domain([yMin, yMax])
+          .nice()
+          .range([eachExamplerHeightFixed - subMargin.bottom, subMargin.top]);
+        // 创建一个副图组，位置在 examplerRegionY + i * eachExamplerHeight
+        const subChart = examplerContentGroup
+          .append("g")
+          .attr("class", "exampler-chart")
+          .attr("transform", `translate(0, ${i * eachExamplerHeightFixed})`);
+
+        // 添加一个透明覆盖矩形，捕获点击事件
+        subChart
+          .append("rect")
+          .attr("class", "subchart-overlay")
+          .attr("x", 0)
+          .attr("y", 0)
+          .attr("width", width - margin.left - margin.right)
+          .attr("height", eachExamplerHeightFixed)
+          .style("fill", "transparent")
+          .style("pointer-events", "all")
+          .on("click", function (event) {
+            event.stopPropagation(); // 阻止事件冒泡到全局
+            selectedIndicator = i; // 设置当前选中的副图指标索引
+            highlightMainChart(i); // 调用更新主图交易标记的函数
+          });
+
+        // 将当前副图的 yScale 挂载到 DOM 元素上
+        subChart.node().yScale = yScaleSub;
+
+        // 绘制副图标题（指标名称）
+        subChart
+          .append("text")
+          .text(title)
+          .attr("x", subMargin.left)
+          .attr("y", subMargin.top / 2)
+          .style("font-size", "12px")
+          .attr("dominant-baseline", "middle");
+
+        // 绘制副图 x 轴（与主图保持一致）
+        subChart
+          .append("g")
+          .attr("class", "axis axis--x")
+          .attr(
+            "transform",
+            `translate(0, ${eachExamplerHeightFixed - subMargin.bottom})`
+          )
+          .call(xAxis);
+
+        // 绘制副图 y 轴
+        const yAxisSub = d3.axisLeft(yScaleSub).ticks(3);
+        subChart
+          .append("g")
+          .attr("class", "axis axis--y")
+          .attr("transform", `translate(0,0)`)
+          .call(yAxisSub);
+
+        // 创建一个内容组，用于绘制折线，并应用 clipPath，只裁剪折线部分
+        const clipId = "clip-exampler-" + i;
+        // 在副图组中添加 defs 定义 clipPath
+        subChart
+          .append("defs")
+          .append("clipPath")
+          .attr("id", clipId)
+          .append("rect")
+          .attr("x", 0)
+          .attr("y", subMargin.top)
+          .attr("width", width - margin.left - margin.right)
+          .attr(
+            "height",
+            eachExamplerHeightFixed - subMargin.top - subMargin.bottom
+          );
+        // 创建内容组，并应用 clipPath
+        const contentGroup = subChart
+          .append("g")
+          .attr("class", "exampler-content")
+          .attr("clip-path", `url(#${clipId})`);
+
+        // 定义折线生成器，使用共享的 xScale 和当前副图的 yScaleSub
+        const lineGeneratorSub = d3
+          .line()
+          .x((d, i) => xScale(i))
+          .y((d) => yScaleSub(d));
+
+        // 绘制该指标下的每条折线，并统一加上 class "exampler-line" 便于后续更新
+        linesData.forEach((lineData, j) => {
+          contentGroup
+            .append("path")
+            .datum(lineData)
+            .attr("class", "exampler-line")
+            .attr("fill", "none")
+            .attr("stroke", d3.schemeCategory10[j % 10])
+            .attr("stroke-width", 1.5)
+            .attr("d", lineGeneratorSub);
+        });
+
+        if (indicatorsTrade && indicatorsTrade[i]) {
+          const tradeArray = indicatorsTrade[i]; // 该指标的交易信号数组
+          // 计算矩形宽度，这里采用与主图相似的计算方法
+          const rectWidth =
+            ((width - margin.left - margin.right) / data.data.length) * 0.7;
+          // 为每个交易信号数据（含索引）添加矩形
+          contentGroup
+            .selectAll(".indicator-trade-rect")
+            .data(tradeArray.map((val, idx) => ({ val, idx })))
+            .enter()
+            .filter((d) => d.val !== 0) // 只对非0信号绘制矩形
+            .append("rect")
+            .attr("class", "indicator-trade-rect")
+            .attr("x", (d) => xScale(d.idx))
+            .attr("y", subMargin.top) // 从绘图区上边界开始
+            .attr("width", rectWidth)
+            .attr(
+              "height",
+              eachExamplerHeightFixed - subMargin.top - subMargin.bottom
+            )
+            .attr("fill", (d) => (d.val === 1 ? "orange" : "blue"));
+        }
+
+        // 绘制图例
+        const subWidth = width - margin.left - margin.right;
+        const legendItemWidth = 80;
+        const legendPaddingRight = 10;
+        const totalLegendWidth = lineNames.length * legendItemWidth;
+        const legendXStart = subWidth - totalLegendWidth - legendPaddingRight;
+        const legendY = subMargin.top / 2; // 图例 y 坐标，位于副图上边距的一半位置
+        lineNames.forEach((name, j) => {
+          subChart
+            .append("rect")
+            .attr("x", legendXStart + j * legendItemWidth)
+            .attr("y", legendY)
+            .attr("width", 10)
+            .attr("height", 10)
+            .attr("fill", d3.schemeCategory10[j % 10]);
+          subChart
+            .append("text")
+            .attr("x", legendXStart + j * legendItemWidth + 12)
+            .attr("y", legendY + 10)
+            .text(name)
+            .style("font-size", "10px")
+            .attr("fill", d3.schemeCategory10[j % 10]);
+        });
+      });
+    }
+
+    svg.on("click", function (event) {
+      // 检查点击目标是否在副图中（可通过查找最近的父节点是否包含 "exampler-chart" 类）
+      // 如果不在副图内，则取消高亮效果
+      if (!event.target.closest(".exampler-chart")) {
+        selectedIndicator = null;
+        resetMainChartMarkers();
+      }
+    });
+
     // 鼠标移动事件：更新十字线和 tooltip 位置
     function mousemove(event) {
       const [mx, my] = d3.pointer(event);
@@ -477,7 +807,7 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
         .attr("x1", cx)
         .attr("y1", 0)
         .attr("x2", cx)
-        .attr("y2", height - margin.top - margin.bottom);
+        .attr("y2", mainChartHeight);
       // 水平线随鼠标纵坐标移动
       crosshair
         .select("#crosshairY")
@@ -501,7 +831,7 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
       // 将 tooltip-bottom 组定位于 x 轴正上方，并使其中心对齐十字线
       tooltipBottomGroup.attr(
         "transform",
-        `translate(${cx}, ${height - margin.bottom - 10})`
+        `translate(${cx}, ${mainChartHeight + margin.top - 10})`
       );
     }
 
@@ -602,13 +932,50 @@ function Candle({ data, trade, startDate, endDate, width, height }) {
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
       });
+
+      // —— 更新副图（exampler）区域 —— //
+      // 副图的 x 轴与主图 xScale 保持一致
+      d3.selectAll(".exampler-chart").each(function () {
+        const subChart = d3.select(this);
+        // 更新副图的 x 轴，使其与主图一致
+        subChart.select(".axis--x").call(xAxis);
+        // 通过 DOM 获取挂载的 yScale
+        const yScaleSub = subChart.node().yScale;
+        // 遍历当前副图内所有折线数据，计算刷选区间内的最小值和最大值
+        let newMin = Infinity,
+          newMax = -Infinity;
+        // 这里假设每条折线数据为一个数组，且数据顺序与主图相同
+        subChart
+          .select(".exampler-content")
+          .selectAll(".exampler-line")
+          .each(function (d) {
+            const sliced = d.slice(start, end + 1);
+            const m = d3.min(sliced);
+            const M = d3.max(sliced);
+            if (m < newMin) newMin = m;
+            if (M > newMax) newMax = M;
+          });
+        // 更新该副图的 yScale domain（可根据需要加入 padding）
+        yScaleSub.domain([newMin, newMax]).nice();
+        // 更新副图 y 轴
+        subChart.select(".axis--y").call(d3.axisLeft(yScaleSub).ticks(4));
+        // 更新折线生成器并重绘副图内所有折线
+        const newLineGenerator = d3
+          .line()
+          .x((d, i) => xScale(i))
+          .y((d) => yScaleSub(d));
+        subChart
+          .select(".exampler-content")
+          .selectAll(".exampler-line")
+          .attr("d", newLineGenerator);
+      });
     }
 
     // 辅助函数：根据当前显示数据个数计算每根 K 线宽度
     function getCandlestickWidth(dataLength) {
       return ((width - margin.left - margin.right) / dataLength) * 0.7;
     }
-  }, [data, trade, startDate, endDate, width, height]);
+  }, [data, trade, startDate, endDate, width, height, examplerData]);
 
   return (
     <div>

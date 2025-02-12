@@ -101,16 +101,10 @@ def process_exampler():
             res = execute_expr(data["exprVariableList"][i][j], data_df)
             if res.dtype.kind in 'biu':
                 res = [int(res)] * len(data_df["close"])
-            variable.append(list(res))
+            # 将结果转换为列表
+            res = list(res)
+            variable.append(res)
         variableList.append([name, variable, data["variableList"][i]])
-    
-    mask = (data_df['trade_date'] >= data["startDate"]) & (data_df['trade_date'] <= data["endDate"])
-    for i in range(len(data["indicatorName"])):
-        for j in range(len(data["exprVariableList"][i])):
-            origin = pd.Series(variableList[i][1][j])
-            update = origin[mask].reset_index(drop=True)
-            update = list(update)
-            variableList[i][1][j] = update
     return jsonify(variableList)
 
 @app.route('/process_stocks', methods=['POST'])
