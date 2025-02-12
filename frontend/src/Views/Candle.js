@@ -72,14 +72,14 @@ function Candle({
         if (indicatorsTrade[selectedIndex][d.index] === 1) {
           d3.select(this).attr("fill", "orange");
         } else {
-          d3.select(this).attr("fill", "gray");
+          d3.select(this).attr("fill", "white");
         }
       });
       d3.selectAll(".buy-marker-triangle").each(function (d) {
         if (indicatorsTrade[selectedIndex][d.index] === 1) {
           d3.select(this).attr("fill", "orange");
         } else {
-          d3.select(this).attr("fill", "gray");
+          d3.select(this).attr("fill", "white");
         }
       });
       // 对于卖出标记
@@ -87,14 +87,14 @@ function Candle({
         if (indicatorsTrade[selectedIndex][d.index] === -1) {
           d3.select(this).attr("fill", "blue");
         } else {
-          d3.select(this).attr("fill", "gray");
+          d3.select(this).attr("fill", "white");
         }
       });
       d3.selectAll(".sell-marker-triangle").each(function (d) {
         if (indicatorsTrade[selectedIndex][d.index] === -1) {
           d3.select(this).attr("fill", "blue");
         } else {
-          d3.select(this).attr("fill", "gray");
+          d3.select(this).attr("fill", "white");
         }
       });
     }
@@ -660,6 +660,19 @@ function Candle({
           .on("click", function (event) {
             event.stopPropagation(); // 阻止事件冒泡到全局
             selectedIndicator = i; // 设置当前选中的副图指标索引
+            examplerContentGroup.selectAll(".selected-border").remove();  // 移除所有副图中的已选边框
+            // 在当前副图中添加边框
+            d3.select(this.parentNode)
+              .append("rect")
+              .attr("class", "selected-border")
+              .attr("x", 0)
+              .attr("y", 0)
+              .attr("width", width - margin.left - margin.right)
+              .attr("height", eachExamplerHeightFixed)
+              .attr("fill", "none")
+              .attr("stroke", "gray")
+              .attr("stroke-width", 2)
+              .style("pointer-events", "none");
             highlightMainChart(i); // 调用更新主图交易标记的函数
           });
 
@@ -786,6 +799,7 @@ function Candle({
       // 如果不在副图内，则取消高亮效果
       if (!event.target.closest(".exampler-chart")) {
         selectedIndicator = null;
+        examplerContentGroup.selectAll(".selected-border").remove();
         resetMainChartMarkers();
       }
     });
