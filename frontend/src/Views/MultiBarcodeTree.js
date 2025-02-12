@@ -55,9 +55,7 @@ const evaluationData1 = [
   {
     name: "period",
     type: "extend",
-    children: [
-      { name: "2023-07-01 2024-07-01", type: "context" },
-    ],
+    children: [{ name: "2023-07-01 2024-07-01", type: "context" }],
   },
   {
     name: "stop",
@@ -108,9 +106,7 @@ const evaluationData2 = [
   {
     name: "period",
     type: "extend",
-    children: [
-      { name: "2023-07-01 2024-07-01", type: "context" },
-    ],
+    children: [{ name: "2023-07-01 2024-07-01", type: "context" }],
   },
   {
     name: "stop",
@@ -145,9 +141,7 @@ const evaluationData3 = [
   {
     name: "period",
     type: "extend",
-    children: [
-      { name: "2023-07-01 2024-07-01", type: "context" },
-    ],
+    children: [{ name: "2023-07-01 2024-07-01", type: "context" }],
   },
   {
     name: "stop",
@@ -228,7 +222,8 @@ function wrapText(textSelection, width) {
     const lineHeight = 1.1; // 行高，单位为 em
     const y = text.attr("y");
     const dy = parseFloat(text.attr("dy") || 0);
-    let tspan = text.text(null)
+    let tspan = text
+      .text(null)
       .append("tspan")
       .attr("x", text.attr("x"))
       .attr("y", y)
@@ -240,7 +235,8 @@ function wrapText(textSelection, width) {
         line.pop();
         tspan.text(line.join(" "));
         line = [word];
-        tspan = text.append("tspan")
+        tspan = text
+          .append("tspan")
           .attr("x", text.attr("x"))
           .attr("y", y)
           .attr("dy", ++lineNumber * lineHeight + dy + "em")
@@ -254,17 +250,12 @@ function wrapText(textSelection, width) {
 
 /**
  * MultiBarcodeTree 组件将多个数据组分别显示 indicatorsData 与 evaluationData，
- * 采用横向排列：  
+ * 采用横向排列：
  * - 对于每个部分，**行**代表不同数据组，**列**代表该部分出现过的树名称，
  *   这样相同树名称在不同数据组中能够**垂直对齐**；
  * - 指标部分和评价部分分别绘制，且各自的单元格尺寸根据可用区域和行列数动态计算。
  */
-const MultiBarcodeTree = ({
-  width = 900,
-  height = 400,
-  margin = 20,
-  gap = 4,
-}) => {
+const MultiBarcodeTree = ({ width, height, margin, gap }) => {
   const svgRef = useRef(null);
   // 每个数据组包含 { indicatorsData, evaluationData }
   const [groups, setGroups] = useState(null);

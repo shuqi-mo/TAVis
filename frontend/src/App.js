@@ -278,30 +278,46 @@ function App() {
         <Flex gap="small">
           <Flex vertical="true">
             <div className="view-title">Candlestick View</div>
-            {trade && examplerData && <Candle data={data} trade={trade} indicatorsTrade={tradeByIndicators} startDate={evaluation.startDate} endDate={evaluation.endDate} width={550} height={840} examplerData={examplerData}/>}
-            {/* <div style={{ display: "flex", justifyContent: "center" }}>
-              <Radio.Group
-                size="small"
-                value={position}
-                onChange={(e) => setPosition(e.target.value)}
-              >
-                <Radio.Button value="current stock">indicators</Radio.Button>
-                <Radio.Button
-                  value="selected stocks"
-                  onClick={() => handleExecute()}
-                >
-                  stocks
-                </Radio.Button>
-              </Radio.Group>
-            </div> */}
-            {/* <Flex>
-              <Flex>
+            {trade && examplerData && (
+              <Candle
+                data={data}
+                trade={trade}
+                indicatorsTrade={tradeByIndicators}
+                startDate={evaluation.startDate}
+                endDate={evaluation.endDate}
+                width={550}
+                height={840}
+                examplerData={examplerData}
+              />
+            )}
+          </Flex>
+          <Flex vertical="true">
+            <div className="view-title">Evaluation View</div>
+            <Flex>
+              <Flex vertical>
+                <div style={{ display: "flex", justifyContent: "center" }}>
+                  <Radio.Group
+                    size="small"
+                    value={position}
+                    onChange={(e) => setPosition(e.target.value)}
+                  >
+                    <Radio.Button value="current stock">
+                      indicators
+                    </Radio.Button>
+                    <Radio.Button
+                      value="selected stocks"
+                      onClick={() => handleExecute()}
+                    >
+                      stocks
+                    </Radio.Button>
+                  </Radio.Group>
+                </div>
                 {backtest && position === "current stock" && (
                   <div style={{ padding: "5px", overflowY: "auto" }}>
                     <ParallelCoordinatesChart
                       data={backtest}
-                      width={280}
-                      height={400}
+                      width={250}
+                      height={350}
                     />
                   </div>
                 )}
@@ -309,30 +325,45 @@ function App() {
                   <div style={{ padding: "5px", overflowY: "auto" }}>
                     <ParallelCoordinatesChart
                       data={stockPerformance}
-                      width={280}
-                      height={400}
+                      width={250}
+                      height={350}
                     />
                   </div>
                 )}
               </Flex>
-              <div style={{ maxHeight: 450, overflowY: "auto" }}>
+              <div style={{ width: 400, maxHeight: 400, overflowY: "auto" }}>
                 {curveBoxplotData &&
                   position === "current stock" &&
                   curveBoxplotData.map((item) => (
-                    <CurveBoxplot boxplotData={item} />
+                    <CurveBoxplot boxplotData={item} width={160} height={120} />
                   ))}
                 {curveBoxplotDataForStocks &&
                   position === "selected stocks" &&
                   curveBoxplotDataForStocks.map((item) => (
-                    <CurveBoxplot boxplotData={item} />
+                    <CurveBoxplot boxplotData={item} width={160} height={120} />
                   ))}
               </div>
-            </Flex> */}
-          </Flex>
-          <Flex vertical="true">
-            {/* <div className="view-title">Comparison View</div> */}
+              {trade && indicatorPerformance && (
+                <Pattern
+                  selectStock={selectStock}
+                  trade={trade}
+                  startDate={evaluation.startDate}
+                  endDate={evaluation.endDate}
+                  indicatorPerformance={indicatorPerformance}
+                />
+              )}
+            </Flex>
             <Flex>
               <Flex vertical="true">
+                <div className="view-title">Comparison View</div>
+                <div>
+                  <MultiBarcodeTree
+                    width={750}
+                    height={400}
+                    margin={20}
+                    gap={4}
+                  />
+                </div>
                 {/* <div
                   style={{
                     width: 780,
@@ -344,7 +375,7 @@ function App() {
                   <TreeComponent indicators={indicators} />
                 </div> */}
                 {/* <div style={{ width: 780, height: 220 }}> */}
-                  {/* <Comparison
+                {/* <Comparison
                     initialCode={code}
                     indicators={indicators}
                     evaluation={evaluation}
@@ -356,22 +387,16 @@ function App() {
               </Flex>
             </Flex>
             <Flex>
-              {/* {trade && indicatorPerformance && (
-                <Pattern
-                  selectStock={selectStock}
-                  trade={trade}
-                  startDate={evaluation.startDate}
-                  endDate={evaluation.endDate}
-                  indicatorPerformance={indicatorPerformance}
-                />
-              )}
+              {/* 
               <PlayCircleFilled onClick={() => handleExecuteScatter()} />
               {scatterData && (
                 <ScatterPlot data={scatterData} width={350} height={350} />
               )} */}
             </Flex>
           </Flex>
-          <Flex vertical="true"></Flex>
+          <Flex vertical="true">
+            <div className="view-title">Stock Selection View</div>
+          </Flex>
           <Flex>
             {visible && (
               <div
@@ -404,9 +429,6 @@ function App() {
             >
               {visible ? <CloseOutlined /> : <CodeOutlined />}
             </Button>
-            {/* <div>
-              <MultiBarcodeTree/>
-            </div> */}
           </Flex>
         </Flex>
       </Layout>

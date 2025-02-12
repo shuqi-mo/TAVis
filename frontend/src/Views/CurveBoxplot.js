@@ -1,28 +1,27 @@
 import React, { useEffect, useRef } from "react";
 import * as d3 from "d3";
 
-const CurveBoxplot = ({ boxplotData }) => {
-  // console.log(boxplotData);
+const CurveBoxplot = ({ boxplotData, width, height }) => {
   const svgRef = useRef();
   const title = boxplotData[0];
   const data = boxplotData[1];
 
   useEffect(() => {
-    const margin = { top: 10, right: 30, bottom: 10, left: 40 };
-    const width = 200 - margin.left - margin.right;
-    const height = 150 - margin.top - margin.bottom;
+    const margin = { top: 10, right: 0, bottom: 5, left: 30 };
+    const adjustedWidth = width - margin.left - margin.right;
+    const adjustedHeight = height - margin.top - margin.bottom;
 
     const svg = d3
       .select(svgRef.current)
-      .attr("width", width + margin.left + margin.right)
-      .attr("height", height + margin.top + margin.bottom)
+      .attr("width", width)
+      .attr("height", height)
       .append("g")
       .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Add title
     svg
       .append("text")
-      .attr("x", margin.right) // Center horizontally
+      .attr("x", adjustedWidth / 2) // Center horizontally
       .attr("y", margin.top / 20) // Place above the chart area
       .attr("text-anchor", "middle") // Center text alignment
       .style("font-size", "10px")
@@ -60,11 +59,12 @@ const CurveBoxplot = ({ boxplotData }) => {
     const x = d3
       .scaleLinear()
       .domain([0, maxLength - 1])
-      .range([0, width]);
-    // X and Y scales: handle negative values by ensuring the Y domain covers the full range
+      .range([0, adjustedWidth]);
+
+    // Y scales: handle negative values by ensuring the Y domain covers the full range
     const yMin = d3.min(data.flat());
     const yMax = d3.max(data.flat());
-    const y = d3.scaleLinear().domain([yMin, yMax]).range([height, 0]);
+    const y = d3.scaleLinear().domain([yMin, yMax]).range([adjustedHeight, 0]);
 
     const yZeroPos = y(0); // Get the position of y = 0 on the y-axis
 
@@ -153,7 +153,7 @@ const CurveBoxplot = ({ boxplotData }) => {
     return () => {
       d3.select(svgRef.current).selectAll("*").remove();
     };
-  }, [data]);
+  }, [data, width, height]);
 
   return <svg ref={svgRef}></svg>;
 };

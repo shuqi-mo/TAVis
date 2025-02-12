@@ -6,9 +6,7 @@ const ParallelCoordinatesChart = ({ data, width, height }) => {
 
   useEffect(() => {
     // 2. 设置画布尺寸和边距
-    const width = 300;
-    const height = 350;
-    const margin = { top: 30, right: 5, bottom: 10, left: 0 };
+    const margin = { top: 30, right: 5, bottom: 50, left: 0 };
 
     // 3. 获取 SVG，并清空之前的内容（以便重复渲染时不叠加）
     const svg = d3.select(svgRef.current);
