@@ -51,25 +51,6 @@ const indicatorsData1 = [
   },
 ];
 
-const evaluationData1 = [
-  {
-    name: "period",
-    type: "extend",
-    children: [{ name: "2023-07-01 2024-07-01", type: "context" }],
-  },
-  {
-    name: "stop",
-    type: "extend",
-    children: [
-      {
-        name: "ahead",
-        type: "extend",
-        children: [{ name: "-1", type: "context" }],
-      },
-    ],
-  },
-];
-
 const indicatorsData2 = [
   {
     name: "boll",
@@ -102,25 +83,6 @@ const indicatorsData2 = [
   },
 ];
 
-const evaluationData2 = [
-  {
-    name: "period",
-    type: "extend",
-    children: [{ name: "2023-07-01 2024-07-01", type: "context" }],
-  },
-  {
-    name: "stop",
-    type: "extend",
-    children: [
-      {
-        name: "ahead",
-        type: "extend",
-        children: [{ name: "-1", type: "context" }],
-      },
-    ],
-  },
-];
-
 const indicatorsData3 = [
   {
     name: "rsi",
@@ -137,7 +99,7 @@ const indicatorsData3 = [
   },
 ];
 
-const evaluationData3 = [
+const evaluationData = [
   {
     name: "period",
     type: "extend",
@@ -154,6 +116,16 @@ const evaluationData3 = [
       },
     ],
   },
+];
+
+const indicatorsLinks = [{ row: 0, source: "MACD", target: "boll", count: 2 }];
+
+const evaluationLinks = [{ source: "period", target: "stop", count: 3 }];
+
+const sideLinks = [
+  { row: 0, source: "boll", target: "stop" },
+  { row: 1, source: "boll", target: "stop" },
+  { row: 2, source: "rsi", target: "stop" },
 ];
 
 // ============ 辅助函数 ==============
@@ -257,68 +229,75 @@ function wrapText(textSelection, width) {
  */
 const MultiBarcodeTree = ({ width, height, margin, gap }) => {
   const svgRef = useRef(null);
-  // 每个数据组包含 { indicatorsData, evaluationData }
-  const [groups, setGroups] = useState(null);
+  // 将指标数据分为3个策略
+  const [indicatorsGroups, setIndicatorsGroups] = useState([]);
+  // 评价数据直接使用
+  const [evaluationGroups, setEvaluationGroups] = useState([]);
 
   // 初始化 groups（深拷贝并调用 initTree 进行初始化）
   useEffect(() => {
-    const groupsData = [
-      { indicatorsData: indicatorsData1, evaluationData: evaluationData1 },
-      { indicatorsData: indicatorsData2, evaluationData: evaluationData2 },
-      { indicatorsData: indicatorsData3, evaluationData: evaluationData3 },
-    ];
-    const newGroups = groupsData.map((group) => ({
-      indicatorsData: group.indicatorsData.map((tree) =>
-        initTree(JSON.parse(JSON.stringify(tree)))
-      ),
-      evaluationData: group.evaluationData.map((tree) =>
-        initTree(JSON.parse(JSON.stringify(tree)))
-      ),
-    }));
-    setGroups(newGroups);
+    const indicators = [indicatorsData1, indicatorsData2, indicatorsData3];
+    const evaluation = [evaluationData];
+    const newIndicatorsGroups = indicators.map((treeArray) =>
+      treeArray.map((tree) => initTree(JSON.parse(JSON.stringify(tree))))
+    );
+    setIndicatorsGroups(newIndicatorsGroups);
+    const newEvaluationGroups = evaluation.map((treeArray) =>
+      treeArray.map((tree) => initTree(JSON.parse(JSON.stringify(tree))))
+    );
+    setEvaluationGroups(newEvaluationGroups);
   }, []);
 
   useEffect(() => {
-    if (!groups) return;
+    if (!indicatorsGroups.length || !evaluationGroups.length) return;
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
     // 整体可用区域
-    const availableWidth = width - margin * 2;
+    const rightMargin = 50;
+    const availableWidth = width - margin - rightMargin;
     const availableHeight = height - margin * 2;
     // 分成两个部分（指标和评价），中间留 sectionGap
+    const R1 = indicatorsGroups.length;
+    const R2 = evaluationGroups.length;
+    const totalRows = R1 + R2;
     const sectionGap = 20;
-    const indicatorsSectionHeight = (availableHeight - sectionGap) / 2;
-    const evaluationSectionHeight = (availableHeight - sectionGap) / 2;
+    const cellHeight = (availableHeight - sectionGap) / totalRows;
+    const indicatorsSectionHeight = R1 * cellHeight;
+    const evaluationSectionHeight = R2 * cellHeight;
+
+    // 保存盒子位置信息
+    const indicatorPositions = {}; // 键格式："row_treeName"，保存左右边缘中心位置
+    const evaluationPositions = {}; // 键：treeName，保存左右边缘中心位置
 
     // 对于指标部分：行 = 数据组数，列 = union(指标树名称)
     let indicatorNames = [];
-    groups.forEach((group) => {
-      group.indicatorsData.forEach((tree) => {
+    indicatorsGroups.forEach((group) => {
+      group.forEach((tree) => {
         if (!indicatorNames.includes(tree.name)) {
           indicatorNames.push(tree.name);
         }
       });
     });
-    const numIndicatorRows = groups.length;
+
     const numIndicatorCols = indicatorNames.length;
-    const colGap = 10;
-    const cellWidthIndicators = (availableWidth - (numIndicatorCols - 1) * colGap) / numIndicatorCols;
-    const cellHeightIndicators = indicatorsSectionHeight / numIndicatorRows;
+    const colGap = 20;
+    const cellWidthIndicators =
+      (availableWidth - (numIndicatorCols - 1) * colGap) / numIndicatorCols;
 
     // 对于评价部分：行 = 数据组数，列 = union(评价树名称)
     let evaluationNames = [];
-    groups.forEach((group) => {
-      group.evaluationData.forEach((tree) => {
+    evaluationGroups.forEach((group) => {
+      group.forEach((tree) => {
         if (!evaluationNames.includes(tree.name)) {
           evaluationNames.push(tree.name);
         }
       });
     });
-    const numEvaluationRows = groups.length;
+
     const numEvaluationCols = evaluationNames.length;
-    const cellWidthEvaluation = (availableWidth - (numEvaluationCols - 1) * colGap) / numEvaluationCols;
-    const cellHeightEvaluation = evaluationSectionHeight / numEvaluationRows;
+    const cellWidthEvaluation =
+      (availableWidth - (numEvaluationCols - 1) * colGap) / numEvaluationCols;
 
     // 预先定义颜色比例尺（复用同一实例）
     const barColor = d3.scaleOrdinal(d3.schemeCategory10);
@@ -326,15 +305,15 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
 
     // ======= 绘制指标（indicatorsData）部分 =======
     // 每一行对应一个数据组（rowIndex），每一列对应一个指标名称（colIndex）
-    groups.forEach((group, rowIndex) => {
+    indicatorsGroups.forEach((group, rowIndex) => {
       indicatorNames.forEach((indicatorName, colIndex) => {
         const x0 = margin + colIndex * (cellWidthIndicators + colGap);
-        const y0 = margin + rowIndex * cellHeightIndicators;
+        const y0 = margin + rowIndex * cellHeight;
         const cellGroup = svg
           .append("g")
           .attr("transform", `translate(${x0}, ${y0})`);
         // 查找当前组中是否存在该指标树
-        const tree = group.indicatorsData.find((t) => t.name === indicatorName);
+        const tree = group.find((t) => t.name === indicatorName);
         if (tree) {
           const visibleNodes = getVisibleNodes(tree);
           const totalWeight = d3.sum(visibleNodes, (d) => d.weight);
@@ -396,7 +375,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
               .attr("x", x)
               .attr("y", 0)
               .attr("width", rectWidth)
-              .attr("height", cellHeightIndicators)
+              .attr("height", cellHeight)
               .attr("fill", fill)
               .attr("stroke", stroke)
               .attr("stroke-dasharray", dash)
@@ -412,12 +391,12 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
                     const target = findTargetNode([tree], linkChild.name);
                     if (target) {
                       target.collapsed = false;
-                      setGroups([...groups]);
+                      setIndicatorsGroups([...indicatorsGroups]);
                       return;
                     }
                   }
                   node.collapsed = !node.collapsed;
-                  setGroups([...groups]);
+                  setIndicatorsGroups([...indicatorsGroups]);
                 }
               });
 
@@ -425,7 +404,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
               const textElem = gNode
                 .append("text")
                 .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightIndicators / 2)
+                .attr("y", cellHeight / 2)
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .text(node.name)
@@ -436,11 +415,11 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
                 const keys = Object.keys(node.value);
                 const barWidth = rectWidth / keys.length;
                 keys.forEach((k, idx) => {
-                  const barH = cellHeightIndicators * node.value[k];
+                  const barH = cellHeight * node.value[k];
                   gNode
                     .append("rect")
                     .attr("x", x + idx * barWidth)
-                    .attr("y", cellHeightIndicators - barH)
+                    .attr("y", cellHeight - barH)
                     .attr("width", barWidth - 1)
                     .attr("height", barH)
                     .attr("fill", barColor(k));
@@ -450,7 +429,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
               const textElem = gNode
                 .append("text")
                 .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightIndicators / 2)
+                .attr("y", cellHeight / 2)
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .text(node.name)
@@ -460,23 +439,25 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
           });
         } else {
         }
+        // 保存指标盒子位置：保存左边缘和右边缘中心
+        indicatorPositions[`${rowIndex}_${indicatorName}`] = {
+          left: { x: x0, y: y0 + cellHeight / 2 },
+          right: { x: x0 + cellWidthIndicators, y: y0 + cellHeight / 2 },
+        };
       });
     });
 
     // ======= 绘制评价（evaluationData）部分 =======
     // 每一行代表一个数据组，列代表评价树的名称
-    groups.forEach((group, rowIndex) => {
+    evaluationGroups.forEach((group, rowIndex) => {
       evaluationNames.forEach((evalName, colIndex) => {
         const x0 = margin + colIndex * (cellWidthEvaluation + colGap);
         const y0 =
-          margin +
-          indicatorsSectionHeight +
-          sectionGap +
-          rowIndex * cellHeightEvaluation;
+          margin + indicatorsSectionHeight + sectionGap + rowIndex * cellHeight;
         const cellGroup = svg
           .append("g")
           .attr("transform", `translate(${x0}, ${y0})`);
-        const tree = group.evaluationData.find((t) => t.name === evalName);
+        const tree = group.find((t) => t.name === evalName);
         if (tree) {
           const visibleNodes = getVisibleNodes(tree);
           const totalWeight = d3.sum(visibleNodes, (d) => d.weight);
@@ -538,7 +519,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
               .attr("x", x)
               .attr("y", 0)
               .attr("width", rectWidth)
-              .attr("height", cellHeightEvaluation)
+              .attr("height", cellHeight)
               .attr("fill", fill)
               .attr("stroke", stroke)
               .attr("stroke-dasharray", dash)
@@ -554,12 +535,12 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
                     const target = findTargetNode([tree], linkChild.name);
                     if (target) {
                       target.collapsed = false;
-                      setGroups([...groups]);
+                      setEvaluationGroups([...evaluationGroups]);
                       return;
                     }
                   }
                   node.collapsed = !node.collapsed;
-                  setGroups([...groups]);
+                  setEvaluationGroups([...evaluationGroups]);
                 }
               });
 
@@ -567,7 +548,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
               gNode
                 .append("text")
                 .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightEvaluation / 2)
+                .attr("y", cellHeight / 2)
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .text(node.name)
@@ -577,11 +558,11 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
                 const keys = Object.keys(node.value);
                 const barWidth = rectWidth / keys.length;
                 keys.forEach((k, idx) => {
-                  const barH = cellHeightEvaluation * node.value[k];
+                  const barH = cellHeight * node.value[k];
                   gNode
                     .append("rect")
                     .attr("x", x + idx * barWidth)
-                    .attr("y", cellHeightEvaluation - barH)
+                    .attr("y", cellHeight - barH)
                     .attr("width", barWidth - 1)
                     .attr("height", barH)
                     .attr("fill", barColor(k));
@@ -591,7 +572,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
               const textElem = gNode
                 .append("text")
                 .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightEvaluation / 2)
+                .attr("y", cellHeight / 2)
                 .attr("dy", ".35em")
                 .attr("text-anchor", "middle")
                 .text(node.name)
@@ -601,9 +582,86 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
           });
         } else {
         }
+        evaluationPositions[evalName] = {
+          left: { x: x0, y: y0 + cellHeight / 2 },
+          right: { x: x0 + cellWidthEvaluation, y: y0 + cellHeight / 2 },
+        };
       });
     });
-  }, [groups, width, height, margin, gap]);
+    // ----- 绘制连线 -----
+    // 根据 indicatorsLinks 绘制指标部分的直线连线
+    indicatorsLinks.forEach((link) => {
+      const row = link.row;
+      const sourceKey = `${row}_${link.source}`;
+      const targetKey = `${row}_${link.target}`;
+      const sourcePos = indicatorPositions[sourceKey];
+      const targetPos = indicatorPositions[targetKey];
+      if (sourcePos && targetPos) {
+        for (let i = 0; i < link.count; i++) {
+          const offset = (i - (link.count - 1) / 2) * 5;
+          svg
+            .append("line")
+            .attr("x1", sourcePos.right.x)
+            .attr("y1", sourcePos.right.y + offset)
+            .attr("x2", targetPos.left.x)
+            .attr("y2", targetPos.left.y + offset)
+            .attr("stroke", "black")
+            .attr("stroke-width", 1);
+        }
+      }
+    });
+
+    // 根据 evaluationLinks 绘制评价部分直线
+    evaluationLinks.forEach((link) => {
+      const sourcePos = evaluationPositions[link.source];
+      const targetPos = evaluationPositions[link.target];
+      if (sourcePos && targetPos) {
+        for (let i = 0; i < link.count; i++) {
+          const offset = (i - (link.count - 1) / 2) * 5;
+          svg
+            .append("line")
+            .attr("x1", sourcePos.right.x)
+            .attr("y1", sourcePos.right.y + offset)
+            .attr("x2", targetPos.left.x)
+            .attr("y2", targetPos.left.y + offset)
+            .attr("stroke", "black")
+            .attr("stroke-width", 1);
+        }
+      }
+    });
+
+    sideLinks.forEach((link) => {
+      const row = link.row;
+      const sourceKey = `${row}_${link.source}`;
+      const sourcePos = indicatorPositions[sourceKey];    // 指标区位置
+      const targetPos = evaluationPositions[link.target]; // 评价区位置
+    
+      if (sourcePos && targetPos) {
+        // 先找出源与目标的右 x 坐标，再加一个额外距离
+        const pathRight = Math.max(sourcePos.right.x, targetPos.right.x) + 10;
+    
+        // 路径分段：
+        // 1. 从 source 的右侧 (sx, sy) 出发
+        // 2. 水平到 pathRight
+        // 3. 垂直到 target 的 y
+        // 4. 水平回到 target 的右侧
+        const pathData = [
+          `M ${sourcePos.right.x} ${sourcePos.right.y}`, // 起点
+          `H ${pathRight}`,                               // 先向右
+          `V ${targetPos.right.y}`,                       // 再垂直
+          `H ${targetPos.right.x}`                        // 回到目标 right.x
+        ].join(" ");
+    
+        svg
+          .append("path")
+          .attr("d", pathData)
+          .attr("fill", "none")
+          .attr("stroke", "black")
+          .attr("stroke-width", 1);
+      }
+    });
+    
+  }, [indicatorsGroups, evaluationGroups, width, height, margin, gap]);
 
   return (
     <svg
