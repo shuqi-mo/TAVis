@@ -302,7 +302,8 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
     });
     const numIndicatorRows = groups.length;
     const numIndicatorCols = indicatorNames.length;
-    const cellWidthIndicators = availableWidth / numIndicatorCols;
+    const colGap = 10;
+    const cellWidthIndicators = (availableWidth - (numIndicatorCols - 1) * colGap) / numIndicatorCols;
     const cellHeightIndicators = indicatorsSectionHeight / numIndicatorRows;
 
     // 对于评价部分：行 = 数据组数，列 = union(评价树名称)
@@ -316,7 +317,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
     });
     const numEvaluationRows = groups.length;
     const numEvaluationCols = evaluationNames.length;
-    const cellWidthEvaluation = availableWidth / numEvaluationCols;
+    const cellWidthEvaluation = (availableWidth - (numEvaluationCols - 1) * colGap) / numEvaluationCols;
     const cellHeightEvaluation = evaluationSectionHeight / numEvaluationRows;
 
     // 预先定义颜色比例尺（复用同一实例）
@@ -327,7 +328,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
     // 每一行对应一个数据组（rowIndex），每一列对应一个指标名称（colIndex）
     groups.forEach((group, rowIndex) => {
       indicatorNames.forEach((indicatorName, colIndex) => {
-        const x0 = margin + colIndex * cellWidthIndicators;
+        const x0 = margin + colIndex * (cellWidthIndicators + colGap);
         const y0 = margin + rowIndex * cellHeightIndicators;
         const cellGroup = svg
           .append("g")
@@ -466,7 +467,7 @@ const MultiBarcodeTree = ({ width, height, margin, gap }) => {
     // 每一行代表一个数据组，列代表评价树的名称
     groups.forEach((group, rowIndex) => {
       evaluationNames.forEach((evalName, colIndex) => {
-        const x0 = margin + colIndex * cellWidthEvaluation;
+        const x0 = margin + colIndex * (cellWidthEvaluation + colGap);
         const y0 =
           margin +
           indicatorsSectionHeight +

@@ -222,9 +222,8 @@ def process_scatterplot():
 @app.route('/process_code', methods=['POST'])
 def process_code():
     data = request.get_json()
-    output_tree = build_output(data["input_data"]["indicators"])
-    output_dict = output_tree.to_dict()
-    return jsonify(output_dict)
+    indicatorsData, evaluationData = transform_code(data["code"])
+    return jsonify([indicatorsData, evaluationData])
 
 @app.route('/process_strategy', methods=['POST'])
 def process_strategy():

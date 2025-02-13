@@ -1,251 +1,197 @@
-import json
+import ast
 import re
+import random
 
-# ======================
-# AST 节点定义
-# ======================
-class ASTNode:
-    def __init__(self, name, node_type="operation", children=None, circle=None):
-        self.name = name              # 节点名称，例如函数名或数值
-        self.type = node_type         # "operation" 表示函数/运算，"value" 表示叶子（数值、标识符）
-        self.children = children if children is not None else []
-        self.circle = circle          # 合并后生成的 circle 信息
+random.seed(42)
 
-    def to_dict(self):
-        """将 AST 转换为字典，便于 JSON 输出"""
-        d = {"name": self.name, "type": self.type}
-        if self.circle:
-            d["circle"] = self.circle
-        if self.children:
-            d["children"] = [child.to_dict() for child in self.children]
-        return d
+# ─────────────────────────────
+# 利用 AST 提取表达式中的变量名称
+def extract_vars(expr):
+    try:
+        tree = ast.parse(expr, mode='eval')
+    except Exception:
+        return []
+    vars_found = []
+    class VarVisitor(ast.NodeVisitor):
+        def visit_Name(self, node):
+            vars_found.append(node.id)
+        def visit_Call(self, node):
+            # 不将函数名本身作为依赖，只遍历参数
+            for arg in node.args:
+                self.visit(arg)
+    VarVisitor().visit(tree.body)
+    return vars_found
 
-# ======================
-# 解析器（Tokenizer + Recursive Descent Parser）
-# ======================
-TOKEN_REGEX = r"\s*(?:(\d+)|([a-zA-Z_]\w*)|(.))"
-# 第一组匹配数字，第二组匹配标识符（支持下划线），第三组匹配其它单字符（如括号、逗号、运算符）
 
-def tokenize(s):
-    tokens = []
-    for number, ident, other in re.findall(TOKEN_REGEX, s):
-        if number:
-            tokens.append(("NUMBER", number))
-        elif ident:
-            tokens.append(("IDENT", ident))
-        elif other:
-            tokens.append((other, other))
-    return tokens
+# ─────────────────────────────
+# 根据表达式判断类型
+def determine_type(expr):
+    if isinstance(expr, (int, float)):
+        return "constant"
+    if isinstance(expr, str):
+        s = expr.strip()
+        # 判断是否为函数调用形式，如 "EMA(close,12)" 或 "rsi(close,14)"
+        if re.match(r'^[A-Za-z_]\w*\s*\(.*\)$', s):
+            return "function"
+        # 若包含算术运算符，则认为需要解析其依赖（extend 类型）
+        if any(op in s for op in ['+', '-', '*', '/']):
+            return "extend"
+        # 否则视为价格时间序列
+        return "timeseries"
+    return "constant"
 
-class Parser:
-    def __init__(self, tokens):
-        self.tokens = tokens
-        self.pos = 0
 
-    def current(self):
-        if self.pos < len(self.tokens):
-            return self.tokens[self.pos]
-        return None
-
-    def consume(self, expected=None):
-        token = self.current()
-        if expected and token[0] != expected:
-            raise ValueError(f"期望 {expected}，但得到 {token}")
-        self.pos += 1
-        return token
-
-    def parse_expression(self):
-        """解析表达式（支持 + 与 - 运算）"""
-        node = self.parse_term()
-        while self.current() and self.current()[0] in ('+', '-'):
-            op = self.consume()[1]
-            right = self.parse_term()
-            node = ASTNode(op, "operation", [node, right])
-        return node
-
-    def parse_term(self):
-        """解析乘除表达式（支持 * 与 / 运算）"""
-        node = self.parse_factor()
-        while self.current() and self.current()[0] in ('*', '/'):
-            op = self.consume()[1]
-            right = self.parse_factor()
-            node = ASTNode(op, "operation", [node, right])
-        return node
-
-    def parse_factor(self):
-        """解析因子：可能为数值、标识符或函数调用"""
-        token = self.current()
-        if not token:
-            return None
-        if token[0] == "NUMBER":
-            self.consume()
-            return ASTNode(token[1], "value")
-        elif token[0] == "IDENT":
-            ident = self.consume()[1]
-            # 如果后面紧跟 "(" 则解析为函数调用
-            if self.current() and self.current()[0] == "(":
-                self.consume("(")  # 消耗 "("
-                args = self.parse_arguments()
-                if self.current() and self.current()[0] == ")":
-                    self.consume(")")
-                return ASTNode(ident, "operation", args)
-            else:
-                return ASTNode(ident, "value")
-        elif token[0] == "(":
-            self.consume("(")
-            node = self.parse_expression()
-            if self.current() and self.current()[0] == ")":
-                self.consume(")")
-            return node
-        else:
-            self.consume()
-            return None
-
-    def parse_arguments(self):
-        """解析函数调用的参数列表（以逗号分隔）"""
-        args = []
-        while self.current() and self.current()[0] != ")":
-            arg = self.parse_expression()
-            if arg:
-                args.append(arg)
-            if self.current() and self.current()[0] == ",":
-                self.consume(",")
-        return args
-
-def parse_formula(formula_str):
-    tokens = tokenize(formula_str)
-    parser = Parser(tokens)
-    return parser.parse_expression()
-
-# ======================
-# 合并规则
-# ======================
-def merge_ast(ast1, ast2, indicator_name):
-    """
-    合并两个 AST（长/短公式），规则如下：
-      1. 如果两个 AST 完全相同，则返回 ast1。
-      2. 如果两个节点均为 cross，则将它们的子节点取并集（顺序无关，不重复）。
-      3. 如果两个节点名称相同且均为 operation，则：
-           - 若子节点个数相同，则按对应位置递归合并；
-           - 否则取两边子节点的并集。
-      4. 其它情况，直接返回 ast1。
-    注意：这里不对 EMA 做特殊处理，EMA 的 circle 信息由后处理生成。
-    """
-    if ast1.to_dict() == ast2.to_dict():
-        return ast1
-
-    if ast1.name.lower() == "cross" and ast2.name.lower() == "cross":
-        # 对 cross 节点，取 union（不重复添加相同子节点）
-        for child in ast2.children:
-            if not any(child.to_dict() == exist_child.to_dict() for exist_child in ast1.children):
-                ast1.children.append(child)
-        return ast1
-
-    if ast1.type == "operation" and ast2.type == "operation" and ast1.name == ast2.name:
-        if len(ast1.children) == len(ast2.children):
-            for i in range(len(ast1.children)):
-                ast1.children[i] = merge_ast(ast1.children[i], ast2.children[i], indicator_name)
-        else:
-            union_children = list(ast1.children)
-            for child in ast2.children:
-                if not any(child.to_dict() == exist_child.to_dict() for exist_child in union_children):
-                    union_children.append(child)
-            ast1.children = union_children
-        return ast1
-
-    return ast1
-
-def merge_indicator(long_expr, short_expr, indicator_name):
-    """
-    解析 long 与 short 公式，生成各自的 AST 后合并，返回合并后的 AST。
-    """
-    ast_long = parse_formula(long_expr)
-    ast_short = parse_formula(short_expr)
-    merged = merge_ast(ast_long, ast_short, indicator_name)
-    return merged
-
-# ======================
-# 辅助函数：将 AST 节点转换为字符串表示（并对 * 运算进行简化处理）
-# ======================
-def node_to_str(node):
-    if node.type == "value" or not node.children:
-        return node.name
-    # 如果是 "*" 运算且其中一个子节点为 "2"，则返回另一子节点的字符串表示
-    if node.name == "*" and len(node.children) == 2:
-        if node.children[0].type == "value" and node.children[0].name == "2":
-            return node_to_str(node.children[1])
-        elif node.children[1].type == "value" and node.children[1].name == "2":
-            return node_to_str(node.children[0])
-    return f"{node.name}(" + ",".join(node_to_str(child) for child in node.children) + ")"
-
-# ======================
-# 后处理：为 AST 添加 circle 信息
-# ======================
-def add_circle_info_to_tree(node, indicator_name):
-    """
-    递归遍历 AST，按规则为部分 operation 节点添加 circle 信息：
-      1. 如果当前节点为 cross，则检查其子节点中是否存在多个 "+" 或 "-" 节点，
-         若存在，则取这些节点子节点字符串表示的交集（利用 node_to_str 已做简化），
-         并为这些节点添加 circle 信息，group 为 "{indicator}_plus_minus"；
-      2. 如果当前节点为 SMA 或 movingstd 且有两个子节点，则添加 circle 信息，
-         group 为 "{indicator}_sma_std"，node 为其子节点名称列表；
-      3. 如果当前节点为 EMA 且有两个子节点，则“折叠”该节点，
-         用第二个子节点的名称替换当前节点名称，并添加 circle 信息，
-         group 为 "{indicator}_EMA_{first_param}"，node 为 ["EMA", first_param]。
-      4. 对其它节点，递归处理其子节点。
-    """
-    if node.type == "operation":
-        # 处理 cross 节点中 "+" 和 "-" 子节点的 circle 信息
-        if node.name.lower() == "cross" and node.children:
-            plus_minus_nodes = [child for child in node.children if child.name in ["+", "-"]]
-            if len(plus_minus_nodes) >= 2:
-                sets = [set(node_to_str(child_) for child_ in child.children) 
-                        for child in plus_minus_nodes if child.children]
-                if sets:
-                    common = set.intersection(*sets)
-                    if common:
-                        common_list = sorted(list(common))
-                        count = len(plus_minus_nodes)
-                        for child in plus_minus_nodes:
-                            child.circle = {"value": str(count),
-                                            "node": common_list,
-                                            "group": f"{indicator_name}_plus_minus"}
-        # 处理 SMA 和 movingstd 节点
-        if node.name.upper() in ["SMA", "MOVINGSTD"] and len(node.children) == 2:
-            node.circle = {"value": "2",
-                           "node": [child.name for child in node.children],
-                           "group": f"{indicator_name}_sma_std"}
-        # 处理 EMA 节点：折叠为只显示第二参数，并添加 circle 信息
-        if node.name.upper() == "EMA" and len(node.children) == 2:
-            first_param = node.children[0].name
-            second_param = node.children[1].name
-            circle = {
-                "value": "2",
-                "node": ["EMA", first_param],
-                "group": f"{indicator_name}_EMA_{first_param}"
+# ─────────────────────────────
+# 处理指标中的单个变量（依赖）
+def process_variable(key, indicator, cache):
+    if key in cache:
+        return cache[key]
+    expr = indicator[key]
+    node = {}
+    t = determine_type(expr)
+    if t == "constant":
+        node["name"] = str(expr).replace(" ", "")
+        node["type"] = "constant"
+    elif t in ["function", "timeseries"]:
+        node["name"] = expr.replace(" ", "")
+        node["type"] = t
+        if t == "function":
+            # 对于函数节点，增加 value 属性（使用随机值模拟）
+            node["value"] = {
+                "trend": round(random.uniform(0.1, 1.0), 1),
+                "seasonal": round(random.uniform(0.1, 1.0), 1),
+                "residual": round(random.uniform(0.1, 1.0), 1)
             }
-            node.name = second_param
-            node.circle = circle
-            node.children = []  # 折叠后不保留子节点
-        # 递归处理所有子节点
-        for child in node.children:
-            add_circle_info_to_tree(child, indicator_name)
+    elif t == "extend":
+        node["name"] = key
+        node["type"] = "extend"
+        # 解析表达式中的依赖变量
+        deps = extract_vars(expr)
+        ordered = []
+        # 按照 indicator 中键的顺序（排除 name、long、short）选取依赖
+        for k in indicator:
+            if k not in ["name", "long", "short"] and k in deps:
+                ordered.append(k)
+        children = []
+        for dep in ordered:
+            child = process_variable(dep, indicator, cache)
+            children.append(child)
+        node["children"] = children
+    else:
+        node["name"] = str(expr)
+        node["type"] = t
+    cache[key] = node
+    return node
 
-# ======================
-# 构造最终输出树
-# ======================
-def build_output(indicators):
-    """
-    根据每个指标的 long/short 公式构造输出树，
-    根节点名称为 "indicators"，其 children 为各指标节点，
-    每个指标节点下挂合并后的公式 AST（后处理时生成 circle 信息）。
-    """
+
+# ─────────────────────────────
+# 类型优先级（用于排序顶层依赖节点，仅作为参考）
+def type_priority(t):
+    mapping = {
+        "constant": 0,
+        "function": 1,
+        "timeseries": 2,
+        "extend": 3,
+        "link": 4,
+        "context": 5
+    }
+    return mapping.get(t, 99)
+
+
+# ─────────────────────────────
+# 处理单个指标（indicator）
+def process_indicator(indicator):
+    cache = {}
+    node = {"name": indicator["name"], "type": "extend"}
+    # 提取 "long" 与 "short" 表达式中引用的变量
+    deps_set = set()
+    for key_expr in ["long", "short"]:
+        if key_expr in indicator:
+            deps_set.update(extract_vars(indicator[key_expr]))
+    deps = []
+    # 根据 indicator 中的键顺序，选择在 long/short 中出现的依赖
+    for k in indicator:
+        if k not in ["name", "long", "short"] and k in deps_set:
+            deps.append(k)
     children = []
-    for ind in indicators:
-        name = ind["name"]
-        merged_ast = merge_indicator(ind["long"], ind["short"], name)
-        indicator_node = ASTNode(name, "operation", [merged_ast])
-        # 后处理：为该指标下的 AST 添加 circle 信息
-        add_circle_info_to_tree(merged_ast, name)
-        children.append(indicator_node)
-    return ASTNode("indicators", "operation", children)
+    for dep in deps:
+        child_node = process_variable(dep, indicator, cache)
+        children.append(child_node)
+    # 对顶层指标节点的 children 按类型优先级排序（例如 rsi 的常数先于函数）
+    children = sorted(children, key=lambda child: type_priority(child["type"]))
+    node["children"] = children
+    return node
+
+
+# ─────────────────────────────
+# 为去重比较定义归一化函数
+# 对于 extend 类型的节点，忽略自身的 name，只考虑 children 结构
+def normalized_structure(node):
+    t = node["type"]
+    if t == "extend":
+        # 对 extend 节点，只取 children 结构（若没有 children，则视为空元组）
+        return (t, tuple(normalized_structure(child) for child in node.get("children", [])))
+    else:
+        # 对于其它节点，比较 type 和 name
+        return (t, node.get("name"))
+
+
+# 对同级节点中的 extend 类型节点进行去重：
+# 如果某个 extend 节点的 children 结构与之前的某个 extend 节点相同，
+# 则用一个 link 节点替换其 children，引用第一次出现的节点的 name。
+def deduplicate_indicator_children(children):
+    seen = {}
+    for child in children:
+        if child["type"] == "extend" and "children" in child:
+            # 归一化子树结构（仅比较 children 部分）
+            key = tuple(normalized_structure(c) for c in child["children"])
+            if key in seen:
+                # 找到了相同结构的子树，将当前节点的 children 替换为 link 节点
+                child["children"] = [{"name": seen[key], "type": "link"}]
+            else:
+                seen[key] = child["name"]
+        # 递归处理每个子节点的 children
+        if "children" in child:
+            deduplicate_indicator_children(child["children"])
+
+
+# ─────────────────────────────
+# 处理 evaluation 部分，输出为数组形式
+def process_evaluation(evaluation):
+    eval_list = []
+    for key, value in evaluation.items():
+        if key == "period":
+            node = {"name": key, "type": "extend", "children": []}
+            if isinstance(value, list) and len(value) == 2:
+                # 格式为 "[start,end]"
+                node["children"].append({"name": f"{value[0]} {value[1]}", "type": "context"})
+            eval_list.append(node)
+        else:
+            node = {"name": key, "type": "extend", "children": []}
+            if isinstance(value, list):
+                for item in value:
+                    if isinstance(item, dict):
+                        for subkey, subvalue in item.items():
+                            subnode = {
+                                "name": subkey,
+                                "type": "extend",
+                                "children": [{"name": subvalue, "type": "context"}]
+                            }
+                            node["children"].append(subnode)
+            eval_list.append(node)
+    return eval_list
+
+
+# ─────────────────────────────
+# 主转换函数，返回 indicatorsData 与 evaluationData（均为数组形式）
+def transform_code(code):
+    # 处理 indicators 部分
+    indicators_list = []
+    for indicator in code.get("indicators", []):
+        node = process_indicator(indicator)
+        # 在每个指标的 children 中进行去重
+        deduplicate_indicator_children(node["children"])
+        indicators_list.append(node)
+    # 处理 evaluation 部分
+    evaluation_list = process_evaluation(code.get("evaluation", {}))
+    return indicators_list, evaluation_list

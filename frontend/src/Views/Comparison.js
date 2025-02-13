@@ -175,9 +175,9 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode }) => {
 
   return (
     <div>
-      <Flex gap="small">
-        <div style={{ width: 100, height: 220 }}>
-          <Flex vertical gap="small">
+      <Flex vertical gap="small">
+        <div style={{ width: 100, height: 50 }}>
+          <Flex gap="small">
             <Select
               value={valueKey}
               onChange={(val) => setValueKey(val)}
@@ -201,8 +201,8 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode }) => {
         <div style={{ border: "1px solid #ddd" }}>
           <StrategyMap
             data={treeData}
-            width={620}
-            height={220}
+            width={100}
+            height={200}
             onNodeClick={handleNodeClick}
             valueKey={valueKey}
             selectedNode={selectedNode}

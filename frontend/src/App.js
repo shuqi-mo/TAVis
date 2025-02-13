@@ -13,10 +13,7 @@ import ScatterPlot from "./Views/ScatterPlot";
 import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
 import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
-import TreeComponent from "./Views/TreeComponent";
 import MultiBarcodeTree from "./Views/MultiBarcodeTree";
-
-const { Sider } = Layout;
 
 function App() {
   const API_URL = "http://localhost:5000";
@@ -353,9 +350,9 @@ function App() {
                 />
               )}
             </Flex>
-            <Flex>
-              <Flex vertical="true">
-                <div className="view-title">Comparison View</div>
+            <Flex vertical="true">
+              <div className="view-title">Comparison View</div>
+              <Flex>
                 <div>
                   <MultiBarcodeTree
                     width={750}
@@ -364,26 +361,16 @@ function App() {
                     gap={4}
                   />
                 </div>
-                {/* <div
-                  style={{
-                    width: 780,
-                    height: 220,
-                    maxHeight: 220,
-                    overflowY: "auto",
-                  }}
-                >
-                  <TreeComponent indicators={indicators} />
-                </div> */}
-                {/* <div style={{ width: 780, height: 220 }}> */}
-                {/* <Comparison
+                <div style={{ width: 370, height: 220 }}>
+                  <Comparison
                     initialCode={code}
                     indicators={indicators}
                     evaluation={evaluation}
                     onSelectCode={(code) => {
                       setCode(code);
                     }}
-                  /> */}
-                {/* </div> */}
+                  />
+                </div>
               </Flex>
             </Flex>
             <Flex>
@@ -393,9 +380,6 @@ function App() {
                 <ScatterPlot data={scatterData} width={350} height={350} />
               )} */}
             </Flex>
-          </Flex>
-          <Flex vertical="true">
-            <div className="view-title">Stock Selection View</div>
           </Flex>
           <Flex>
             {visible && (

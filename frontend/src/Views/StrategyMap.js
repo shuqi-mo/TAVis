@@ -31,7 +31,7 @@ const StrategyMap = ({
     const root = d3.hierarchy(data);
 
     // 创建树形布局（横向）
-    const treeLayout = d3.tree().size([height - 100, width - 200]); // 高度决定节点的纵向分布，宽度决定横向分布
+    const treeLayout = d3.tree().size([height, width]); // 高度决定节点的纵向分布，宽度决定横向分布
     treeLayout(root);
 
     // 获取所有节点和连线
@@ -82,7 +82,7 @@ const StrategyMap = ({
         "d",
         d3
           .linkHorizontal()
-          .x((d) => d.y + 100) // 平移以留出边距（横向）
+          .x((d) => d.y + 20) // 平移以留出边距（横向）
           .y((d) => d.x)
       )
       .attr("fill", "none")
@@ -96,7 +96,7 @@ const StrategyMap = ({
       .selectAll("g")
       .data(nodes)
       .join("g")
-      .attr("transform", (d) => `translate(${d.y + 100},${d.x})`); // 平移以留出边距
+      .attr("transform", (d) => `translate(${d.y + 20},${d.x})`); // 平移以留出边距
 
     // 定义鼠标事件处理函数
     const handleMouseOver = () => {
