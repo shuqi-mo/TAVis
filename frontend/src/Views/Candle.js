@@ -660,7 +660,7 @@ function Candle({
           .on("click", function (event) {
             event.stopPropagation(); // 阻止事件冒泡到全局
             selectedIndicator = i; // 设置当前选中的副图指标索引
-            examplerContentGroup.selectAll(".selected-border").remove();  // 移除所有副图中的已选边框
+            examplerContentGroup.selectAll(".selected-border").remove(); // 移除所有副图中的已选边框
             // 在当前副图中添加边框
             d3.select(this.parentNode)
               .append("rect")
@@ -982,6 +982,19 @@ function Candle({
           .select(".exampler-content")
           .selectAll(".exampler-line")
           .attr("d", newLineGenerator);
+      });
+
+      // 更新副图中的交易信号矩形
+      d3.selectAll(".exampler-chart").each(function () {
+        const subChart = d3.select(this);
+        subChart
+          .select(".exampler-content")
+          .selectAll(".indicator-trade-rect")
+          .attr("x", (d) => xScale(d.idx))
+          .attr(
+            "width",
+            ((width - margin.left - margin.right) / data.data.length) * 0.7
+          );
       });
     }
 

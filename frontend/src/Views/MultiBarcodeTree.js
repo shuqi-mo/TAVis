@@ -120,7 +120,7 @@ const evaluationData = [
 
 const indicatorsLinks = [{ row: 0, source: "MACD", target: "boll", count: 2 }];
 
-const evaluationLinks = [{ source: "period", target: "stop", count: 3 }];
+const evaluationLinks = [{ source: "period", target: "stop", count: 4 }];
 
 const sideLinks = [
   { row: 0, source: "boll", target: "stop" },
