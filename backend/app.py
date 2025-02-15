@@ -10,7 +10,6 @@ import json
 from indicator import *
 from process import *
 from evaluation import *
-from pattern import *
 from parser import *
 
 app = Flask(__name__)
@@ -137,24 +136,6 @@ def process_stocks():
         res.append([item, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
         res_curve.append([item, curve])
     return jsonify([res, res_curve])
-
-@app.route('/process_pattern', methods=['POST'])
-def process_pattern():
-    data = request.get_json()
-    # print(data["indicatorPerformance"])
-    data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
-    mask = (data_df['trade_date'] >= data["startDate"]) & (data_df['trade_date'] <= data["endDate"])
-    update_data_df = data_df[mask].reset_index(drop=True)
-    matcher = PatternMatcher(minsup=data["minsup"])
-    matcher.data = list(update_data_df["close"])
-    matcher.generate_candL2(matcher.pattern)
-    matcher.generate_fre(matcher.pattern, matcher.L2)
-    matcher.Cancalute(matcher.pattern)
-    matcher.process_patterns()
-    pattern_dict = convert_tuple_keys(matcher.find_pattern_subsequences())
-    pattern_list = [convert_np_types(item) for item in matcher.fre_pattern_list]
-    pattern_analysis = analyze_signals(pattern_dict, data["indicatorPerformance"])
-    return jsonify([pattern_list, pattern_analysis])
 
 @app.route('/process_scatterplot', methods=['POST'])
 def process_scatterplot():

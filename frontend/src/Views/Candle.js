@@ -362,7 +362,7 @@ function Candle({
       .attr("height", rectHeight)
       .attr("x", (d) => xScale(d.index))
       .attr("y", (d) => yScale(d.max) - markerOffset - rectHeight)
-      .attr("fill", "orange");
+      .attr("fill", "red");
 
     // 买入标记：三角形（尖角朝下）
     candlestick
@@ -379,7 +379,7 @@ function Candle({
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
       })
-      .attr("fill", "orange");
+      .attr("fill", "red");
 
     // 卖出标记：矩形（位于 K 线最低价下方）
     candlestick
@@ -392,7 +392,7 @@ function Candle({
       .attr("height", rectHeight)
       .attr("x", (d) => xScale(d.index))
       .attr("y", (d) => yScale(d.min) + markerOffset)
-      .attr("fill", "blue");
+      .attr("fill", "green");
 
     // 卖出标记：三角形（尖角朝上）
     candlestick
@@ -409,7 +409,7 @@ function Candle({
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
       })
-      .attr("fill", "blue");
+      .attr("fill", "green");
 
     // —— 绘制上下文（刷选）区域 —— //
 
@@ -461,7 +461,7 @@ function Candle({
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
       })
       .attr("fill", (d) =>
-        d.trade === 1 ? "orange" : d.trade === -1 ? "blue" : "white"
+        d.trade === 1 ? "red" : d.trade === -1 ? "green" : "white"
       );
 
     // 在上下文区域添加刷选（brush），初始范围使用 xScale2
@@ -765,7 +765,7 @@ function Candle({
               "height",
               eachExamplerHeightFixed - subMargin.top - subMargin.bottom
             )
-            .attr("fill", (d) => (d.val === 1 ? "orange" : "blue"));
+            .attr("fill", (d) => (d.val === 1 ? "red" : "green"));
         }
 
         // 绘制图例

@@ -8,7 +8,6 @@ import { Indicator, Evaluation } from "./utils/ClassDefinitions";
 import { Layout, Button, Flex, Radio } from "antd";
 import { CloseOutlined, CodeOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
-import Pattern from "./Views/Pattern";
 import ScatterPlot from "./Views/ScatterPlot";
 import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
@@ -328,7 +327,7 @@ function App() {
                   </div>
                 )}
               </Flex>
-              <div style={{ width: 400, maxHeight: 400, overflowY: "auto" }}>
+              <div style={{ width: 180, maxHeight: 400, overflowY: "auto" }}>
                 {curveBoxplotData &&
                   position === "current stock" &&
                   curveBoxplotData.map((item) => (
@@ -340,15 +339,7 @@ function App() {
                     <CurveBoxplot boxplotData={item} width={160} height={120} />
                   ))}
               </div>
-              {trade && indicatorPerformance && (
-                <Pattern
-                  selectStock={selectStock}
-                  trade={trade}
-                  startDate={evaluation.startDate}
-                  endDate={evaluation.endDate}
-                  indicatorPerformance={indicatorPerformance}
-                />
-              )}
+              
             </Flex>
             <Flex vertical="true">
               <div className="view-title">Comparison View</div>
