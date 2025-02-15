@@ -119,7 +119,7 @@ def transform_data_ring(ring_indicator_stock):
                 arr = np.array(profit_arr)
                 min_val = float(np.min(arr))
                 max_val = float(np.max(arr))
-                median_val = float(np.median(arr))
+                median_val = float(np.percentile(arr, 50))
                 q1 = float(np.percentile(arr, 25))
                 q3 = float(np.percentile(arr, 75))
             else:
