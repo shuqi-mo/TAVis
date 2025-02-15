@@ -17,7 +17,7 @@ function Candle({
   const subMargin = { top: 20, right: 5, bottom: 20, left: 20 };
   // --- 新布局参数 --- //
   // 固定主图区域高度
-  const mainChartHeight = 250;
+  const mainChartHeight = 350;
   // 固定刷选区域（上下文区域）高度
   const brushChartHeight = 40;
   // 主图与刷选区域之间的间隔
@@ -70,14 +70,14 @@ function Candle({
       d3.selectAll(".buy-marker-rect").each(function (d) {
         // 如果对应指标交易信号为 1，则恢复橙色，否则改为灰色
         if (indicatorsTrade[selectedIndex][d.index] === 1) {
-          d3.select(this).attr("fill", "orange");
+          d3.select(this).attr("fill", "blue");
         } else {
           d3.select(this).attr("fill", "white");
         }
       });
       d3.selectAll(".buy-marker-triangle").each(function (d) {
         if (indicatorsTrade[selectedIndex][d.index] === 1) {
-          d3.select(this).attr("fill", "orange");
+          d3.select(this).attr("fill", "blue");
         } else {
           d3.select(this).attr("fill", "white");
         }
@@ -101,8 +101,8 @@ function Candle({
 
     function resetMainChartMarkers() {
       // 恢复主图所有交易标记的原始颜色
-      d3.selectAll(".buy-marker-rect").attr("fill", "orange");
-      d3.selectAll(".buy-marker-triangle").attr("fill", "orange");
+      d3.selectAll(".buy-marker-rect").attr("fill", "blue");
+      d3.selectAll(".buy-marker-triangle").attr("fill", "blue");
       d3.selectAll(".sell-marker-rect").attr("fill", "blue");
       d3.selectAll(".sell-marker-triangle").attr("fill", "blue");
     }
@@ -362,7 +362,7 @@ function Candle({
       .attr("height", rectHeight)
       .attr("x", (d) => xScale(d.index))
       .attr("y", (d) => yScale(d.max) - markerOffset - rectHeight)
-      .attr("fill", "red");
+      .attr("fill", "blue");
 
     // 买入标记：三角形（尖角朝下）
     candlestick
@@ -379,7 +379,7 @@ function Candle({
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
       })
-      .attr("fill", "red");
+      .attr("fill", "blue");
 
     // 卖出标记：矩形（位于 K 线最低价下方）
     candlestick
@@ -392,7 +392,7 @@ function Candle({
       .attr("height", rectHeight)
       .attr("x", (d) => xScale(d.index))
       .attr("y", (d) => yScale(d.min) + markerOffset)
-      .attr("fill", "green");
+      .attr("fill", "blue");
 
     // 卖出标记：三角形（尖角朝上）
     candlestick
@@ -409,7 +409,7 @@ function Candle({
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
       })
-      .attr("fill", "green");
+      .attr("fill", "blue");
 
     // —— 绘制上下文（刷选）区域 —— //
 
@@ -546,8 +546,8 @@ function Candle({
     // ===============================
     // 若 examplerData 存在，计算每个副图的高度（若有多个指标，则均分）
     const numExamplers = examplerData ? examplerData.length : 0;
-    // 如果指标个数<=4，则显示全部，否则只显示4个，剩余部分需要滚动查看
-    const visibleCount = numExamplers <= 4 ? numExamplers : 4;
+    // 如果指标个数<=3，则显示全部，否则只显示3个，剩余部分需要滚动查看
+    const visibleCount = numExamplers <= 3 ? numExamplers : 3;
     // 当指标个数<=4时，每个副图高度均分 examplerTotalHeight；当大于4时，固定每个副图高度 = examplerTotalHeight/4
     const eachExamplerHeightFixed = examplerTotalHeight / visibleCount;
     // 总内容高度
@@ -670,7 +670,7 @@ function Candle({
               .attr("width", width - margin.left - margin.right)
               .attr("height", eachExamplerHeightFixed)
               .attr("fill", "none")
-              .attr("stroke", "gray")
+              .attr("stroke", "blue")
               .attr("stroke-width", 2)
               .style("pointer-events", "none");
             highlightMainChart(i); // 调用更新主图交易标记的函数

@@ -13,6 +13,7 @@ import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
 import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
 import MultiBarcodeTree from "./Views/MultiBarcodeTree";
+import SunburstChart from "./Views/SunburstChart";
 
 function App() {
   const API_URL = "http://localhost:5000";
@@ -31,7 +32,8 @@ function App() {
     useState(null);
   const [examplerData, setExamplerData] = useState(null);
   const [scatterData, setScatterData] = useState(null);
-  const [indicatorPerformance, setIndicatorPerformance] = useState(null);
+  const [ringDataIndicatorStock, setRingDataIndicatorStock] = useState(null);
+  const [ringDataStockIndicator, setRingDataStockIndicator] = useState(null);
 
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState("current stock");
@@ -106,7 +108,7 @@ function App() {
     // console.log(exprVariableList);
     try {
       // 等待axios请求完成并获取响应数据
-      const response = await axios.post(`${API_URL}/process_single_stock`, {
+      const response = await axios.post(`${API_URL}/process_stock`, {
         indicatorName,
         exprLongList,
         exprShortList,
@@ -117,7 +119,7 @@ function App() {
         getTakeProfitThreshold,
         getAheadStopTime,
       });
-      // console.log(response.data);
+      console.log(response.data);
       setTradeByIndicators(response.data[0]);
       var t = [];
       for (let i = 0; i < response.data[0][0].length; i++) {
@@ -145,11 +147,22 @@ function App() {
       setBacktest(newBacktest);
       // 更新curveBoxplotData
       setCurveBoxplotData(response.data[2]);
-      setIndicatorPerformance(response.data[3]);
-      // console.log(response.data[3]);
+      const performance = response.data[3].map((stock) => ({
+        name: stock[0],
+        totalTrades: stock[1],
+        successRate: stock[2],
+        avgReturn: stock[3],
+        totalProfit: stock[4],
+      }));
+      // console.log(performance);
+      setStockPerformance(performance);
+      setCurveBoxplotDataForStocks(response.data[4]);
+      setRingDataIndicatorStock(response.data[5]);
+      setRingDataStockIndicator(response.data[6]);
     } catch (error) {
       console.error("Error:", error);
     }
+
     try {
       // 等待axios请求完成并获取响应数据
       const response = await axios.post(`${API_URL}/process_exampler`, {
@@ -179,45 +192,6 @@ function App() {
       });
     processStrategies();
   }, [selectStock, code]);
-
-  const handleExecute = async () => {
-    let exprLongList = [];
-    let exprShortList = [];
-    const startDate = evaluation.startDate;
-    const endDate = evaluation.endDate;
-    const getStopLossThreshold = evaluation.getStopLossThreshold();
-    const getTakeProfitThreshold = evaluation.getTakeProfitThreshold();
-    const getAheadStopTime = evaluation.getAheadStopTime();
-    for (let i = 0; i < indicators.length; i++) {
-      exprLongList.push(indicators[i].exprLong);
-      exprShortList.push(indicators[i].exprShort);
-    }
-    try {
-      // 等待axios请求完成并获取响应数据
-      const response = await axios.post(`${API_URL}/process_stocks`, {
-        exprLongList,
-        exprShortList,
-        startDate,
-        endDate,
-        getStopLossThreshold,
-        getTakeProfitThreshold,
-        getAheadStopTime,
-      });
-
-      const performance = response.data[0].map((stock) => ({
-        name: stock[0],
-        totalTrades: stock[1],
-        successRate: stock[2],
-        avgReturn: stock[3],
-        totalProfit: stock[4],
-      }));
-      // console.log(performance);
-      setStockPerformance(performance);
-      setCurveBoxplotDataForStocks(response.data[1]);
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
 
   const handleExecuteScatter = async () => {
     let indicatorName = [];
@@ -302,7 +276,7 @@ function App() {
                     </Radio.Button>
                     <Radio.Button
                       value="selected stocks"
-                      onClick={() => handleExecute()}
+                      // onClick={() => handleExecute()}
                     >
                       stocks
                     </Radio.Button>
@@ -339,7 +313,8 @@ function App() {
                     <CurveBoxplot boxplotData={item} width={160} height={120} />
                   ))}
               </div>
-              
+              {position === "current stock" && <SunburstChart data={ringDataIndicatorStock} width={300} height={400} />}
+              {position === "selected stocks" && <SunburstChart data={ringDataStockIndicator} width={300} height={400} />}
             </Flex>
             <Flex vertical="true">
               <div className="view-title">Comparison View</div>

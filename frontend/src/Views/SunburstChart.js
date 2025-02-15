@@ -6,7 +6,7 @@ import * as d3 from "d3";
 //   children: [
 //     {
 //       name: "MACD",
-//       value: -1,
+//       value: 0,
 //       children: [
 //         {
 //           name: "p1",
@@ -39,7 +39,7 @@ import * as d3 from "d3";
 //     },
 //     {
 //       name: "RSI",
-//       value: -2,
+//       value: 0,
 //       children: [
 //         {
 //           name: "p1",
@@ -66,7 +66,7 @@ import * as d3 from "d3";
 //     },
 //     {
 //       name: "BOLL",
-//       value: -1,
+//       value: 0,
 //       children: [
 //         {
 //           name: "p1",
@@ -309,8 +309,7 @@ const SunburstChart = ({ data, width, height }) => {
       let minRadius;
       if (d === referenceNode) {
         minRadius = d.y0;
-      }
-      else {
+      } else {
         const zeroValP = 0 - ps.min;
         const zeroOffsetP = singleScale(zeroValP);
         minRadius = zeroRadius - zeroOffsetP;
@@ -368,7 +367,14 @@ const SunburstChart = ({ data, width, height }) => {
       .text((d) => (d.depth > 0 ? d.data.name : ""));
   }, [data, width, height]);
 
-  return <div ref={ref} />;
+  return (
+    <div
+      ref={ref}
+      width={width}
+      height={height}
+      style={{ border: "1px solid #ccc" }}
+    />
+  );
 };
 
 export default SunburstChart;

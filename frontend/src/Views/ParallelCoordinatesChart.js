@@ -85,7 +85,7 @@ const ParallelCoordinatesChart = ({ data, width, height }) => {
       .attr("class", "legend")
       .attr(
         "transform",
-        `translate(${margin.left}, ${height - margin.bottom + 20})`
+        `translate(${margin.left}, ${height - margin.bottom + 15})`
       );
 
     // 为了测量文本宽度，需要一个临时的测量容器
@@ -96,12 +96,12 @@ const ParallelCoordinatesChart = ({ data, width, height }) => {
 
     let currentX = 0;
     let currentY = 0;
-    const lineHeight = 20; // 每一行的高度
+    const lineHeight = 15; // 每一行的高度
     const maxLegendWidth = width - margin.left - margin.right; // 图例可使用的最大宽度
 
     uniqueNames.forEach((name, i) => {
       // 先创建一个临时文本来测量宽度
-      const tempText = measureG.append("text").attr("font-size", 12).text(name);
+      const tempText = measureG.append("text").attr("font-size", 10).text(name);
 
       // 测量后获取 bounding box
       const bbox = tempText.node().getBBox();
@@ -133,9 +133,9 @@ const ParallelCoordinatesChart = ({ data, width, height }) => {
       // 文本
       itemG
         .append("text")
-        .attr("x", 20)
+        .attr("x", 15)
         .attr("y", 0)
-        .attr("font-size", 12)
+        .attr("font-size", 10)
         .attr("alignment-baseline", "middle")
         .text(name);
 

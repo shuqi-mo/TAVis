@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def updatePeriod(stock, trade_origin, startDate=None, endDate=None):
     trade_origin = pd.Series(trade_origin)
@@ -99,3 +100,42 @@ def calBacktest(price, trade, ahead = -1):
                     scatterData.append(scatterData[i-1] + price[i] - price[j])
                 boxplotData.append(item)
     return [success,profit,profitpent,boxplotData,scatterData,positionAndProfit]
+
+def transform_data_ring(ring_indicator_stock):
+    result = {"name": "root", "children": []}
+    # 遍历每个元素
+    for indicator, stock_list in ring_indicator_stock.items():
+        indicator_node = {
+            "name": indicator.upper(),  # 将指标名称大写，如 'rsi' -> 'RSI'
+            "value": 0,
+            "children": []
+        }   
+        # 遍历该指标下的所有股票数据
+        for stock_entry in stock_list:
+            stock_code = stock_entry[0]
+            profit_arr = stock_entry[1]
+            # 如果 profit_arr 非空，则计算统计值
+            if profit_arr:
+                arr = np.array(profit_arr)
+                min_val = float(np.min(arr))
+                max_val = float(np.max(arr))
+                median_val = float(np.median(arr))
+                q1 = float(np.percentile(arr, 25))
+                q3 = float(np.percentile(arr, 75))
+            else:
+                min_val = max_val = median_val = q1 = q3 = None
+            
+            stock_node = {
+                "name": stock_code,
+                "value": len(profit_arr),
+                "profitStats": {
+                    "min": min_val,
+                    "q1": q1,
+                    "median": median_val,
+                    "q3": q3,
+                    "max": max_val,
+                }
+            }
+            indicator_node["children"].append(stock_node)
+        result["children"].append(indicator_node)
+    return result

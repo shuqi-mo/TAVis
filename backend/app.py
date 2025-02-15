@@ -61,14 +61,30 @@ def update_single_stock_data():
     res["data"] = stock
     return jsonify(res)
 
-@app.route('/process_single_stock', methods=['POST'])
-def process_single_stock():
+@app.route('/process_stock', methods=['POST'])
+def process_stock():
     data = request.get_json()
     data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
+
+    # 单个股票处理结果
     float_trade = []
     performance = []
     boxplotData = []
     indiatorPerformance = []
+
+    # 多个股票处理结果
+    res_stock = []
+    res_curve = []
+
+    # 环状图数据
+    ring_indicator_stock = {}
+    ring_stock_indicator = {}
+    for i in range(len(data["indicatorName"])):
+        ring_indicator_stock[data["indicatorName"][i]] = []
+    for item in csv_files:
+        ring_stock_indicator[item] = []
+
+    # 单个股票数据处理
     for i in range(len(data["indicatorName"])):
         name = data["indicatorName"][i]
         long = execute_expr(data["exprLongList"][i], data_df)
@@ -86,7 +102,41 @@ def process_single_stock():
         performance.append([name, totalTrade, successRate, averProfit, totalProfit])
         boxplotData.append([name, res[3]])
         indiatorPerformance.append([name, res[5]])
-    return jsonify([float_trade, performance, boxplotData, indiatorPerformance])
+    
+    # 多个股票数据处理
+    for item in csv_files:
+        stock = pd.read_csv(file_path + item + ".csv")
+        tradeCount = 0
+        successCount = 0
+        profitCount = 0
+        avgReturnList = []
+        curve = []
+        for i in range(len(data["indicatorName"])):
+            current_performance = []
+            long = execute_expr(data["exprLongList"][i], stock)
+            short = execute_expr(data["exprShortList"][i], stock)
+            long = CustomList(long)
+            short = CustomList(short)
+            trade_origin = process_trades(long, short)
+            price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
+            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
+            tradeCount += len(res_singlestock[0])
+            successCount += sum(res_singlestock[0])
+            profitCount += res_singlestock[1][-1]
+            for r in res_singlestock[2]:
+                avgReturnList.append(r)
+            for r in res_singlestock[3]:
+                curve.append(r)
+                current_performance.append(r[-1])
+            ring_indicator_stock[data["indicatorName"][i]].append([item, current_performance])
+            ring_stock_indicator[item].append([data["indicatorName"][i], current_performance])
+        res_stock.append([item, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
+        res_curve.append([item, curve])
+    
+    ring_indicator_stock_format = transform_data_ring(ring_indicator_stock)
+    ring_stock_indicator_format = transform_data_ring(ring_stock_indicator)
+
+    return jsonify([float_trade, performance, boxplotData, res_stock, res_curve, ring_indicator_stock_format, ring_stock_indicator_format])
 
 @app.route('/process_exampler', methods=['POST'])
 def process_exampler():
@@ -105,37 +155,6 @@ def process_exampler():
             variable.append(res)
         variableList.append([name, variable, data["variableList"][i]])
     return jsonify(variableList)
-
-@app.route('/process_stocks', methods=['POST'])
-def process_stocks():
-    data = request.get_json()
-    res = []
-    res_curve = []
-    for item in csv_files:
-        stock = pd.read_csv(file_path + item + ".csv")
-        tradeCount = 0
-        successCount = 0
-        profitCount = 0
-        avgReturnList = []
-        curve = []
-        for i in range(len(data["exprLongList"])):
-            long = execute_expr(data["exprLongList"][i], stock)
-            short = execute_expr(data["exprShortList"][i], stock)
-            long = CustomList(long)
-            short = CustomList(short)
-            trade_origin = process_trades(long, short)
-            price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
-            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
-            tradeCount += len(res_singlestock[0])
-            successCount += sum(res_singlestock[0])
-            profitCount += res_singlestock[1][-1]
-            for r in res_singlestock[2]:
-                avgReturnList.append(r)
-            for r in res_singlestock[3]:
-                curve.append(r)
-        res.append([item, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
-        res_curve.append([item, curve])
-    return jsonify([res, res_curve])
 
 @app.route('/process_scatterplot', methods=['POST'])
 def process_scatterplot():
