@@ -1,111 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-// const data = {
-//   name: "root",
-//   children: [
-//     {
-//       name: "MACD",
-//       value: 0,
-//       children: [
-//         {
-//           name: "p1",
-//           value: 11,
-//           profitStats: {
-//             min: -9.5,
-//             q1: -2.49,
-//             median: -0.05,
-//             q3: 6.4,
-//             max: 7.95,
-//           },
-//         },
-//         {
-//           name: "p2",
-//           value: 7,
-//           profitStats: { min: -1, q1: 0, median: 1.5, q3: 2, max: 4 },
-//         },
-//         {
-//           name: "p3",
-//           value: 13,
-//           profitStats: {
-//             min: -2.52,
-//             q1: 2.155,
-//             median: 6.83,
-//             q3: 8.275,
-//             max: 9.72,
-//           },
-//         },
-//       ],
-//     },
-//     {
-//       name: "RSI",
-//       value: 0,
-//       children: [
-//         {
-//           name: "p1",
-//           value: 13,
-//           profitStats: { min: -3, q1: -2, median: 0, q3: 1, max: 3 },
-//         },
-//         {
-//           name: "p2",
-//           value: 7,
-//           profitStats: { min: -4, q1: -1, median: 0, q3: 2, max: 6 },
-//         },
-//         {
-//           name: "p3",
-//           value: 8,
-//           profitStats: {
-//             min: -2.51,
-//             q1: 0.14,
-//             median: 6.25,
-//             q3: 6.55,
-//             max: 6.88,
-//           },
-//         },
-//       ],
-//     },
-//     {
-//       name: "BOLL",
-//       value: 0,
-//       children: [
-//         {
-//           name: "p1",
-//           value: 3,
-//           profitStats: {
-//             min: -3.5,
-//             q1: -2.105,
-//             median: -0.71,
-//             q3: 3.085,
-//             max: 6.88,
-//           },
-//         },
-//         {
-//           name: "p2",
-//           value: 7,
-//           profitStats: {
-//             min: -5.18,
-//             q1: -1.8375,
-//             median: 1.505,
-//             q3: 4.8475,
-//             max: 8.19,
-//           },
-//         },
-//         {
-//           name: "p3",
-//           value: 5,
-//           profitStats: {
-//             min: -8.42,
-//             q1: -8.42,
-//             median: -8.42,
-//             q3: -8.42,
-//             max: -8.42,
-//           },
-//         },
-//       ],
-//     },
-//   ],
-// };
-
 const SunburstChart = ({ data, width, height }) => {
   const ref = useRef(null);
   // console.log(data);
@@ -119,6 +14,7 @@ const SunburstChart = ({ data, width, height }) => {
     // 构造分区
     const radius = Math.min(width, height) / 2;
     const partition = d3.partition().size([2 * Math.PI, radius]);
+    const offset = 40;
 
     const root = d3.hierarchy(data).sum((d) => d.value);
     partition(root);
@@ -249,7 +145,7 @@ const SunburstChart = ({ data, width, height }) => {
 
     const gMain = svg
       .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2})`);
+      .attr("transform", `translate(${width / 2}, ${height / 2 - offset})`);
 
     //  绘制旭日图
     const nodes = root.descendants().filter((d) => d.depth > 0);
@@ -349,22 +245,59 @@ const SunburstChart = ({ data, width, height }) => {
         .attr("stroke-width", 2);
     });
 
-    // 为指标/Pattern 添加文字
+    // 为内层圆环添加文字
     gMain
       .selectAll("text")
-      .data(root.descendants())
+      .data(root.descendants().filter((d) => d.depth === 1))
       .join("text")
-      .attr("transform", function (d) {
-        const x = (d.x0 + d.x1) / 2;
-        const y = (d.y0 + d.y1) / 2;
-        const rotate = ((x - Math.PI / 2) / Math.PI) * 180;
-        // 为了让文字在扇形内居中，做一个简单的移动和旋转
-        return `translate(${arc.centroid(d)}) rotate(${rotate})`;
-      })
+      // .attr("transform", function (d) {
+      //   const x = (d.x0 + d.x1) / 2;
+      //   const y = (d.y0 + d.y1) / 2;
+      //   const rotate = ((x - Math.PI / 2) / Math.PI) * 180;
+      //   // 为了让文字在扇形内居中，做一个简单的移动和旋转
+      //   return `translate(${arc.centroid(d)}) rotate(${rotate})`;
+      // })
+      .attr("transform", (d) => `translate(${arc.centroid(d)})`)
       .attr("text-anchor", "middle")
       .attr("font-size", "10px")
+      .attr("font-weight", "bold")
       .attr("fill", "#000")
       .text((d) => (d.depth > 0 ? d.data.name : ""));
+
+    // 添加图例
+    const legend = svg
+      .append("g")
+      .attr("transform", `translate(20, ${height - 80})`);
+
+    const legendItemsPerRow = 3; // 每行显示最多 3 个
+    const legendItemWidth = 100; // 每个图例的宽度
+    const legendItemHeight = 20; // 每行高度
+
+    const legendItems = legend
+      .selectAll(".legend-item")
+      .data(patternNames)
+      .enter()
+      .append("g")
+      .attr("class", "legend-item")
+      .attr("transform", (d, i) => {
+        const row = Math.floor(i / legendItemsPerRow);
+        const col = i % legendItemsPerRow;
+        return `translate(${col * legendItemWidth}, ${row * legendItemHeight})`;
+      });
+
+    legendItems
+      .append("rect")
+      .attr("width", 15)
+      .attr("height", 15)
+      .attr("fill", (d) => patternColorScale(d));
+
+    legendItems
+      .append("text")
+      .attr("x", 20)
+      .attr("y", 12)
+      .attr("font-size", "12px")
+      .attr("fill", "#000")
+      .text((d) => d);
   }, [data, width, height]);
 
   return (
@@ -372,7 +305,6 @@ const SunburstChart = ({ data, width, height }) => {
       ref={ref}
       width={width}
       height={height}
-      style={{ border: "1px solid #ccc" }}
     />
   );
 };
