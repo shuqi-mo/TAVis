@@ -1,7 +1,14 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const ScatterPlot = ({ data, width, height }) => {
+const ScatterPlot = ({
+  data,
+  performance,
+  valueKey,
+  colorStats,
+  width,
+  height,
+}) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -55,20 +62,27 @@ const ScatterPlot = ({ data, width, height }) => {
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale);
 
-    // x 轴
-    svg
-      .append("g")
-      .attr("class", "x-axis")
-      .attr("transform", `translate(0, ${height - margin.bottom})`)
-      .call(xAxis);
-
-    // y 轴
-    svg
-      .append("g")
-      .attr("class", "y-axis")
-      .attr("transform", `translate(${margin.left}, 0)`)
-      .call(yAxis);
-
+    // 根据 performance 数据构造 diverging color scale
+    let divergingScale = null;
+    if (
+      colorStats &&
+      colorStats.min !== undefined &&
+      colorStats.median !== undefined &&
+      colorStats.max !== undefined
+    ) {
+      divergingScale = d3
+        .scaleDiverging()
+        .domain([colorStats.min, colorStats.median, colorStats.max])
+        .interpolator((t) => d3.interpolateRdYlGn(1 - t));
+    }
+    // mapping: performance中各指标所在的下标
+    const metricIndex = {
+      totalTrades: 1,
+      successRate: 2,
+      avgReturn: 3,
+      totalProfit: 4,
+    };
+    
     // 绘制主图散点
     // 先创建一个 tooltip DIV
     const tooltip = d3
@@ -91,7 +105,21 @@ const ScatterPlot = ({ data, width, height }) => {
       .attr("cx", (d) => xScale(d[1]))
       .attr("cy", (d) => yScale(d[2]))
       .attr("r", 5)
-      .attr("fill", "steelblue")
+      .attr("fill", (d) => {
+        // 默认填充为灰色
+        let fillColor = "gray";
+        if (divergingScale && performance) {
+          // 根据股票名称匹配 performance 数据（d[0] 为股票名称）
+          const perf = performance.find((p) => p[0] === d[0]);
+          if (perf) {
+            let value = parseFloat(perf[metricIndex[valueKey]]);
+            if (!isNaN(value)) {
+              fillColor = divergingScale(value);
+            }
+          }
+        }
+        return fillColor;
+      })
       .attr("opacity", 0.8)
       .on("mouseover", function (event, d) {
         // 放大 + 高亮
@@ -110,22 +138,31 @@ const ScatterPlot = ({ data, width, height }) => {
           .style("top", event.pageY + 6 + "px")
           .style("left", event.pageX + 6 + "px");
       })
-      .on("mouseout", function () {
-        // 恢复原状
+      .on("mouseout", function (event, d) {
+        // 鼠标移出时恢复原有颜色
+        let fillColor = "gray";
+        if (divergingScale && performance) {
+          const perf = performance.find((p) => p[0] === d[0]);
+          if (perf) {
+            let value = parseFloat(perf[metricIndex[valueKey]]);
+            if (!isNaN(value)) {
+              fillColor = divergingScale(value);
+            }
+          }
+        }
         d3.select(this)
           .transition()
           .duration(100)
-          .attr("r", 5)
-          .attr("fill", "steelblue");
-
-        // 隐藏 tooltip
+          .attr("r", circleRadius)
+          .attr("stroke", "none")
+          .attr("fill", fillColor);
         tooltip.style("visibility", "hidden");
       });
 
     // --- 4. 缩放/拖拽行为 (让坐标轴与图表一起缩放) ---
     const zoomBehavior = d3
       .zoom()
-      .scaleExtent([0.5, 5]) // 缩放范围
+      .scaleExtent([1, 5]) // 缩放范围
       .translateExtent([
         [0, 0],
         [width, height],
@@ -135,9 +172,9 @@ const ScatterPlot = ({ data, width, height }) => {
     svg.call(zoomBehavior);
 
     // --- 5. 添加缩略图 ---
-    // 缩略图尺寸设置（例如宽高各为主图的 1/4）
-    const thumbWidth = width / 4;
-    const thumbHeight = height / 4;
+    // 缩略图尺寸设置（例如宽高各为主图的 1/6）
+    const thumbWidth = width / 6;
+    const thumbHeight = height / 6;
     const thumbMargin = { top: 5, right: 5, bottom: 5, left: 5 };
 
     // 缩略图中比例尺：使用与主图相同的 domain，但范围缩小
@@ -150,14 +187,11 @@ const ScatterPlot = ({ data, width, height }) => {
       .domain(yScale.domain())
       .range([thumbHeight - thumbMargin.bottom - thumbMargin.top, 0]); // 注意：y 轴翻转
 
-    // 在主 SVG 中新增一个分组来绘制缩略图，放置于右下角（可根据需要调整位置）
+    // 在主 SVG 中新增一个分组来绘制缩略图，放置于右上角（可根据需要调整位置）
     const thumbGroup = svg
       .append("g")
       .attr("class", "thumbnail")
-      .attr(
-        "transform",
-        `translate(${width - thumbWidth - 10}, ${height - thumbHeight - 10})`
-      );
+      .attr("transform", `translate(${width - thumbWidth}, 0)`);
 
     // 绘制缩略图背景
     thumbGroup
@@ -238,7 +272,7 @@ const ScatterPlot = ({ data, width, height }) => {
     return () => {
       tooltip.remove();
     };
-  }, [data]);
+  }, [data, performance, valueKey, colorStats, width, height]);
 
   return <svg ref={svgRef} />;
 };

@@ -235,7 +235,6 @@ function App() {
                     </Radio.Button>
                     <Radio.Button
                       value="selected stocks"
-                      // onClick={() => handleExecute()}
                     >
                       stocks
                     </Radio.Button>
@@ -274,7 +273,7 @@ function App() {
               </div>
               {position === "current stock" && <SunburstChart data={ringDataIndicatorStock} width={300} height={400} />}
               {position === "selected stocks" && <SunburstChart data={ringDataStockIndicator} width={300} height={400} />}
-              <StockSelection/>
+              <StockSelection indicators={indicators} evaluation={evaluation}/>
             </Flex>
             <Flex vertical="true">
               <div className="view-title">Comparison View</div>
@@ -300,11 +299,6 @@ function App() {
               </Flex>
             </Flex>
             <Flex>
-              {/* 
-              <PlayCircleFilled onClick={() => handleExecuteScatter()} />
-              {scatterData && (
-                <ScatterPlot data={scatterData} width={350} height={350} />
-              )} */}
             </Flex>
           </Flex>
           <Flex>

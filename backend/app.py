@@ -4,8 +4,6 @@ import pandas as pd
 import numpy as np
 import os
 from sklearn.manifold import TSNE
-import umap
-import json
 import csv
 
 from indicator import *
@@ -128,7 +126,7 @@ def process_stock():
         averProfit = sum(res[2]) / len(res[2])
         performance.append([name, totalTrade, successRate, averProfit, totalProfit])
         boxplotData.append([name, res[3]])
-        indiatorPerformance.append([name, res[5]])
+        indiatorPerformance.append([name, res[4]])
     
     # 多个股票数据处理
     for item in csv_files:
@@ -183,68 +181,41 @@ def process_exampler():
         variableList.append([name, variable, data["variableList"][i]])
     return jsonify(variableList)
 
-@app.route('/process_scatterplot', methods=['POST'])
-def process_scatterplot():
+@app.route('/process_stock_all', methods=['POST'])
+def process_stock_all():
     data = request.get_json()
-    stocks_data = []
-    # results = []
+    res = []
+    
+    # 所有股票数据处理
     for item in stock_csv_files:
         stock = pd.read_csv(stock_file_path + item + ".csv")
-        trade_list = []
-        trade_origin = []
-        print(item)
         if len(stock) == 0 or stock['trade_date'][0] > data["startDate"] or stock['trade_date'][len(stock)-1] < data["endDate"]:
             continue
-        for i in range(len(data["exprLongList"])):
+        print(item)
+        tradeCount = 0
+        successCount = 0
+        profitCount = 0
+        avgReturnList = []
+        for i in range(len(data["indicatorName"])):
             long = execute_expr(data["exprLongList"][i], stock)
             short = execute_expr(data["exprShortList"][i], stock)
             long = CustomList(long)
             short = CustomList(short)
-            trade_list.append(process_trades(long, short)) 
-        n = len(trade_list)
-        for i in range(len(trade_list[0])):
-            count  = 0
-            for j in range(n):
-                count += trade_list[j][i]
-            if count > 0:
-                trade_origin.append(1)
-            elif count < 0:
-                trade_origin.append(-1)
-            else:
-                trade_origin.append(0)
-        price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
-        res_backtest = calBacktest(price, trade, data["getAheadStopTime"])
-        stocks_data.append(np.array(res_backtest[4]))
-        # results.append([item, len(res_backtest[4])])
-        # 获取所有数组的长度
-        lengths = [len(arr) for arr in stocks_data]
-
-        # 统计每个长度出现的次数
-        length_counts = {}
-        for length in lengths:
-            if length in length_counts:
-                length_counts[length] += 1
-            else:
-                length_counts[length] = 1
-
-        # 找出出现次数最多的长度
-        max_count_length = max(length_counts, key=length_counts.get)
-
-        # 仅保留长度为出现次数最多的长度的元素
-        filtered_stocks_data = [arr for arr in stocks_data if len(arr) <= max_count_length and len(arr) >= max_count_length * 0.9]
-        
-    series = []
-    for item in filtered_stocks_data:
-        series.append(np.array(item))
-    print("Distance calculating...")
-    # 计算DTW距离矩阵
-    dtw_distance_matrix = compute_dtw_distance_matrix_fast(series)
-    print("Finish distance calculation! Data reducing...")
-
-    reducer = umap.UMAP(n_components=2, metric='precomputed', random_state=42)
-    coords = reducer.fit_transform(dtw_distance_matrix)
-    coords_list = coords.tolist()
-    return jsonify(coords_list)
+            trade_origin = process_trades(long, short)
+            price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
+            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
+            if len(res_singlestock[0]) == 0:
+                continue
+            tradeCount += len(res_singlestock[0])
+            successCount += sum(res_singlestock[0])
+            profitCount += res_singlestock[1][-1]
+            for r in res_singlestock[2]:
+                avgReturnList.append(r)
+        if tradeCount:
+            res.append([item, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
+        else:
+            res.append([item, 0, 0, 0, 0])
+    return jsonify(res)
 
 @app.route('/process_code', methods=['POST'])
 def process_code():
