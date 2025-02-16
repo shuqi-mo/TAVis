@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react';
-import * as d3 from 'd3';
+import React, { useRef, useEffect } from "react";
+import * as d3 from "d3";
 
 const ScatterPlot = ({ data, width, height }) => {
   const svgRef = useRef(null);
@@ -8,20 +8,20 @@ const ScatterPlot = ({ data, width, height }) => {
     if (!data || data.length === 0) return;
 
     // --- 1. 基础设置 ---
-    const margin = { top: 20, right: 20, bottom: 30, left: 30 };
+    const margin = { top: 10, right: 10, bottom: 10, left: 10 };
 
     // 选择并初始化 SVG
     const svg = d3
       .select(svgRef.current)
-      .attr('width', width)
-      .attr('height', height);
+      .attr("width", width)
+      .attr("height", height);
 
     // 清空之前的内容
-    svg.selectAll('*').remove();
+    svg.selectAll("*").remove();
 
     // xScale / yScale
-    const xExtent = d3.extent(data, (d) => d[0]);
-    const yExtent = d3.extent(data, (d) => d[1]);
+    const xExtent = d3.extent(data, (d) => d[1]);
+    const yExtent = d3.extent(data, (d) => d[2]);
     const xScale = d3
       .scaleLinear()
       .domain(xExtent)
@@ -32,97 +32,97 @@ const ScatterPlot = ({ data, width, height }) => {
       .range([height - margin.bottom, margin.top]);
 
     // --- 2. 定义 clipPath (裁剪区域) ---
-    const clipId = 'clip-scatter';
-    const defs = svg.append('defs');
+    const circleRadius = 5;
+    const clipOffset = circleRadius;
+    const clipId = "clip-scatter";
+    const defs = svg.append("defs");
     defs
-      .append('clipPath')
-      .attr('id', clipId)
-      .append('rect')
-      .attr('x', margin.left)
-      .attr('y', margin.top)
-      .attr('width', width - margin.left - margin.right)
-      .attr('height', height - margin.top - margin.bottom);
+      .append("clipPath")
+      .attr("id", clipId)
+      .append("rect")
+      .attr("x", margin.left - clipOffset)
+      .attr("y", margin.top - clipOffset)
+      .attr("width", width - margin.left - margin.right + clipOffset * 2)
+      .attr("height", height - margin.top - margin.bottom + clipOffset * 2);
 
     // --- 3. 主绘图分组 & 绑定 clipPath ---
     const chartArea = svg
-      .append('g')
-      .attr('class', 'chart-area')
-      .attr('clip-path', `url(#${clipId})`);
+      .append("g")
+      .attr("class", "chart-area")
+      .attr("clip-path", `url(#${clipId})`);
 
-    // --- 4. 创建坐标轴 (初始状态) ---
+    // 创建坐标轴 (初始状态)
     const xAxis = d3.axisBottom(xScale);
     const yAxis = d3.axisLeft(yScale);
 
     // x 轴
     svg
-      .append('g')
-      .attr('class', 'x-axis')
-      .attr('transform', `translate(0, ${height - margin.bottom})`)
+      .append("g")
+      .attr("class", "x-axis")
+      .attr("transform", `translate(0, ${height - margin.bottom})`)
       .call(xAxis);
 
     // y 轴
     svg
-      .append('g')
-      .attr('class', 'y-axis')
-      .attr('transform', `translate(${margin.left}, 0)`)
+      .append("g")
+      .attr("class", "y-axis")
+      .attr("transform", `translate(${margin.left}, 0)`)
       .call(yAxis);
 
-    // --- 5. 绘制散点 ---
+    // 绘制主图散点
     // 先创建一个 tooltip DIV
     const tooltip = d3
-      .select('body')
-      .append('div')
-      .style('position', 'absolute')
-      .style('padding', '4px 8px')
-      .style('background', 'rgba(255,255,255,0.9)')
-      .style('border', '1px solid #ccc')
-      .style('border-radius', '4px')
-      .style('font-size', '12px')
-      .style('visibility', 'hidden') // 初始隐藏
-      .style('pointer-events', 'none'); // tooltip 不阻塞鼠标事件
+      .select("body")
+      .append("div")
+      .style("position", "absolute")
+      .style("padding", "4px 8px")
+      .style("background", "rgba(255,255,255,0.9)")
+      .style("border", "1px solid #ccc")
+      .style("border-radius", "4px")
+      .style("font-size", "12px")
+      .style("visibility", "hidden") // 初始隐藏
+      .style("pointer-events", "none"); // tooltip 不阻塞鼠标事件
 
     const circles = chartArea
-      .selectAll('circle')
+      .selectAll("circle")
       .data(data)
       .enter()
-      .append('circle')
-      .attr('cx', (d) => xScale(d[0]))
-      .attr('cy', (d) => yScale(d[1]))
-      .attr('r', 5)
-      .attr('fill', 'steelblue')
-      .attr('opacity', 0.8)
-      .on('mouseover', function (event, d) {
+      .append("circle")
+      .attr("cx", (d) => xScale(d[1]))
+      .attr("cy", (d) => yScale(d[2]))
+      .attr("r", 5)
+      .attr("fill", "steelblue")
+      .attr("opacity", 0.8)
+      .on("mouseover", function (event, d) {
         // 放大 + 高亮
         d3.select(this)
           .transition()
           .duration(100)
-          .attr('r', 8)
-          .attr('fill', 'orange');
+          .attr("r", 8)
+          .attr("fill", "orange");
 
         // 显示 tooltip
-        tooltip
-          .style('visibility', 'visible')
-          .text(`x = ${d[0].toFixed(2)}, y = ${d[1].toFixed(2)}`);
+        tooltip.style("visibility", "visible").text(`${d[0]}`);
       })
-      .on('mousemove', (event) => {
+      .on("mousemove", (event) => {
         // 移动 tooltip
         tooltip
-          .style('top', event.pageY + 6 + 'px')
-          .style('left', event.pageX + 6 + 'px');
+          .style("top", event.pageY + 6 + "px")
+          .style("left", event.pageX + 6 + "px");
       })
-      .on('mouseout', function () {
+      .on("mouseout", function () {
         // 恢复原状
         d3.select(this)
           .transition()
           .duration(100)
-          .attr('r', 5)
-          .attr('fill', 'steelblue');
+          .attr("r", 5)
+          .attr("fill", "steelblue");
 
         // 隐藏 tooltip
-        tooltip.style('visibility', 'hidden');
+        tooltip.style("visibility", "hidden");
       });
 
-    // --- 6. 缩放/拖拽行为 (让坐标轴与图表一起缩放) ---
+    // --- 4. 缩放/拖拽行为 (让坐标轴与图表一起缩放) ---
     const zoomBehavior = d3
       .zoom()
       .scaleExtent([0.5, 5]) // 缩放范围
@@ -130,24 +130,109 @@ const ScatterPlot = ({ data, width, height }) => {
         [0, 0],
         [width, height],
       ]) // 限制拖拽范围
-      .on('zoom', (event) => {
-        // 这里使用 "rescaleX" / "rescaleY" 来更新坐标
-        const newXScale = event.transform.rescaleX(xScale);
-        const newYScale = event.transform.rescaleY(yScale);
-
-        // 1) 更新散点位置
-        circles
-          .attr('cx', (d) => newXScale(d[0]))
-          .attr('cy', (d) => newYScale(d[1]));
-
-        // 2) 更新坐标轴
-        svg.select('.x-axis')
-          .call(xAxis.scale(newXScale));
-        svg.select('.y-axis')
-          .call(yAxis.scale(newYScale));
-      });
+      .on("zoom", zoomed);
 
     svg.call(zoomBehavior);
+
+    // --- 5. 添加缩略图 ---
+    // 缩略图尺寸设置（例如宽高各为主图的 1/4）
+    const thumbWidth = width / 4;
+    const thumbHeight = height / 4;
+    const thumbMargin = { top: 5, right: 5, bottom: 5, left: 5 };
+
+    // 缩略图中比例尺：使用与主图相同的 domain，但范围缩小
+    const thumbXScale = d3
+      .scaleLinear()
+      .domain(xScale.domain())
+      .range([0, thumbWidth - thumbMargin.left - thumbMargin.right]);
+    const thumbYScale = d3
+      .scaleLinear()
+      .domain(yScale.domain())
+      .range([thumbHeight - thumbMargin.bottom - thumbMargin.top, 0]); // 注意：y 轴翻转
+
+    // 在主 SVG 中新增一个分组来绘制缩略图，放置于右下角（可根据需要调整位置）
+    const thumbGroup = svg
+      .append("g")
+      .attr("class", "thumbnail")
+      .attr(
+        "transform",
+        `translate(${width - thumbWidth - 10}, ${height - thumbHeight - 10})`
+      );
+
+    // 绘制缩略图背景
+    thumbGroup
+      .append("rect")
+      .attr("x", 0)
+      .attr("y", 0)
+      .attr("width", thumbWidth)
+      .attr("height", thumbHeight)
+      .attr("fill", "#f5f5f5")
+      .attr("stroke", "#ccc");
+
+    // 在缩略图中绘制所有数据点（用较小的圆点）
+    thumbGroup
+      .selectAll("circle")
+      .data(data)
+      .enter()
+      .append("circle")
+      .attr("cx", (d) => thumbXScale(d[1]) + thumbMargin.left)
+      .attr("cy", (d) => thumbYScale(d[2]) + thumbMargin.top)
+      .attr("r", 2)
+      .attr("fill", "steelblue")
+      .attr("opacity", 0.8);
+
+    // 在缩略图中添加一个矩形框，用于指示当前主图的缩放区域
+    const brushRect = thumbGroup
+      .append("rect")
+      .attr("class", "brush-rect")
+      .attr("fill", "none")
+      .attr("stroke", "orange")
+      .attr("stroke-width", 1);
+
+    // 根据当前缩放状态更新缩略图中矩形框的位置和大小
+    function updateThumbBrush(transform) {
+      // 使用当前缩放状态计算主图可见区域的数据域
+      const newXScale = transform.rescaleX(xScale);
+      const newYScale = transform.rescaleY(yScale);
+
+      const xVisibleMin = newXScale.invert(margin.left);
+      const xVisibleMax = newXScale.invert(width - margin.right);
+      const yVisibleMax = newYScale.invert(margin.top); // 注意：y 轴翻转
+      const yVisibleMin = newYScale.invert(height - margin.bottom);
+
+      // 将数据域映射到缩略图的像素坐标
+      const thumbX1 = thumbXScale(xVisibleMin) + thumbMargin.left;
+      const thumbX2 = thumbXScale(xVisibleMax) + thumbMargin.left;
+      const thumbY1 = thumbYScale(yVisibleMax) + thumbMargin.top;
+      const thumbY2 = thumbYScale(yVisibleMin) + thumbMargin.top;
+
+      brushRect
+        .attr("x", thumbX1)
+        .attr("y", thumbY1)
+        .attr("width", thumbX2 - thumbX1)
+        .attr("height", thumbY2 - thumbY1);
+    }
+
+    // 初始时设置缩略图中 brush 的位置（使用 identity transform）
+    updateThumbBrush(d3.zoomIdentity);
+
+    // --- 6. 缩放事件处理 ---
+    function zoomed(event) {
+      const transform = event.transform;
+      // 更新主图中散点位置
+      const newXScale = transform.rescaleX(xScale);
+      const newYScale = transform.rescaleY(yScale);
+      circles
+        .attr("cx", (d) => newXScale(d[1]))
+        .attr("cy", (d) => newYScale(d[2]));
+
+      // 更新坐标轴
+      svg.select(".x-axis").call(xAxis.scale(newXScale));
+      svg.select(".y-axis").call(yAxis.scale(newYScale));
+
+      // 同步更新缩略图中表示可视区域的矩形框
+      updateThumbBrush(transform);
+    }
 
     // 组件卸载时清理 tooltip
     return () => {

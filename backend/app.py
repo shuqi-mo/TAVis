@@ -6,6 +6,7 @@ import os
 from sklearn.manifold import TSNE
 import umap
 import json
+import csv
 
 from indicator import *
 from process import *
@@ -48,6 +49,32 @@ def get_stock_data():
         stock.append([rows["trade_date"],rows["open"],rows["close"],rows["high"],rows["low"],rows["vol"]])
     data["data"] = stock
     return jsonify(data)
+
+@app.route('/get_scatterdata_default')
+def get_scatterdata_default():
+    csv_file_path = os.path.join('static', 'stock_embedding.csv')
+    scatter_data = []  # 存储所有三维数组
+    try:
+        with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
+            csv_reader = csv.reader(csvfile)
+            # 跳过第一行标题
+            headers = next(csv_reader, None)
+            # 遍历每一行数据
+            for row in csv_reader:
+                # 检查是否至少有三列数据
+                if len(row) >= 3:
+                    try:
+                        # 尝试将前三个值转换为浮点数
+                        point = [row[0], float(row[1]), float(row[2])]
+                    except ValueError:
+                        # 如果转换失败，则保留原始数据（例如字符串）
+                        point = [row[0], row[1], row[2]]
+                    scatter_data.append(point)
+    except FileNotFoundError:
+        print(f"文件 {csv_file_path} 未找到。")
+    except Exception as e:
+        print(f"读取 CSV 文件时发生错误: {e}")
+    return jsonify(scatter_data)
 
 @app.route('/update_single_stock_data', methods=['POST'])
 def update_single_stock_data():

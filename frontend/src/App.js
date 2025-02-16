@@ -8,12 +8,11 @@ import { Indicator, Evaluation } from "./utils/ClassDefinitions";
 import { Layout, Button, Flex, Radio } from "antd";
 import { CloseOutlined, CodeOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
-import ScatterPlot from "./Views/ScatterPlot";
-import { PlayCircleFilled } from "@ant-design/icons";
 import Comparison from "./Views/Comparison";
 import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
 import MultiBarcodeTree from "./Views/MultiBarcodeTree";
 import SunburstChart from "./Views/SunburstChart";
+import StockSelection from "./Views/StockSelection";
 
 function App() {
   const API_URL = "http://localhost:5000";
@@ -31,7 +30,6 @@ function App() {
   const [curveBoxplotDataForStocks, setCurveBoxplotDataForStocks] =
     useState(null);
   const [examplerData, setExamplerData] = useState(null);
-  const [scatterData, setScatterData] = useState(null);
   const [ringDataIndicatorStock, setRingDataIndicatorStock] = useState(null);
   const [ringDataStockIndicator, setRingDataStockIndicator] = useState(null);
 
@@ -119,7 +117,7 @@ function App() {
         getTakeProfitThreshold,
         getAheadStopTime,
       });
-      console.log(response.data);
+      // console.log(response.data);
       setTradeByIndicators(response.data[0]);
       var t = [];
       for (let i = 0; i < response.data[0][0].length; i++) {
@@ -192,45 +190,6 @@ function App() {
       });
     processStrategies();
   }, [selectStock, code]);
-
-  const handleExecuteScatter = async () => {
-    let indicatorName = [];
-    let exprLongList = [];
-    let exprShortList = [];
-    let exprVariableList = [];
-    let variableList = [];
-
-    const startDate = evaluation.startDate;
-    const endDate = evaluation.endDate;
-    const getStopLossThreshold = evaluation.getStopLossThreshold();
-    const getTakeProfitThreshold = evaluation.getTakeProfitThreshold();
-    const getAheadStopTime = evaluation.getAheadStopTime();
-
-    for (let i = 0; i < indicators.length; i++) {
-      indicatorName.push(indicators[i].name);
-      exprLongList.push(indicators[i].exprLong);
-      exprShortList.push(indicators[i].exprShort);
-      exprVariableList.push(indicators[i].exprVariable);
-      variableList.push(indicators[i].variable);
-    }
-
-    axios
-      .post(`${API_URL}/process_scatterplot`, {
-        exprLongList,
-        exprShortList,
-        startDate,
-        endDate,
-        getStopLossThreshold,
-        getTakeProfitThreshold,
-        getAheadStopTime,
-      })
-      .then((response) => {
-        setScatterData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
 
   // 切换 CodeEditor 展开/收起状态
   const toggleEditor = () => {
@@ -315,6 +274,7 @@ function App() {
               </div>
               {position === "current stock" && <SunburstChart data={ringDataIndicatorStock} width={300} height={400} />}
               {position === "selected stocks" && <SunburstChart data={ringDataStockIndicator} width={300} height={400} />}
+              <StockSelection/>
             </Flex>
             <Flex vertical="true">
               <div className="view-title">Comparison View</div>
