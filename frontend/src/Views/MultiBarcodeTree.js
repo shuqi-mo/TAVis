@@ -47,37 +47,47 @@ function findTargetNode(trees, name) {
   return target;
 }
 
-function wrapText(textSelection, width) {
+function wrapText(textSelection, width, boxHeight) {
   textSelection.each(function () {
     const text = d3.select(this);
-    const words = text.text().split(/\s+/).reverse();
-    let word;
-    let line = [];
+    const textString = text.text();
+    // 清空原内容
+    text.text("");
+    
     let lineNumber = 0;
-    const lineHeight = 1.1;
-    const y = text.attr("y");
+    const lineHeight = 1.1; // 行高（单位：em），可根据实际情况调整
+    const x = text.attr("x") || 0;
+    const y = text.attr("y") || 0;
     const dy = parseFloat(text.attr("dy") || 0);
-    let tspan = text
-      .text(null)
-      .append("tspan")
-      .attr("x", text.attr("x"))
+    
+    // 新建第一个 tspan
+    let tspan = text.append("tspan")
+      .attr("x", x)
       .attr("y", y)
-      .attr("dy", dy + "em");
-    while ((word = words.pop())) {
-      line.push(word);
-      tspan.text(line.join(" "));
+      .attr("dy", dy + "em")
+      .text("");
+    
+    let currentLine = "";
+    for (let i = 0; i < textString.length; i++) {
+      currentLine += textString[i];
+      tspan.text(currentLine);
       if (tspan.node().getComputedTextLength() > width) {
-        line.pop();
-        tspan.text(line.join(" "));
-        line = [word];
-        tspan = text
-          .append("tspan")
-          .attr("x", text.attr("x"))
+        // 超出宽度，去掉最后一个字符后换行
+        currentLine = currentLine.slice(0, -1);
+        tspan.text(currentLine);
+        currentLine = textString[i];
+        tspan = text.append("tspan")
+          .attr("x", x)
           .attr("y", y)
           .attr("dy", ++lineNumber * lineHeight + dy + "em")
-          .text(word);
+          .text(currentLine);
       }
     }
+    
+    // 计算整个文本的包围盒高度，并计算垂直偏移，使文本整体居中
+    const bbox = text.node().getBBox();
+    const offset = (boxHeight - bbox.height) / 2 - bbox.y;
+    text.attr("transform", `translate(0, ${offset})`);
   });
 }
 
@@ -99,15 +109,9 @@ const MultiBarcodeTree = ({
   const [groups, setGroups] = useState(null);
 
   useEffect(() => {
-    // const groupsData = [
-    //   { indicatorsData: indicatorsData1, evaluationData: evaluationData1 },
-    //   { indicatorsData: indicatorsData2, evaluationData: evaluationData2 },
-    //   { indicatorsData: indicatorsData3, evaluationData: evaluationData3 },
-    // ];
-    const groupsData = data.map((item)=> {
-      return {indicatorsData: item[0],
-      evaluationData: item[1]}
-    })
+    const groupsData = data.map((item) => {
+      return { indicatorsData: item[0], evaluationData: item[1] };
+    });
     const newGroups = groupsData.map((group) => ({
       indicatorsData: group.indicatorsData.map((tree) =>
         initTree(JSON.parse(JSON.stringify(tree)))
@@ -202,33 +206,34 @@ const MultiBarcodeTree = ({
               // 内部绘制柱状图，不设背景色
             } else if (node.type === "constant") {
               dash = "4,2";
-              const num = parseFloat(node.name);
-              const density = isNaN(num)
-                ? 5
-                : Math.max(2, Math.floor(10 - num / 10));
-              const patternId = `diagonalPattern-${density}`;
-              if (svg.select(`#${patternId}`).empty()) {
-                const pattern = svg
-                  .append("defs")
-                  .append("pattern")
-                  .attr("id", patternId)
-                  .attr("patternUnits", "userSpaceOnUse")
-                  .attr("width", density)
-                  .attr("height", density)
-                  .attr("patternTransform", "rotate(45)");
-                pattern
-                  .append("line")
-                  .attr("x1", 0)
-                  .attr("y1", 0)
-                  .attr("x2", 0)
-                  .attr("y2", density)
-                  .attr("stroke", "#ccc")
-                  .attr("stroke-width", 1);
-              }
-              fill = `url(#${patternId})`;
+              // const num = parseFloat(node.name);
+              // const density = isNaN(num)
+              //   ? 5
+              //   : Math.max(2, Math.floor(10 - num / 10));
+              // const patternId = `diagonalPattern-${density}`;
+              // if (svg.select(`#${patternId}`).empty()) {
+              //   const pattern = svg
+              //     .append("defs")
+              //     .append("pattern")
+              //     .attr("id", patternId)
+              //     .attr("patternUnits", "userSpaceOnUse")
+              //     .attr("width", density)
+              //     .attr("height", density)
+              //     .attr("patternTransform", "rotate(45)");
+              //   pattern
+              //     .append("line")
+              //     .attr("x1", 0)
+              //     .attr("y1", 0)
+              //     .attr("x2", 0)
+              //     .attr("y2", density)
+              //     .attr("stroke", "#ccc")
+              //     .attr("stroke-width", 1);
+              // }
+              // fill = `url(#${patternId})`;
             } else if (node.type === "timeseries") {
               dash = "4,2";
-              fill = tsColor(node.name);
+              // fill = tsColor(node.name);
+              fill = "none";
             } else if (node.type === "context") {
               dash = "4,2";
             }
@@ -270,22 +275,31 @@ const MultiBarcodeTree = ({
                 .attr("text-anchor", "middle")
                 .text(node.name)
                 .style("pointer-events", "none");
-              wrapText(textElem, rectWidth);
+              wrapText(textElem, rectWidth, cellHeightIndicators);
             } else if (node.type === "function") {
-              if (node.value) {
-                const keys = Object.keys(node.value);
-                const barWidth = rectWidth / keys.length;
-                keys.forEach((k, idx) => {
-                  const barH = cellHeightIndicators * node.value[k];
-                  gNode
-                    .append("rect")
-                    .attr("x", x + idx * barWidth)
-                    .attr("y", cellHeightIndicators - barH)
-                    .attr("width", barWidth - 1)
-                    .attr("height", barH)
-                    .attr("fill", barColor(k));
-                });
-              }
+              // if (node.value) {
+              //   const keys = Object.keys(node.value);
+              //   const barWidth = rectWidth / keys.length;
+              //   keys.forEach((k, idx) => {
+              //     const barH = cellHeightIndicators * node.value[k];
+              //     gNode
+              //       .append("rect")
+              //       .attr("x", x + idx * barWidth)
+              //       .attr("y", cellHeightIndicators - barH)
+              //       .attr("width", barWidth - 1)
+              //       .attr("height", barH)
+              //       .attr("fill", barColor(k));
+              //   });
+              // }
+              const textElem = gNode
+                .append("text")
+                .attr("x", x + rectWidth / 2)
+                .attr("y", cellHeightIndicators / 2)
+                .attr("dy", ".35em")
+                .attr("text-anchor", "middle")
+                .text(node.name)
+                .style("pointer-events", "none");
+              wrapText(textElem, rectWidth, cellHeightIndicators);
             } else {
               const textElem = gNode
                 .append("text")
@@ -295,7 +309,7 @@ const MultiBarcodeTree = ({
                 .attr("text-anchor", "middle")
                 .text(node.name)
                 .style("pointer-events", "none");
-              wrapText(textElem, rectWidth);
+              wrapText(textElem, rectWidth, cellHeightIndicators);
             }
           });
         }
@@ -339,33 +353,34 @@ const MultiBarcodeTree = ({
               // 内部绘制柱状图
             } else if (node.type === "constant") {
               dash = "4,2";
-              const num = parseFloat(node.name);
-              const density = isNaN(num)
-                ? 5
-                : Math.max(2, Math.floor(10 - num / 10));
-              const patternId = `diagonalPattern-${density}`;
-              if (svg.select(`#${patternId}`).empty()) {
-                const pattern = svg
-                  .append("defs")
-                  .append("pattern")
-                  .attr("id", patternId)
-                  .attr("patternUnits", "userSpaceOnUse")
-                  .attr("width", density)
-                  .attr("height", density)
-                  .attr("patternTransform", "rotate(45)");
-                pattern
-                  .append("line")
-                  .attr("x1", 0)
-                  .attr("y1", 0)
-                  .attr("x2", 0)
-                  .attr("y2", density)
-                  .attr("stroke", "#ccc")
-                  .attr("stroke-width", 1);
-              }
-              fill = `url(#${patternId})`;
+              // const num = parseFloat(node.name);
+              // const density = isNaN(num)
+              //   ? 5
+              //   : Math.max(2, Math.floor(10 - num / 10));
+              // const patternId = `diagonalPattern-${density}`;
+              // if (svg.select(`#${patternId}`).empty()) {
+              //   const pattern = svg
+              //     .append("defs")
+              //     .append("pattern")
+              //     .attr("id", patternId)
+              //     .attr("patternUnits", "userSpaceOnUse")
+              //     .attr("width", density)
+              //     .attr("height", density)
+              //     .attr("patternTransform", "rotate(45)");
+              //   pattern
+              //     .append("line")
+              //     .attr("x1", 0)
+              //     .attr("y1", 0)
+              //     .attr("x2", 0)
+              //     .attr("y2", density)
+              //     .attr("stroke", "#ccc")
+              //     .attr("stroke-width", 1);
+              // }
+              // fill = `url(#${patternId})`;
             } else if (node.type === "timeseries") {
               dash = "4,2";
-              fill = tsColor(node.name);
+              // fill = tsColor(node.name);
+              fill = "none";
             } else if (node.type === "context") {
               dash = "4,2";
             }
@@ -407,22 +422,31 @@ const MultiBarcodeTree = ({
                 .attr("text-anchor", "middle")
                 .text(node.name)
                 .style("pointer-events", "none");
-              wrapText(textElem, rectWidth);
+              wrapText(textElem, rectWidth, cellHeightEvaluation);
             } else if (node.type === "function") {
-              if (node.value) {
-                const keys = Object.keys(node.value);
-                const barWidth = rectWidth / keys.length;
-                keys.forEach((k, idx) => {
-                  const barH = cellHeightEvaluation * node.value[k];
-                  gNode
-                    .append("rect")
-                    .attr("x", x + idx * barWidth)
-                    .attr("y", cellHeightEvaluation - barH)
-                    .attr("width", barWidth - 1)
-                    .attr("height", barH)
-                    .attr("fill", barColor(k));
-                });
-              }
+              // if (node.value) {
+              //   const keys = Object.keys(node.value);
+              //   const barWidth = rectWidth / keys.length;
+              //   keys.forEach((k, idx) => {
+              //     const barH = cellHeightEvaluation * node.value[k];
+              //     gNode
+              //       .append("rect")
+              //       .attr("x", x + idx * barWidth)
+              //       .attr("y", cellHeightEvaluation - barH)
+              //       .attr("width", barWidth - 1)
+              //       .attr("height", barH)
+              //       .attr("fill", barColor(k));
+              //   });
+              // }
+              const textElem = gNode
+                .append("text")
+                .attr("x", x + rectWidth / 2)
+                .attr("y", cellHeightIndicators / 2)
+                .attr("dy", ".35em")
+                .attr("text-anchor", "middle")
+                .text(node.name)
+                .style("pointer-events", "none");
+              wrapText(textElem, rectWidth, cellHeightEvaluation);
             } else {
               const textElem = gNode
                 .append("text")
@@ -432,7 +456,7 @@ const MultiBarcodeTree = ({
                 .attr("text-anchor", "middle")
                 .text(node.name)
                 .style("pointer-events", "none");
-              wrapText(textElem, rectWidth);
+              wrapText(textElem, rectWidth, cellHeightEvaluation);
             }
           });
         }
