@@ -24,8 +24,10 @@ const StrategyMap = ({
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
+    const padding = 40;
+
     // 设置 SVG 的宽高
-    svg.attr("width", width).attr("height", height);
+    svg.attr("width", width + padding).attr("height", height);
 
     // 创建层级数据
     const root = d3.hierarchy(data);

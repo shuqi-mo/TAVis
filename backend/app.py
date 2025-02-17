@@ -33,25 +33,6 @@ def get_all_stocks():
             csv_files.append(file[:9])
     return jsonify(csv_files)
 
-@app.route('/get_stock_list')
-def get_stock_list():
-    csv_files = []
-    # 遍历data文件夹中的文件
-    for file in os.listdir(stock_file_path):
-        if file.endswith('.csv'):
-            csv_files.append(file[:9])
-    return jsonify(csv_files)
-
-@app.route('/get_stock_data')
-def get_stock_data():
-    data = {}
-    data["name"] = file_name[:9]
-    stock = []
-    for index, rows in data_df.iterrows():
-        stock.append([rows["trade_date"],rows["open"],rows["close"],rows["high"],rows["low"],rows["vol"]])
-    data["data"] = stock
-    return jsonify(data)
-
 @app.route('/get_scatterdata_default')
 def get_scatterdata_default():
     csv_file_path = os.path.join('static', 'stock_embedding.csv')
@@ -224,7 +205,7 @@ def process_stock_all():
 @app.route('/process_code', methods=['POST'])
 def process_code():
     data = request.get_json()
-    indicatorsData, evaluationData = transform_code(data["code"])
+    indicatorsData, evaluationData = transform_code(eval(data["initialCode"]))
     return jsonify([indicatorsData, evaluationData])
 
 @app.route('/process_strategy', methods=['POST'])

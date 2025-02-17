@@ -10,7 +10,6 @@ import { CloseOutlined, CodeOutlined } from "@ant-design/icons";
 import CurveBoxplot from "./Views/CurveBoxplot";
 import Comparison from "./Views/Comparison";
 import ParallelCoordinatesChart from "./Views/ParallelCoordinatesChart";
-import MultiBarcodeTree from "./Views/MultiBarcodeTree";
 import SunburstChart from "./Views/SunburstChart";
 import StockSelection from "./Views/StockSelection";
 
@@ -281,15 +280,7 @@ function App() {
             <Flex vertical="true">
               <div className="view-title">Comparison View</div>
               <Flex>
-                <div>
-                  <MultiBarcodeTree
-                    width={750}
-                    height={400}
-                    margin={20}
-                    gap={4}
-                  />
-                </div>
-                <div style={{ width: 370, height: 220 }}>
+                <div style={{ }}>
                   <Comparison
                     initialCode={code}
                     indicators={indicators}
@@ -302,7 +293,6 @@ function App() {
                 </div>
               </Flex>
             </Flex>
-            <Flex></Flex>
           </Flex>
           <Flex>
             {visible && (

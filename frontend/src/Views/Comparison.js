@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from "react";
 import { Button, Select, Flex } from "antd";
 import StrategyMap from "./StrategyMap";
+import MultiBarcodeTree from "./MultiBarcodeTree";
 import * as d3 from "d3";
 import axios from "axios";
 
@@ -36,15 +37,23 @@ function removeNode(root, targetCode) {
   return root;
 }
 
-const Comparison = ({ initialCode, indicators, evaluation, onSelectCode, stockList }) => {
+const Comparison = ({
+  initialCode,
+  indicators,
+  evaluation,
+  onSelectCode,
+  stockList,
+}) => {
   const API_URL = "http://localhost:5000";
 
   const [treeData, setTreeData] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [valueKey, setValueKey] = useState("totalTrades");
+  const [groups, setGroups] = useState([]);
 
   useEffect(() => {
     if (!initialCode) return;
+    // 先调用 process_strategy 接口获取策略表现数据
     const fetchInitialData = async () => {
       let exprLongList = [];
       let exprShortList = [];
@@ -83,8 +92,17 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode, stockLi
       } catch (error) {
         console.error("Error fetching initial node data:", error);
       }
+      // 调用 process_code 接口，传入 initialCode，将返回的数据追加到 groups 中
+      try {
+        const codeResponse = await axios.post(`${API_URL}/process_code`, {
+          initialCode,
+        });
+        setGroups((prev) => [...prev, codeResponse.data]);
+        // console.log(codeResponse.data);
+      } catch (error) {
+        console.error("Error fetching process_code for initial node:", error);
+      }
     };
-
     fetchInitialData();
   }, [stockList]);
 
@@ -133,6 +151,7 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode, stockLi
         exprShortList,
         startDate,
         endDate,
+        stockList,
         getStopLossThreshold,
         getTakeProfitThreshold,
         getAheadStopTime,
@@ -154,6 +173,15 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode, stockLi
       });
       setTreeData(newTree);
       setSelectedNode(null);
+
+      try {
+        const codeResponse = await axios.post(`${API_URL}/process_code`, {
+          initialCode: newNode.code,
+        });
+        setGroups((prev) => [...prev, codeResponse.data]);
+      } catch (error) {
+        console.error("Error fetching process_code for new node:", error);
+      }
     } catch (error) {
       console.error("Error:", error);
     }
@@ -175,42 +203,41 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode, stockLi
   };
 
   return (
-    <div>
+    <Flex>
+      <MultiBarcodeTree data={groups} width={780} height={400} margin={20} gap={4} />
       <Flex vertical gap="small">
-        <div style={{ width: 100, height: 50 }}>
-          <Flex gap="small">
-            <Select
-              value={valueKey}
-              onChange={(val) => setValueKey(val)}
-              style={{ width: 100 }}
-            >
-              <Option value="totalTrades">totalTrades</Option>
-              <Option value="successRate">successRate</Option>
-              <Option value="avgReturn">avgReturn</Option>
-              <Option value="totalProfit">totalProfit</Option>
-            </Select>
-            <Button type="primary" onClick={handleSave}>
-              Save
-            </Button>
-            <Button danger onClick={handleDelete}>
-              Delete
-            </Button>
-            <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
-          </Flex>
-        </div>
+        <Flex gap="small">
+          <Select
+            value={valueKey}
+            onChange={(val) => setValueKey(val)}
+            style={{ width: 100 }}
+          >
+            <Option value="totalTrades">totalTrades</Option>
+            <Option value="successRate">successRate</Option>
+            <Option value="avgReturn">avgReturn</Option>
+            <Option value="totalProfit">totalProfit</Option>
+          </Select>
+          <Button type="primary" onClick={handleSave}>
+            Save
+          </Button>
+          <Button danger onClick={handleDelete}>
+            Delete
+          </Button>
+          <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
+        </Flex>
 
         <div style={{ border: "1px solid #ddd" }}>
           <StrategyMap
             data={treeData}
-            width={100}
-            height={200}
+            width={300}
+            height={300}
             onNodeClick={handleNodeClick}
             valueKey={valueKey}
             selectedNode={selectedNode}
           />
         </div>
       </Flex>
-    </div>
+    </Flex>
   );
 };
 
@@ -223,8 +250,8 @@ function ColorLegend({ minVal, maxVal, valueKey }) {
   const leftColor = colorScale(minVal);
   const rightColor = colorScale(maxVal);
 
-   // 格式化数值，根据指标做不同处理
-   const formatValue = (value, key) => {
+  // 格式化数值，根据指标做不同处理
+  const formatValue = (value, key) => {
     if (value === undefined || value === null) return "-";
     if (key === "successRate" || key === "avgReturn") {
       return (value * 100).toFixed(2) + "%";

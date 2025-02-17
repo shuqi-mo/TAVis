@@ -1,161 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 
-// ============ 示例输入数据 ==============
-
-const indicatorsData1 = [
-  {
-    name: "MACD",
-    type: "extend",
-    children: [
-      {
-        name: "EMA(close,12)",
-        type: "function",
-        value: { trend: 0.6, seasonal: 0.2, residual: 0.1 },
-      },
-      {
-        name: "EMA(close,26)",
-        type: "function",
-        value: { trend: 0.7, seasonal: 0.2, residual: 0.1 },
-      },
-    ],
-  },
-  {
-    name: "boll",
-    type: "extend",
-    children: [
-      { name: "close", type: "timeseries" },
-      {
-        name: "up",
-        type: "extend",
-        children: [
-          {
-            name: "EMA(close,20)",
-            type: "function",
-            value: { trend: 0.6, seasonal: 0.2, residual: 0.1 },
-          },
-          {
-            name: "movingstd(mid,20)",
-            type: "function",
-            value: { trend: 0.2, seasonal: 0.6, residual: 0.1 },
-          },
-          { name: "2", type: "constant" },
-        ],
-      },
-      {
-        name: "down",
-        type: "extend",
-        children: [{ name: "up", type: "link" }],
-      },
-    ],
-  },
-];
-
-const evaluationData1 = [
-  {
-    name: "period",
-    type: "extend",
-    children: [{ name: "2023-07-01 2024-07-01", type: "context" }],
-  },
-  {
-    name: "stop",
-    type: "extend",
-    children: [
-      {
-        name: "ahead",
-        type: "extend",
-        children: [{ name: "-1", type: "context" }],
-      },
-    ],
-  },
-];
-
-const indicatorsData2 = [
-  {
-    name: "boll",
-    type: "extend",
-    children: [
-      { name: "close", type: "timeseries" },
-      {
-        name: "up",
-        type: "extend",
-        children: [
-          {
-            name: "EMA(close,20)",
-            type: "function",
-            value: { trend: 0.6, seasonal: 0.2, residual: 0.1 },
-          },
-          {
-            name: "movingstd(mid,20)",
-            type: "function",
-            value: { trend: 0.2, seasonal: 0.6, residual: 0.1 },
-          },
-          { name: "2", type: "constant" },
-        ],
-      },
-      {
-        name: "down",
-        type: "extend",
-        children: [{ name: "up", type: "link" }],
-      },
-    ],
-  },
-];
-
-const evaluationData2 = [
-  {
-    name: "period",
-    type: "extend",
-    children: [{ name: "2023-07-01 2024-07-01", type: "context" }],
-  },
-  {
-    name: "stop",
-    type: "extend",
-    children: [
-      {
-        name: "ahead",
-        type: "extend",
-        children: [{ name: "-1", type: "context" }],
-      },
-    ],
-  },
-];
-
-const indicatorsData3 = [
-  {
-    name: "rsi",
-    type: "extend",
-    children: [
-      { name: "70", type: "constant" },
-      { name: "30", type: "constant" },
-      {
-        name: "rsi(close,14)",
-        type: "function",
-        value: { trend: 0.5, seasonal: 0.1, residual: 0.2 },
-      },
-    ],
-  },
-];
-
-const evaluationData3 = [
-  {
-    name: "period",
-    type: "extend",
-    children: [{ name: "2023-07-01 2024-07-01", type: "context" }],
-  },
-  {
-    name: "stop",
-    type: "extend",
-    children: [
-      {
-        name: "ahead",
-        type: "extend",
-        children: [{ name: "-1", type: "context" }],
-      },
-    ],
-  },
-];
-
 // ============ 辅助函数 ==============
 
 function initTree(node) {
@@ -243,16 +88,26 @@ function wrapText(textSelection, width) {
  * 每一列代表该部分出现过的树（指标或评价），同时在不同列之间增加列间距，
  * 并在图的右侧增加额外的空白区域（rightMargin）。
  */
-const MultiBarcodeTree = ({ width = 900, height = 400, margin = 20, gap = 4 }) => {
+const MultiBarcodeTree = ({
+  data,
+  width = 900,
+  height = 400,
+  margin = 20,
+  gap = 4,
+}) => {
   const svgRef = useRef(null);
   const [groups, setGroups] = useState(null);
 
   useEffect(() => {
-    const groupsData = [
-      { indicatorsData: indicatorsData1, evaluationData: evaluationData1 },
-      { indicatorsData: indicatorsData2, evaluationData: evaluationData2 },
-      { indicatorsData: indicatorsData3, evaluationData: evaluationData3 },
-    ];
+    // const groupsData = [
+    //   { indicatorsData: indicatorsData1, evaluationData: evaluationData1 },
+    //   { indicatorsData: indicatorsData2, evaluationData: evaluationData2 },
+    //   { indicatorsData: indicatorsData3, evaluationData: evaluationData3 },
+    // ];
+    const groupsData = data.map((item)=> {
+      return {indicatorsData: item[0],
+      evaluationData: item[1]}
+    })
     const newGroups = groupsData.map((group) => ({
       indicatorsData: group.indicatorsData.map((tree) =>
         initTree(JSON.parse(JSON.stringify(tree)))
@@ -262,7 +117,7 @@ const MultiBarcodeTree = ({ width = 900, height = 400, margin = 20, gap = 4 }) =
       ),
     }));
     setGroups(newGroups);
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     if (!groups) return;
@@ -338,7 +193,9 @@ const MultiBarcodeTree = ({ width = 900, height = 400, margin = 20, gap = 4 }) =
             const x = xScale(start) + i * gap;
             const rectWidth = xScale(cumulative) - xScale(start);
             const gNode = cellGroup.append("g").attr("class", "node");
-            let stroke = "black", dash = null, fill = "none";
+            let stroke = "black",
+              dash = null,
+              fill = "none";
             if (node.type === "extend") {
               fill = "#ADD8E6";
             } else if (node.type === "function") {
@@ -557,7 +414,8 @@ const MultiBarcodeTree = ({ width = 900, height = 400, margin = 20, gap = 4 }) =
                 const barWidth = rectWidth / keys.length;
                 keys.forEach((k, idx) => {
                   const barH = cellHeightEvaluation * node.value[k];
-                  gNode.append("rect")
+                  gNode
+                    .append("rect")
                     .attr("x", x + idx * barWidth)
                     .attr("y", cellHeightEvaluation - barH)
                     .attr("width", barWidth - 1)
@@ -566,7 +424,8 @@ const MultiBarcodeTree = ({ width = 900, height = 400, margin = 20, gap = 4 }) =
                 });
               }
             } else {
-              const textElem = gNode.append("text")
+              const textElem = gNode
+                .append("text")
                 .attr("x", x + rectWidth / 2)
                 .attr("y", cellHeightEvaluation / 2)
                 .attr("dy", ".35em")
