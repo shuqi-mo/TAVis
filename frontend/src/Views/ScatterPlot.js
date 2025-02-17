@@ -84,7 +84,29 @@ const ScatterPlot = ({
     };
     
     // 绘制主图散点
-    // 先创建一个 tooltip DIV
+    // 定义获取填充颜色的函数
+    const getFillColor = (d) => {
+      // 若未传入 colorStats，则全部使用 steelblue
+      if (!colorStats) {
+        return "steelblue";
+      }
+      // 若传入 colorStats，并且 performance 存在，则根据 performance 数据更新颜色
+      if (divergingScale && performance) {
+        // 根据股票名称匹配 performance 数据（d[0] 为股票名称）
+        const perf = performance.find((p) => p[0] === d[0]);
+        if (perf) {
+          const value = parseFloat(perf[metricIndex[valueKey]]);
+          if (!isNaN(value)) {
+            return divergingScale(value);
+          }
+        }
+        return "gray"; // 若找不到匹配的 performance 或数值无效，则返回灰色
+      }
+      // 如果 colorStats 存在但未满足上述条件，默认返回 steelblue
+      return "steelblue";
+    };
+
+    // 创建一个 tooltip DIV
     const tooltip = d3
       .select("body")
       .append("div")
@@ -105,21 +127,7 @@ const ScatterPlot = ({
       .attr("cx", (d) => xScale(d[1]))
       .attr("cy", (d) => yScale(d[2]))
       .attr("r", 5)
-      .attr("fill", (d) => {
-        // 默认填充为灰色
-        let fillColor = "gray";
-        if (divergingScale && performance) {
-          // 根据股票名称匹配 performance 数据（d[0] 为股票名称）
-          const perf = performance.find((p) => p[0] === d[0]);
-          if (perf) {
-            let value = parseFloat(perf[metricIndex[valueKey]]);
-            if (!isNaN(value)) {
-              fillColor = divergingScale(value);
-            }
-          }
-        }
-        return fillColor;
-      })
+      .attr("fill", (d) => getFillColor(d))
       .attr("opacity", 0.8)
       .on("mouseover", function (event, d) {
         // 放大 + 高亮
@@ -212,7 +220,7 @@ const ScatterPlot = ({
       .attr("cx", (d) => thumbXScale(d[1]) + thumbMargin.left)
       .attr("cy", (d) => thumbYScale(d[2]) + thumbMargin.top)
       .attr("r", 2)
-      .attr("fill", "steelblue")
+      .attr("fill", (d) => getFillColor(d))
       .attr("opacity", 0.8);
 
     // 在缩略图中添加一个矩形框，用于指示当前主图的缩放区域

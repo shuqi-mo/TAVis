@@ -4,7 +4,6 @@ import { Select } from "antd";
 import {
   FilterOutlined,
   SettingOutlined,
-  RedoOutlined,
   PlayCircleOutlined,
 } from "@ant-design/icons";
 import * as d3 from "d3";
@@ -171,12 +170,6 @@ const StockSelection = ({ indicators, evaluation }) => {
           style={{ border: "none", background: "none", cursor: "pointer" }}
         >
           <SettingOutlined style={{ fontSize: "18px" }} />
-        </button>
-        <button
-          onClick={fetchData}
-          style={{ border: "none", background: "none", cursor: "pointer" }}
-        >
-          <RedoOutlined style={{ fontSize: "18px" }} />
         </button>
         {/* 单选框：选择用于散点图上色的指标 */}
         <Select
