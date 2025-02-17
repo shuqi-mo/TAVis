@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Select, Button, Popover, Slider } from "antd";
+import { Select, Button, Popover, Slider, Spin, Transfer } from "antd";
 import {
   FilterOutlined,
   SettingOutlined,
   PlayCircleOutlined,
+  StarFilled,
+  StarOutlined,
 } from "@ant-design/icons";
 import * as d3 from "d3";
 import ScatterPlot from "./ScatterPlot";
@@ -231,13 +233,64 @@ function ColorLegend({ minVal, maxVal, medianVal, valueKey }) {
   );
 }
 
-const StockSelection = ({ indicators, evaluation }) => {
+function StockTransfer({
+  allStocks,
+  targetKeys,
+  selectStock,
+  onSelectStock,
+  onChange,
+}) {
+  const dataSource = allStocks.map((stock) => ({ key: stock, title: stock }));
+  return (
+    <Transfer
+      dataSource={dataSource}
+      titles={["All Stocks", "Selected Stocks"]}
+      targetKeys={targetKeys}
+      onChange={onChange}
+      render={(item) => {
+        const isCurrent = item.key === selectStock;
+        return (
+          <div style={{ display: "flex", alignItems: "center" }}>
+            {isCurrent ? (
+              <StarFilled
+                style={{ color: "yellow", cursor: "pointer" }}
+                onClick={() => onSelectStock(item.key)}
+              />
+            ) : (
+              <StarOutlined
+                style={{ cursor: "pointer" }}
+                onClick={() => onSelectStock(item.key)}
+              />
+            )}
+            <span style={{ marginLeft: 8 }}>{item.title}</span>
+          </div>
+        );
+      }}
+      oneWay
+      listStyle={{
+        width: 200,
+        height: 300,
+      }}
+    />
+  );
+}
+
+const StockSelection = ({
+  indicators,
+  evaluation,
+  selectStock,
+  stockList,
+  onSelectStock,
+  onStockListChange,
+}) => {
   const API_URL = "http://localhost:5000";
   const [defaultData, setDefaultData] = useState([]);
   const [stocksPerformance, setStocksPerformance] = useState(null);
   const [valueKey, setValueKey] = useState("totalProfit");
-  const [filterCriteria, setFilterCriteria] = useState(null); // 过滤条件，初始为 null
+  const [filterCriteria, setFilterCriteria] = useState(null);
   const [filterPopoverVisible, setFilterPopoverVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [allStocks, setAllStocks] = useState([]);
 
   // mapping: 性能数据中各指标在数组中的位置
   const metricIndex = {
@@ -273,6 +326,8 @@ const StockSelection = ({ indicators, evaluation }) => {
   };
 
   const handleExecute = async () => {
+    setLoading(true); // 开始加载
+
     let indicatorName = [];
     let exprLongList = [];
     let exprShortList = [];
@@ -307,12 +362,27 @@ const StockSelection = ({ indicators, evaluation }) => {
       setStocksPerformance(response.data);
     } catch (error) {
       console.error("Error:", error);
+    } finally {
+      setLoading(false);
     }
+  };
+
+  const fetchAllStocks = async () => {
+    axios
+      .get(`${API_URL}/get_all_stocks`)
+      .then((response) => {
+        // 假设返回数据格式为数组，每个元素包含 { key, title }
+        setAllStocks(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
   };
 
   // 组件加载时自动获取数据
   useEffect(() => {
     fetchData();
+    fetchAllStocks();
   }, []);
 
   return (
@@ -347,15 +417,23 @@ const StockSelection = ({ indicators, evaluation }) => {
             <FilterOutlined style={{ fontSize: "18px" }} />
           </Button>
         </Popover>
-        <Button
-          onClick={() => {
-            // TODO: 添加设置功能
-            console.log("Setting clicked");
-          }}
-          style={{ border: "none", background: "none", cursor: "pointer" }}
+        {/* 设置按钮：点击后弹出 Transfer 穿梭框 */}
+        <Popover
+          content={
+            <StockTransfer
+              allStocks={allStocks}
+              targetKeys={stockList}
+              selectStock={selectStock}
+              onSelectStock={onSelectStock}
+              onChange={(newTargetKeys) => onStockListChange(newTargetKeys)}
+            />
+          }
+          trigger="click"
         >
-          <SettingOutlined style={{ fontSize: "18px" }} />
-        </Button>
+          <Button style={{ border: "none", background: "none", cursor: "pointer" }}>
+            <SettingOutlined style={{ fontSize: "18px" }} />
+          </Button>
+        </Popover>
         {/* 单选框：选择用于散点图上色的指标 */}
         <Select
           value={valueKey}
@@ -380,16 +458,19 @@ const StockSelection = ({ indicators, evaluation }) => {
           )}
       </div>
 
-      {/* 散点图组件，将数据传入 */}
-      <ScatterPlot
-        data={defaultData}
-        performance={stocksPerformance}
-        valueKey={valueKey}
-        colorStats={{ min: minVal, median: medianVal, max: maxVal }}
-        filters={filterCriteria}
-        width={350}
-        height={350}
-      />
+      {/* 散点图区域，加载时显示 Spin */}
+      <Spin spinning={loading}>
+        <ScatterPlot
+          data={defaultData}
+          performance={stocksPerformance}
+          valueKey={valueKey}
+          colorStats={{ min: minVal, median: medianVal, max: maxVal }}
+          filters={filterCriteria}
+          selectedStocks={stockList}
+          width={350}
+          height={350}
+        />
+      </Spin>
     </div>
   );
 };

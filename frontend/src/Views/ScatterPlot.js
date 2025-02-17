@@ -7,6 +7,7 @@ const ScatterPlot = ({
   valueKey,
   colorStats,
   filters,
+  selectedStocks,
   width,
   height,
 }) => {
@@ -87,7 +88,7 @@ const ScatterPlot = ({
     // 绘制主图散点
     // 定义获取填充颜色的函数
     const getFillColor = (d) => {
-      if (!colorStats) return "steelblue";
+      if (!colorStats || !performance) return "steelblue";
       if (performance) {
         const perf = performance.find((p) => p[0] === d[0]);
         if (perf) {
@@ -134,6 +135,8 @@ const ScatterPlot = ({
       .attr("cy", (d) => yScale(d[2]))
       .attr("r", 5)
       .attr("fill", (d) => getFillColor(d))
+      .attr("stroke", (d) => (selectedStocks && selectedStocks.includes(d[0]) ? "black" : "none"))
+      .attr("stroke-width", (d) => (selectedStocks && selectedStocks.includes(d[0]) ? 2 : 0))
       .attr("opacity", 0.8)
       .on("mouseover", function (event, d) {
         // 放大 + 高亮

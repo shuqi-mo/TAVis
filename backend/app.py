@@ -14,15 +14,6 @@ from parser import *
 app = Flask(__name__)
 CORS(app)
 
-file_path = "static/data/"
-file_name = "600893.SH.csv"
-csv_files = []
-# 遍历data文件夹中的文件
-for file in os.listdir(file_path):
-    # 检查文件是否以.csv结尾
-    if file.endswith('.csv'):
-        csv_files.append(file[:9])
-
 stock_file_path = "static/stock/"
 stock_csv_files = []
 # 遍历data文件夹中的文件
@@ -31,11 +22,24 @@ for file in os.listdir(stock_file_path):
     if file.endswith('.csv'):
         stock_csv_files.append(file[:9])
 
-data_df = pd.read_csv(file_path + file_name)
 app.secret_key = 'secret_key'
+
+@app.route('/get_all_stocks')
+def get_all_stocks():
+    csv_files = []
+    # 遍历data文件夹中的文件
+    for file in os.listdir(stock_file_path):
+        if file.endswith('.csv'):
+            csv_files.append(file[:9])
+    return jsonify(csv_files)
 
 @app.route('/get_stock_list')
 def get_stock_list():
+    csv_files = []
+    # 遍历data文件夹中的文件
+    for file in os.listdir(stock_file_path):
+        if file.endswith('.csv'):
+            csv_files.append(file[:9])
     return jsonify(csv_files)
 
 @app.route('/get_stock_data')
@@ -80,7 +84,7 @@ def update_single_stock_data():
     res = {}
     res["name"] = data["selectStock"]
     stock = []
-    data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
+    data_df = pd.read_csv(stock_file_path + data["selectStock"] + ".csv")
     for index, rows in data_df.iterrows():
         stock.append([rows["trade_date"],rows["open"],rows["close"],rows["high"],rows["low"],rows["vol"]])
     res["data"] = stock
@@ -89,7 +93,7 @@ def update_single_stock_data():
 @app.route('/process_stock', methods=['POST'])
 def process_stock():
     data = request.get_json()
-    data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
+    data_df = pd.read_csv(stock_file_path + data["selectStock"] + ".csv")
 
     # 单个股票处理结果
     float_trade = []
@@ -106,7 +110,7 @@ def process_stock():
     ring_stock_indicator = {}
     for i in range(len(data["indicatorName"])):
         ring_indicator_stock[data["indicatorName"][i]] = []
-    for item in csv_files:
+    for item in data["stockList"]:
         ring_stock_indicator[item] = []
 
     # 单个股票数据处理
@@ -129,8 +133,8 @@ def process_stock():
         indiatorPerformance.append([name, res[4]])
     
     # 多个股票数据处理
-    for item in csv_files:
-        stock = pd.read_csv(file_path + item + ".csv")
+    for item in data["stockList"]:
+        stock = pd.read_csv(stock_file_path + item + ".csv")
         tradeCount = 0
         successCount = 0
         profitCount = 0
@@ -166,7 +170,7 @@ def process_stock():
 @app.route('/process_exampler', methods=['POST'])
 def process_exampler():
     data = request.get_json()
-    data_df = pd.read_csv(file_path + data["selectStock"] + ".csv")
+    data_df = pd.read_csv(stock_file_path + data["selectStock"] + ".csv")
     variableList = []
     for i in range(len(data["indicatorName"])):
         name = data["indicatorName"][i]
@@ -230,8 +234,8 @@ def process_strategy():
     successCount = 0
     profitCount = 0
     avgReturnList = []
-    for item in csv_files:
-        stock = pd.read_csv(file_path + item + ".csv")
+    for item in data["stockList"]:
+        stock = pd.read_csv(stock_file_path + item + ".csv")
         for i in range(len(data["exprLongList"])):
             long = execute_expr(data["exprLongList"][i], stock)
             short = execute_expr(data["exprShortList"][i], stock)

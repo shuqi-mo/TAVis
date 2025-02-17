@@ -24,7 +24,7 @@ function App() {
   const [tradeByIndicators, setTradeByIndicators] = useState(null);
   const [backtest, setBacktest] = useState(null);
   const [selectStock, setSelectStock] = useState("600893.SH");
-  const [stockList, setStockList] = useState(["600893.SH"]);
+  const [stockList, setStockList] = useState(["600893.SH", "000651.SZ", "002241.SZ", "002555.SZ", "002594.SZ"]);
   const [stockPerformance, setStockPerformance] = useState([]);
   const [curveBoxplotData, setCurveBoxplotData] = useState(null);
   const [curveBoxplotDataForStocks, setCurveBoxplotDataForStocks] =
@@ -61,26 +61,13 @@ function App() {
     setCode(newValue);
   };
 
-  // 更新股票清单和选中股票
-  useEffect(() => {
-    axios
-      .get(`${API_URL}/get_stock_data`)
-      .then((response) => {
-        setData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-    axios
-      .get(`${API_URL}/get_stock_list`)
-      .then((response) => {
-        // setData(response.data);
-        setStockList(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+  const onSelectStock = (newValue) => {
+    setSelectStock(newValue);
+  };
+
+  const onStockListChange = (newValue) => {
+    setStockList(newValue);
+  };
 
   // 计算指标交易序列和收益，更新回测和exampler
   async function processStrategies() {
@@ -111,6 +98,7 @@ function App() {
         exprLongList,
         exprShortList,
         selectStock,
+        stockList,
         startDate,
         endDate,
         getStopLossThreshold,
@@ -189,7 +177,7 @@ function App() {
         console.error("Error:", error);
       });
     processStrategies();
-  }, [selectStock, code]);
+  }, [selectStock, stockList, code]);
 
   // 切换 CodeEditor 展开/收起状态
   const toggleEditor = () => {
@@ -233,11 +221,7 @@ function App() {
                     <Radio.Button value="current stock">
                       indicators
                     </Radio.Button>
-                    <Radio.Button
-                      value="selected stocks"
-                    >
-                      stocks
-                    </Radio.Button>
+                    <Radio.Button value="selected stocks">stocks</Radio.Button>
                   </Radio.Group>
                 </div>
                 {backtest && position === "current stock" && (
@@ -271,9 +255,28 @@ function App() {
                     <CurveBoxplot boxplotData={item} width={160} height={120} />
                   ))}
               </div>
-              {position === "current stock" && <SunburstChart data={ringDataIndicatorStock} width={300} height={400} />}
-              {position === "selected stocks" && <SunburstChart data={ringDataStockIndicator} width={300} height={400} />}
-              <StockSelection indicators={indicators} evaluation={evaluation}/>
+              {position === "current stock" && (
+                <SunburstChart
+                  data={ringDataIndicatorStock}
+                  width={300}
+                  height={400}
+                />
+              )}
+              {position === "selected stocks" && (
+                <SunburstChart
+                  data={ringDataStockIndicator}
+                  width={300}
+                  height={400}
+                />
+              )}
+              <StockSelection
+                indicators={indicators}
+                evaluation={evaluation}
+                selectStock={selectStock}
+                stockList={stockList}
+                onSelectStock={onSelectStock}
+                onStockListChange={onStockListChange}
+              />
             </Flex>
             <Flex vertical="true">
               <div className="view-title">Comparison View</div>
@@ -291,6 +294,7 @@ function App() {
                     initialCode={code}
                     indicators={indicators}
                     evaluation={evaluation}
+                    stockList={stockList}
                     onSelectCode={(code) => {
                       setCode(code);
                     }}
@@ -298,8 +302,7 @@ function App() {
                 </div>
               </Flex>
             </Flex>
-            <Flex>
-            </Flex>
+            <Flex></Flex>
           </Flex>
           <Flex>
             {visible && (

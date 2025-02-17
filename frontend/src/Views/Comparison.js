@@ -36,7 +36,7 @@ function removeNode(root, targetCode) {
   return root;
 }
 
-const Comparison = ({ initialCode, indicators, evaluation, onSelectCode }) => {
+const Comparison = ({ initialCode, indicators, evaluation, onSelectCode, stockList }) => {
   const API_URL = "http://localhost:5000";
 
   const [treeData, setTreeData] = useState(null);
@@ -61,6 +61,7 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode }) => {
         const response = await axios.post(`${API_URL}/process_strategy`, {
           exprLongList,
           exprShortList,
+          stockList,
           startDate,
           endDate,
           getStopLossThreshold,
@@ -85,7 +86,7 @@ const Comparison = ({ initialCode, indicators, evaluation, onSelectCode }) => {
     };
 
     fetchInitialData();
-  }, []);
+  }, [stockList]);
 
   const { minVal, maxVal } = useMemo(() => {
     // 1) 将树拍平(或用 d3.hierarchy 也行)
