@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Select } from "antd";
+import { Select, Button, Popover, Slider } from "antd";
 import {
   FilterOutlined,
   SettingOutlined,
@@ -10,6 +10,176 @@ import * as d3 from "d3";
 import ScatterPlot from "./ScatterPlot";
 
 const { Option } = Select;
+
+/* -------------------------------
+   FilterMetric：针对单个指标的过滤模块
+   - 左右输入框显示当前选中区间
+   - 使用 antd Slider 实现滑动条（range 模式）
+   - 下方使用 d3.area 绘制数据分布的面积图，并标出当前选择区域
+-------------------------------- */
+function FilterMetric({ metric, data, value, onChange }) {
+  const dmin = d3.min(data);
+  const dmax = d3.max(data);
+  const stepValue =
+    metric === "successRate" || metric === "avgReturn" ? 0.01 : 1;
+  const [range, setRange] = useState(value || [dmin, dmax]);
+
+  // 当外部 value 变化时更新本地状态
+  React.useEffect(() => {
+    setRange(value || [dmin, dmax]);
+  }, [value, dmin, dmax]);
+
+  const handleSliderChange = (newRange) => {
+    setRange(newRange);
+    onChange(newRange);
+  };
+
+  // 计算面积图：使用 d3.bin 计算数据分布（分为 30 个区间）
+  const bins = d3.bin().domain([dmin, dmax]).thresholds(30)(data);
+  const maxBinCount = d3.max(bins, (d) => d.length);
+  const areaChartWidth = 200;
+  const areaChartHeight = 50;
+  const xScaleArea = d3
+    .scaleLinear()
+    .domain([dmin, dmax])
+    .range([0, areaChartWidth]);
+  const yScaleArea = d3
+    .scaleLinear()
+    .domain([0, maxBinCount])
+    .range([areaChartHeight, 0]);
+  const areaGenerator = d3
+    .area()
+    .x((d) => xScaleArea(d.x0) + (xScaleArea(d.x1) - xScaleArea(d.x0)) / 2)
+    .y0(areaChartHeight)
+    .y1((d) => yScaleArea(d.length))
+    .curve(d3.curveMonotoneX);
+  const areaPath = areaGenerator(bins);
+
+  return (
+    <div style={{ marginBottom: 20, paddingBottom: 10 }}>
+      <div style={{ marginBottom: 4, fontWeight: "bold" }}>{metric}</div>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 10,
+          marginBottom: 4,
+        }}
+      >
+        <input
+          type="number"
+          value={range[0]}
+          style={{ width: 60 }}
+          onChange={(e) => {
+            const newVal = Number(e.target.value);
+            const newRange = [newVal, range[1]];
+            setRange(newRange);
+            onChange(newRange);
+          }}
+        />
+        <Slider
+          range
+          min={dmin}
+          max={dmax}
+          value={range}
+          step={stepValue}
+          onChange={handleSliderChange}
+          style={{ flex: 1 }}
+        />
+        <input
+          type="number"
+          value={range[1]}
+          style={{ width: 60 }}
+          onChange={(e) => {
+            const newVal = Number(e.target.value);
+            const newRange = [range[0], newVal];
+            setRange(newRange);
+            onChange(newRange);
+          }}
+        />
+      </div>
+      <svg width={areaChartWidth} height={areaChartHeight}>
+        <path
+          d={areaPath}
+          fill="lightblue"
+          stroke="steelblue"
+          strokeWidth={1}
+        />
+        {/* 在面积图上绘制选中区域 */}
+        <rect
+          x={xScaleArea(range[0])}
+          y={0}
+          width={xScaleArea(range[1]) - xScaleArea(range[0])}
+          height={areaChartHeight}
+          fill="orange"
+          opacity={0.2}
+        />
+      </svg>
+    </div>
+  );
+}
+
+/** -------------------------------
+ * FilterPopoverContent：弹出层中整体过滤 UI，
+ * 包含针对四项指标的 FilterMetric 和一个 Confirm 按钮
+ * -------------------------------- */
+function FilterPopoverContent({ performance, onConfirm, initialFilters }) {
+  const metrics = ["totalTrades", "successRate", "avgReturn", "totalProfit"];
+  const metricIndex = {
+    totalTrades: 1,
+    successRate: 2,
+    avgReturn: 3,
+    totalProfit: 4,
+  };
+
+  // 从 performance 中提取各指标数据数组
+  const availableData = {};
+  metrics.forEach((metric) => {
+    availableData[metric] = performance
+      ? performance.map((item) => Number(item[metricIndex[metric]]))
+      : [];
+  });
+
+  // 初始过滤范围：若 initialFilters 存在，则使用之；否则取当前数据的全范围
+  const computeInitFilters = () => {
+    const init = {};
+    metrics.forEach((metric) => {
+      const dataArr = availableData[metric];
+      init[metric] = [d3.min(dataArr), d3.max(dataArr)];
+    });
+    return init;
+  };
+
+  const [localFilters, setLocalFilters] = useState(
+    initialFilters || computeInitFilters()
+  );
+
+  // 当 performance 数据更新后，重置过滤范围为全数据范围
+  useEffect(() => {
+    setLocalFilters(computeInitFilters());
+  }, [performance]);
+
+  const handleFilterChange = (metric, range) => {
+    setLocalFilters((prev) => ({ ...prev, [metric]: range }));
+  };
+
+  return (
+    <div style={{ width: 250 }}>
+      {metrics.map((metric) => (
+        <FilterMetric
+          key={metric}
+          metric={metric}
+          data={availableData[metric]}
+          value={localFilters[metric]}
+          onChange={(range) => handleFilterChange(metric, range)}
+        />
+      ))}
+      <Button type="primary" onClick={() => onConfirm(localFilters)}>
+        Confirm
+      </Button>
+    </div>
+  );
+}
 
 // color legend 组件（使用从绿色到红色的渐变）
 function ColorLegend({ minVal, maxVal, medianVal, valueKey }) {
@@ -66,6 +236,8 @@ const StockSelection = ({ indicators, evaluation }) => {
   const [defaultData, setDefaultData] = useState([]);
   const [stocksPerformance, setStocksPerformance] = useState(null);
   const [valueKey, setValueKey] = useState("totalProfit");
+  const [filterCriteria, setFilterCriteria] = useState(null); // 过滤条件，初始为 null
+  const [filterPopoverVisible, setFilterPopoverVisible] = useState(false);
 
   // mapping: 性能数据中各指标在数组中的位置
   const metricIndex = {
@@ -147,22 +319,35 @@ const StockSelection = ({ indicators, evaluation }) => {
     <div>
       {/* 按钮区域 */}
       <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
-        <button
+        <Button
           onClick={() => handleExecute()}
           style={{ border: "none", background: "none", cursor: "pointer" }}
         >
           <PlayCircleOutlined style={{ fontSize: "18px" }} />
-        </button>
-        <button
-          onClick={() => {
-            // TODO: 添加过滤功能
-            console.log("Filter clicked");
-          }}
-          style={{ border: "none", background: "none", cursor: "pointer" }}
+        </Button>
+        {/* 将 FilterOutlined 按钮用 Popover 包裹 */}
+        <Popover
+          content={
+            <FilterPopoverContent
+              performance={stocksPerformance}
+              initialFilters={filterCriteria}
+              onConfirm={(filters) => {
+                setFilterCriteria(filters);
+                setFilterPopoverVisible(false);
+              }}
+            />
+          }
+          trigger="click"
+          visible={filterPopoverVisible}
+          onVisibleChange={(visible) => setFilterPopoverVisible(visible)}
         >
-          <FilterOutlined style={{ fontSize: "18px" }} />
-        </button>
-        <button
+          <Button
+            style={{ border: "none", background: "none", cursor: "pointer" }}
+          >
+            <FilterOutlined style={{ fontSize: "18px" }} />
+          </Button>
+        </Popover>
+        <Button
           onClick={() => {
             // TODO: 添加设置功能
             console.log("Setting clicked");
@@ -170,7 +355,7 @@ const StockSelection = ({ indicators, evaluation }) => {
           style={{ border: "none", background: "none", cursor: "pointer" }}
         >
           <SettingOutlined style={{ fontSize: "18px" }} />
-        </button>
+        </Button>
         {/* 单选框：选择用于散点图上色的指标 */}
         <Select
           value={valueKey}
@@ -201,6 +386,7 @@ const StockSelection = ({ indicators, evaluation }) => {
         performance={stocksPerformance}
         valueKey={valueKey}
         colorStats={{ min: minVal, median: medianVal, max: maxVal }}
+        filters={filterCriteria}
         width={350}
         height={350}
       />

@@ -6,6 +6,7 @@ const ScatterPlot = ({
   performance,
   valueKey,
   colorStats,
+  filters,
   width,
   height,
 }) => {
@@ -86,24 +87,29 @@ const ScatterPlot = ({
     // 绘制主图散点
     // 定义获取填充颜色的函数
     const getFillColor = (d) => {
-      // 若未传入 colorStats，则全部使用 steelblue
-      if (!colorStats) {
-        return "steelblue";
-      }
-      // 若传入 colorStats，并且 performance 存在，则根据 performance 数据更新颜色
-      if (divergingScale && performance) {
-        // 根据股票名称匹配 performance 数据（d[0] 为股票名称）
+      if (!colorStats) return "steelblue";
+      if (performance) {
         const perf = performance.find((p) => p[0] === d[0]);
         if (perf) {
-          const value = parseFloat(perf[metricIndex[valueKey]]);
-          if (!isNaN(value)) {
-            return divergingScale(value);
+          // 检查所有过滤条件，若任一指标不满足，则返回 gray
+          if (filters) {
+            for (const key in filters) {
+              const [fmin, fmax] = filters[key];
+              const value = parseFloat(perf[metricIndex[key]]);
+              if (isNaN(value) || value < fmin || value > fmax) {
+                return "gray";
+              }
+            }
+          }
+          if (divergingScale) {
+            const value = parseFloat(perf[metricIndex[valueKey]]);
+            if (!isNaN(value)) {
+              return divergingScale(value);
+            }
           }
         }
-        return "gray"; // 若找不到匹配的 performance 或数值无效，则返回灰色
       }
-      // 如果 colorStats 存在但未满足上述条件，默认返回 steelblue
-      return "steelblue";
+      return "gray";
     };
 
     // 创建一个 tooltip DIV
