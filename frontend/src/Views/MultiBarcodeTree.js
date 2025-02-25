@@ -27,6 +27,36 @@ function getVisibleNodes(node, level = 0) {
   return arr;
 }
 
+function toggleAllNodes(trees, targetName) {
+  trees.forEach((tree) => {
+    const stack = [tree];
+    while (stack.length) {
+      const node = stack.pop();
+      if (node.name === targetName && node.type === "extend") {
+        node.collapsed = !node.collapsed;
+      }
+      if (node.children) {
+        stack.push(...node.children);
+      }
+    }
+  });
+}
+
+function expandAllNodes(trees, targetName) {
+  trees.forEach((tree) => {
+    const stack = [tree];
+    while (stack.length) {
+      const node = stack.pop();
+      if (node.name === targetName && node.type !== "link") {
+        node.collapsed = false;
+      }
+      if (node.children) {
+        stack.push(...node.children);
+      }
+    }
+  });
+}
+
 function findTargetNode(trees, name) {
   let target = null;
   const search = (node) => {
@@ -53,20 +83,21 @@ function wrapText(textSelection, width, boxHeight) {
     const textString = text.text();
     // 清空原内容
     text.text("");
-    
+
     let lineNumber = 0;
     const lineHeight = 1.1; // 行高（单位：em），可根据实际情况调整
     const x = text.attr("x") || 0;
     const y = text.attr("y") || 0;
     const dy = parseFloat(text.attr("dy") || 0);
-    
+
     // 新建第一个 tspan
-    let tspan = text.append("tspan")
+    let tspan = text
+      .append("tspan")
       .attr("x", x)
       .attr("y", y)
       .attr("dy", dy + "em")
       .text("");
-    
+
     let currentLine = "";
     for (let i = 0; i < textString.length; i++) {
       currentLine += textString[i];
@@ -76,14 +107,15 @@ function wrapText(textSelection, width, boxHeight) {
         currentLine = currentLine.slice(0, -1);
         tspan.text(currentLine);
         currentLine = textString[i];
-        tspan = text.append("tspan")
+        tspan = text
+          .append("tspan")
           .attr("x", x)
           .attr("y", y)
           .attr("dy", ++lineNumber * lineHeight + dy + "em")
           .text(currentLine);
       }
     }
-    
+
     // 计算整个文本的包围盒高度，并计算垂直偏移，使文本整体居中
     const bbox = text.node().getBBox();
     const offset = (boxHeight - bbox.height) / 2 - bbox.y;
@@ -170,9 +202,6 @@ const MultiBarcodeTree = ({
       (availableWidth - (numEvaluationCols - 1) * colGap) / numEvaluationCols;
     const cellHeightEvaluation = evaluationSectionHeight / numEvaluationRows;
 
-    const barColor = d3.scaleOrdinal(d3.schemeCategory10);
-    const tsColor = d3.scaleOrdinal(d3.schemeCategory10);
-
     // ======= 绘制指标（indicatorsData）部分 =======
     groups.forEach((group, rowIndex) => {
       indicatorNames.forEach((indicatorName, colIndex) => {
@@ -205,37 +234,12 @@ const MultiBarcodeTree = ({
             } else if (node.type === "function") {
               // 内部绘制柱状图，不设背景色
             } else if (node.type === "constant") {
-              dash = "4,2";
-              // const num = parseFloat(node.name);
-              // const density = isNaN(num)
-              //   ? 5
-              //   : Math.max(2, Math.floor(10 - num / 10));
-              // const patternId = `diagonalPattern-${density}`;
-              // if (svg.select(`#${patternId}`).empty()) {
-              //   const pattern = svg
-              //     .append("defs")
-              //     .append("pattern")
-              //     .attr("id", patternId)
-              //     .attr("patternUnits", "userSpaceOnUse")
-              //     .attr("width", density)
-              //     .attr("height", density)
-              //     .attr("patternTransform", "rotate(45)");
-              //   pattern
-              //     .append("line")
-              //     .attr("x1", 0)
-              //     .attr("y1", 0)
-              //     .attr("x2", 0)
-              //     .attr("y2", density)
-              //     .attr("stroke", "#ccc")
-              //     .attr("stroke-width", 1);
-              // }
-              // fill = `url(#${patternId})`;
+              dash = null;
             } else if (node.type === "timeseries") {
-              dash = "4,2";
-              // fill = tsColor(node.name);
+              dash = null;
               fill = "none";
             } else if (node.type === "context") {
-              dash = "4,2";
+              dash = null;
             }
             gNode
               .append("rect")
@@ -248,69 +252,36 @@ const MultiBarcodeTree = ({
               .attr("stroke-dasharray", dash)
               .on("click", () => {
                 if (node.type === "extend") {
-                  if (
-                    node.children &&
-                    node.children.some((child) => child.type === "link")
-                  ) {
-                    const linkChild = node.children.find(
-                      (child) => child.type === "link"
-                    );
-                    const target = findTargetNode([tree], linkChild.name);
-                    if (target) {
-                      target.collapsed = false;
+                  if (node.children?.some(child => child.type === "link")) {
+                    const linkChild = node.children.find(child => child.type === "link");
+                    const localTarget = findTargetNode([tree], linkChild.name);
+                    if (localTarget) {
+                      // 在所有树中展开目标节点
+                      groups.forEach(group => {
+                        expandAllNodes([...group.indicatorsData, ...group.evaluationData], localTarget.name);
+                      });
                       setGroups([...groups]);
                       return;
                     }
                   }
-                  node.collapsed = !node.collapsed;
+                  groups.forEach((group) => {
+                    toggleAllNodes(
+                      [...group.indicatorsData, ...group.evaluationData],
+                      node.name
+                    );
+                  });
                   setGroups([...groups]);
                 }
               });
-            if (node.type === "extend") {
-              const textElem = gNode
-                .append("text")
-                .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightIndicators / 2)
-                .attr("dy", ".35em")
-                .attr("text-anchor", "middle")
-                .text(node.name)
-                .style("pointer-events", "none");
-              wrapText(textElem, rectWidth, cellHeightIndicators);
-            } else if (node.type === "function") {
-              // if (node.value) {
-              //   const keys = Object.keys(node.value);
-              //   const barWidth = rectWidth / keys.length;
-              //   keys.forEach((k, idx) => {
-              //     const barH = cellHeightIndicators * node.value[k];
-              //     gNode
-              //       .append("rect")
-              //       .attr("x", x + idx * barWidth)
-              //       .attr("y", cellHeightIndicators - barH)
-              //       .attr("width", barWidth - 1)
-              //       .attr("height", barH)
-              //       .attr("fill", barColor(k));
-              //   });
-              // }
-              const textElem = gNode
-                .append("text")
-                .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightIndicators / 2)
-                .attr("dy", ".35em")
-                .attr("text-anchor", "middle")
-                .text(node.name)
-                .style("pointer-events", "none");
-              wrapText(textElem, rectWidth, cellHeightIndicators);
-            } else {
-              const textElem = gNode
-                .append("text")
-                .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightIndicators / 2)
-                .attr("dy", ".35em")
-                .attr("text-anchor", "middle")
-                .text(node.name)
-                .style("pointer-events", "none");
-              wrapText(textElem, rectWidth, cellHeightIndicators);
-            }
+            const textElem = gNode
+              .append("text")
+              .attr("x", x + rectWidth / 2)
+              .attr("y", cellHeightIndicators / 2)
+              .attr("dy", ".35em")
+              .attr("text-anchor", "middle")
+              .text(node.name)
+              .style("pointer-events", "none");
+            wrapText(textElem, rectWidth, cellHeightIndicators);
           });
         }
       });
@@ -352,37 +323,12 @@ const MultiBarcodeTree = ({
             } else if (node.type === "function") {
               // 内部绘制柱状图
             } else if (node.type === "constant") {
-              dash = "4,2";
-              // const num = parseFloat(node.name);
-              // const density = isNaN(num)
-              //   ? 5
-              //   : Math.max(2, Math.floor(10 - num / 10));
-              // const patternId = `diagonalPattern-${density}`;
-              // if (svg.select(`#${patternId}`).empty()) {
-              //   const pattern = svg
-              //     .append("defs")
-              //     .append("pattern")
-              //     .attr("id", patternId)
-              //     .attr("patternUnits", "userSpaceOnUse")
-              //     .attr("width", density)
-              //     .attr("height", density)
-              //     .attr("patternTransform", "rotate(45)");
-              //   pattern
-              //     .append("line")
-              //     .attr("x1", 0)
-              //     .attr("y1", 0)
-              //     .attr("x2", 0)
-              //     .attr("y2", density)
-              //     .attr("stroke", "#ccc")
-              //     .attr("stroke-width", 1);
-              // }
-              // fill = `url(#${patternId})`;
+              dash = null;
             } else if (node.type === "timeseries") {
-              dash = "4,2";
-              // fill = tsColor(node.name);
+              dash = null;
               fill = "none";
             } else if (node.type === "context") {
-              dash = "4,2";
+              dash = null;
             }
             gNode
               .append("rect")
@@ -395,69 +341,24 @@ const MultiBarcodeTree = ({
               .attr("stroke-dasharray", dash)
               .on("click", () => {
                 if (node.type === "extend") {
-                  if (
-                    node.children &&
-                    node.children.some((child) => child.type === "link")
-                  ) {
-                    const linkChild = node.children.find(
-                      (child) => child.type === "link"
+                  groups.forEach((group) => {
+                    toggleAllNodes(
+                      [...group.indicatorsData, ...group.evaluationData],
+                      node.name
                     );
-                    const target = findTargetNode([tree], linkChild.name);
-                    if (target) {
-                      target.collapsed = false;
-                      setGroups([...groups]);
-                      return;
-                    }
-                  }
-                  node.collapsed = !node.collapsed;
+                  });
                   setGroups([...groups]);
                 }
               });
-            if (node.type === "extend") {
-              const textElem = gNode
-                .append("text")
-                .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightEvaluation / 2)
-                .attr("dy", ".35em")
-                .attr("text-anchor", "middle")
-                .text(node.name)
-                .style("pointer-events", "none");
-              wrapText(textElem, rectWidth, cellHeightEvaluation);
-            } else if (node.type === "function") {
-              // if (node.value) {
-              //   const keys = Object.keys(node.value);
-              //   const barWidth = rectWidth / keys.length;
-              //   keys.forEach((k, idx) => {
-              //     const barH = cellHeightEvaluation * node.value[k];
-              //     gNode
-              //       .append("rect")
-              //       .attr("x", x + idx * barWidth)
-              //       .attr("y", cellHeightEvaluation - barH)
-              //       .attr("width", barWidth - 1)
-              //       .attr("height", barH)
-              //       .attr("fill", barColor(k));
-              //   });
-              // }
-              const textElem = gNode
-                .append("text")
-                .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightIndicators / 2)
-                .attr("dy", ".35em")
-                .attr("text-anchor", "middle")
-                .text(node.name)
-                .style("pointer-events", "none");
-              wrapText(textElem, rectWidth, cellHeightEvaluation);
-            } else {
-              const textElem = gNode
-                .append("text")
-                .attr("x", x + rectWidth / 2)
-                .attr("y", cellHeightEvaluation / 2)
-                .attr("dy", ".35em")
-                .attr("text-anchor", "middle")
-                .text(node.name)
-                .style("pointer-events", "none");
-              wrapText(textElem, rectWidth, cellHeightEvaluation);
-            }
+            const textElem = gNode
+              .append("text")
+              .attr("x", x + rectWidth / 2)
+              .attr("y", cellHeightEvaluation / 2)
+              .attr("dy", ".35em")
+              .attr("text-anchor", "middle")
+              .text(node.name)
+              .style("pointer-events", "none");
+            wrapText(textElem, rectWidth, cellHeightEvaluation);
           });
         }
       });

@@ -7,6 +7,203 @@ import axios from "axios";
 
 const { Option } = Select;
 
+const groupsData = [
+  [
+    [
+
+          {
+            name: "MACD",
+            type: "extend",
+            children: [
+              {
+                name: "EMA(close,12)",
+                type: "function",
+              },
+              {
+                name: "EMA(close,26)",
+                type: "function",
+              },
+            ],
+          },
+          {
+            name: "rsi",
+            type: "extend",
+            children: [
+              {
+                name: "rsi(close,14)",
+                type: "function",
+              },
+              {
+                name: "70",
+                type: "timeseries",
+              },
+              {
+                name: "30",
+                type: "timeseries",
+              },
+            ],
+          },
+          {
+            name: "boll",
+            type: "extend",
+            children: [
+              {
+                name: "close",
+                type: "timeseries",
+              },
+              {
+                name: "up",
+                type: "extend",
+                children: [
+                  {
+                    name: "EMA(close,20)",
+                    type: "function",
+                  },
+                  {
+                    name: "movingstd(mid,20)",
+                    type: "function",
+                  },
+                  {
+                    name: "2",
+                    type: "timeseries",
+                  },
+                ],
+              },
+              {
+                name: "down",
+                type: "extend",
+                children: [
+                  {
+                    name: "up",
+                    type: "link",
+                  },
+                ],
+              },
+            ],
+          },
+        
+    ],
+    [
+
+          {
+            name: "period",
+            type: "extend",
+            children: [
+              {
+                name: "2023-07-01 2024-07-01",
+                type: "context",
+              },
+            ],
+          },
+          {
+            name: "stop",
+            type: "extend",
+            children: [
+              {
+                name: "ahead",
+                type: "extend",
+                children: [
+                  {
+                    name: "-1",
+                    type: "context",
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+
+    ],
+  [
+    [
+      
+
+          {
+            name: "MACD",
+            type: "extend",
+            children: [
+              {
+                name: "EMA(close,12)",
+                type: "function",
+              },
+              {
+                name: "EMA(close,26)",
+                type: "function",
+              },
+            ],
+          },
+          {
+            name: "boll",
+            type: "extend",
+            children: [
+              {
+                name: "close",
+                type: "timeseries",
+              },
+              {
+                name: "up",
+                type: "extend",
+                children: [
+                  {
+                    name: "EMA(close,20)",
+                    type: "function",
+                  },
+                  {
+                    name: "movingstd(mid,20)",
+                    type: "function",
+                  },
+                  {
+                    name: "2",
+                    type: "timeseries",
+                  },
+                ],
+              },
+              {
+                name: "down",
+                type: "extend",
+                children: [
+                  {
+                    name: "up",
+                    type: "link",
+                  },
+                ],
+              },
+            ],
+          },
+
+    ],
+    [
+          {
+            name: "period",
+            type: "extend",
+            children: [
+              {
+                name: "2023-07-01 2024-07-01",
+                type: "context",
+              },
+            ],
+          },
+          {
+            name: "stop",
+            type: "extend",
+            children: [
+              {
+                name: "ahead",
+                type: "extend",
+                children: [
+                  {
+                    name: "-1",
+                    type: "context",
+                  },
+                ],
+              },
+            ],
+          },
+
+    ],
+  ],
+];
+
 function traverseTree(root, targetCode, callback, parent = null) {
   if (!root) return;
   if (root.code === targetCode) {
@@ -204,7 +401,14 @@ const Comparison = ({
 
   return (
     <Flex>
-      <MultiBarcodeTree data={groups} width={780} height={400} margin={20} gap={4} />
+      <MultiBarcodeTree
+        // data={groups}
+        data={groupsData}
+        width={780}
+        height={400}
+        margin={20}
+        gap={4}
+      />
       <Flex vertical gap="small">
         <Flex gap="small">
           <Select

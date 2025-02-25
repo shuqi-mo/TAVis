@@ -51,17 +51,10 @@ def process_variable(key, indicator, cache):
     t = determine_type(expr)
     if t == "constant":
         node["name"] = str(expr).replace(" ", "")
-        node["type"] = "constant"
+        node["type"] = "timeseries"
     elif t in ["function", "timeseries"]:
         node["name"] = expr.replace(" ", "")
         node["type"] = t
-        if t == "function":
-            # 对于函数节点，增加 value 属性（使用随机值模拟）
-            node["value"] = {
-                "trend": round(random.uniform(0.1, 1.0), 1),
-                "seasonal": round(random.uniform(0.1, 1.0), 1),
-                "residual": round(random.uniform(0.1, 1.0), 1)
-            }
     elif t == "extend":
         node["name"] = key
         node["type"] = "extend"
@@ -88,7 +81,6 @@ def process_variable(key, indicator, cache):
 # 类型优先级（用于排序顶层依赖节点，仅作为参考）
 def type_priority(t):
     mapping = {
-        "constant": 0,
         "function": 1,
         "timeseries": 2,
         "extend": 3,
