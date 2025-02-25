@@ -13,10 +13,35 @@ function initTree(node) {
   return node;
 }
 
+// 获取节点深度
+function getNodeDepth(node) {
+  if (!node.children || node.children.length === 0) {
+    return 1;
+  }
+  return 1 + Math.max(...node.children.map(getNodeDepth));
+}
+
+// 计算节点的所有子节点数量
+function countChildNodes(node) {
+  if (!node.children || node.children.length === 0) {
+    return 0;
+  }
+  let count = node.children.length;
+  for (const child of node.children) {
+    count += countChildNodes(child);
+  }
+  return count;
+}
+
 function getVisibleNodes(node, level = 0) {
   const BASE_WEIGHT = 5;
   node.level = level;
   node.weight = Math.max(1, BASE_WEIGHT - level);
+  // 如果是extend节点，计算深度和子节点数量
+  if (node.type === "extend") {
+    node.depth = getNodeDepth(node);
+    node.childCount = countChildNodes(node);
+  }
   let arr = [node];
   if (node.type === "extend" && node.collapsed) return arr;
   if (node.children && node.children.length > 0) {
@@ -123,6 +148,58 @@ function wrapText(textSelection, width, boxHeight) {
   });
 }
 
+// ============ 绘制三角形的函数 ==============
+function drawTriangle(nodeGroup, x, width, cellHeight, node, trees) {
+  // 只为extend节点且处于collapse状态的绘制三角形
+  if (node.type !== "extend" || !node.collapsed) return;
+
+ // 检查是否有单一的link子节点
+ let baseNode = node;
+ if (node.children?.length === 1 && node.children[0].type === "link") {
+   const linkChild = node.children[0];
+   // 在所有树中查找与link节点同名的节点
+   const targetNode = findTargetNode(trees, linkChild.name);
+   if (targetNode) {
+     baseNode = targetNode;
+   }
+ }
+
+  // 计算三角形的尺寸
+  const depth = baseNode.depth || 1;
+  const childCount = baseNode.childCount || 0;
+
+  // 计算三角形的高度和宽度
+  const triangleHeight = Math.min(15, depth * 5); // 限制最大高度
+  const avgWidth = childCount > 0 ? childCount / depth : 1;
+  const triangleWidth = Math.min(width * 0.7, avgWidth * 8); // 限制最大宽度为矩形的70%
+
+  // 计算颜色 - 基于子节点数量从白到黑渐变
+  const colorScale = d3
+    .scaleLinear()
+    .domain([0, 20]) // 假设最多20个子节点，可以根据实际情况调整
+    .range(["#FFFFFF", "#000000"])
+    .clamp(true);
+
+  const triangleColor = colorScale(childCount);
+
+  // 绘制倒三角形
+  // 三角形坐标：中心点在矩形上方，三个点分别是顶点和底边两端
+  nodeGroup
+    .append("path")
+    .attr("d", () => {
+      const centerX = x + width / 2;
+      const topY = -5; // 距离矩形顶部5px
+
+      return `M ${centerX - triangleWidth / 2} ${topY - triangleHeight}
+              L ${centerX + triangleWidth / 2} ${topY - triangleHeight}
+              L ${centerX} ${topY}
+              Z`;
+    })
+    .attr("fill", triangleColor)
+    .attr("stroke", "black")
+    .attr("stroke-width", 1);
+}
+
 // ============ MultiBarcodeTree 组件 ==============
 
 /**
@@ -220,6 +297,10 @@ const MultiBarcodeTree = ({
             .domain([0, totalWeight])
             .range([0, cellWidthIndicators - (n - 1) * gap]);
           let cumulative = 0;
+          const allTrees = [
+            ...group.indicatorsData, 
+            ...group.evaluationData
+          ];
           visibleNodes.forEach((node, i) => {
             const start = cumulative;
             cumulative += node.weight;
@@ -230,7 +311,8 @@ const MultiBarcodeTree = ({
               dash = null,
               fill = "none";
             if (node.type === "extend") {
-              fill = "#ADD8E6";
+              // fill = "#ADD8E6";
+              fill = "white";
             } else if (node.type === "function") {
               // 内部绘制柱状图，不设背景色
             } else if (node.type === "constant") {
@@ -252,13 +334,18 @@ const MultiBarcodeTree = ({
               .attr("stroke-dasharray", dash)
               .on("click", () => {
                 if (node.type === "extend") {
-                  if (node.children?.some(child => child.type === "link")) {
-                    const linkChild = node.children.find(child => child.type === "link");
+                  if (node.children?.some((child) => child.type === "link")) {
+                    const linkChild = node.children.find(
+                      (child) => child.type === "link"
+                    );
                     const localTarget = findTargetNode([tree], linkChild.name);
                     if (localTarget) {
                       // 在所有树中展开目标节点
-                      groups.forEach(group => {
-                        expandAllNodes([...group.indicatorsData, ...group.evaluationData], localTarget.name);
+                      groups.forEach((group) => {
+                        expandAllNodes(
+                          [...group.indicatorsData, ...group.evaluationData],
+                          localTarget.name
+                        );
                       });
                       setGroups([...groups]);
                       return;
@@ -273,6 +360,21 @@ const MultiBarcodeTree = ({
                   setGroups([...groups]);
                 }
               });
+            // 为extend节点在上方绘制三角形
+            if (
+              rowIndex === 0 &&
+              (node.type === "extend" || node.type === "link")
+            )
+              drawTriangle(
+                gNode,
+                x,
+                rectWidth,
+                cellHeightIndicators,
+                node,
+                allTrees
+              );
+
+            // 绘制文本标签
             const textElem = gNode
               .append("text")
               .attr("x", x + rectWidth / 2)
@@ -319,7 +421,8 @@ const MultiBarcodeTree = ({
             let dash = null;
             let fill = "none";
             if (node.type === "extend") {
-              fill = "#ADD8E6";
+              // fill = "#ADD8E6";
+              fill = "white";
             } else if (node.type === "function") {
               // 内部绘制柱状图
             } else if (node.type === "constant") {
@@ -350,6 +453,10 @@ const MultiBarcodeTree = ({
                   setGroups([...groups]);
                 }
               });
+
+            // 为extend节点在上方绘制三角形
+            if (rowIndex === 0 && tree.type === "extend")
+              drawTriangle(gNode, x, rectWidth, cellHeightEvaluation, node);
             const textElem = gNode
               .append("text")
               .attr("x", x + rectWidth / 2)
