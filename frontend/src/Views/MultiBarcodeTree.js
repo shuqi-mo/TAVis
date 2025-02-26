@@ -2,13 +2,17 @@ import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 
 // ============ 辅助函数 ==============
-
 function initTree(node) {
   if (node.type === "extend") {
     node.collapsed = true;
+    node.expanded = false; // 新增：标记节点是否处于展开视图状态
   }
   if (node.children) {
-    node.children.forEach((child) => initTree(child));
+    node.children.forEach((child) => {
+      initTree(child);
+      // 设置父节点引用，用于后续恢复展示
+      child.parent = node;
+    });
   }
   return node;
 }
@@ -33,136 +37,190 @@ function countChildNodes(node) {
   return count;
 }
 
-function getVisibleNodes(node, level = 0) {
-  const BASE_WEIGHT = 5;
+function getVisibleNodes(node, level = 0, trees, parentPath = []) {
+  // 保存节点的层级信息
   node.level = level;
-  node.weight = Math.max(1, BASE_WEIGHT - level);
+  node.parentPath = [...parentPath];
+
+  // 注意: 使用固定宽度，高度基于层级
+  node.width = 1; // 固定宽度为1单位
+
   // 如果是extend节点，计算深度和子节点数量
   if (node.type === "extend") {
     node.depth = getNodeDepth(node);
     node.childCount = countChildNodes(node);
   }
+
+  // 处理已展开状态的节点 - 只返回子节点，不包含父节点
+  if (node.type === "extend" && node.expanded) {
+    let arr = [];
+    if (node.children && node.children.length > 0) {
+      node.children.forEach((child) => {
+        // 为子节点添加标记，表明它们属于已展开的父节点
+        child.hasExpandedParent = true;
+        child.expandedParent = node;
+        const newParentPath = [...parentPath, node];
+        arr = arr.concat(
+          getVisibleNodes(child, level + 1, trees, newParentPath)
+        );
+      });
+    }
+    return arr;
+  }
+
+  // 处理折叠状态的节点
   let arr = [node];
   if (node.type === "extend" && node.collapsed) return arr;
+
+  // 处理未折叠状态的节点
   if (node.children && node.children.length > 0) {
     node.children.forEach((child) => {
-      arr = arr.concat(getVisibleNodes(child, level + 1));
+      const newParentPath = [...parentPath, node];
+      arr = arr.concat(getVisibleNodes(child, level + 1, trees, newParentPath));
     });
   }
   return arr;
 }
 
-function toggleAllNodes(trees, targetName) {
+// 查找具有相同索引的所有节点
+function findNodesWithSameIndex(trees, targetIndex) {
+  const result = [];
   trees.forEach((tree) => {
-    const stack = [tree];
-    while (stack.length) {
-      const node = stack.pop();
-      if (node.name === targetName && node.type === "extend") {
-        node.collapsed = !node.collapsed;
+    const findNodes = (node) => {
+      if (node.index === targetIndex) {
+        result.push(node);
       }
       if (node.children) {
-        stack.push(...node.children);
+        node.children.forEach((child) => findNodes(child));
       }
-    }
+    };
+    findNodes(tree);
   });
+  return result;
 }
 
-function expandAllNodes(trees, targetName) {
-  trees.forEach((tree) => {
-    const stack = [tree];
-    while (stack.length) {
-      const node = stack.pop();
-      if (node.name === targetName && node.type !== "link") {
-        node.collapsed = false;
-      }
-      if (node.children) {
-        stack.push(...node.children);
-      }
-    }
-  });
-}
+// 切换节点的展开/折叠状态
+function toggleNodeExpansion(node, trees) {
+  if (node.type !== "extend") return;
 
-function findTargetNode(trees, name) {
-  let target = null;
-  const search = (node) => {
-    if (node.name === name && node.type !== "link") {
-      target = node;
-      return;
-    }
-    if (node.children) {
-      for (let child of node.children) {
-        search(child);
-        if (target) return;
+  // 如果节点已展开，则恢复到折叠状态
+  if (node.expanded) {
+    node.expanded = false;
+    node.collapsed = true; // 恢复为折叠状态
+    return;
+  }
+
+  // 否则，展开节点
+  node.expanded = true;
+  node.collapsed = false;
+
+  // 如果有索引，则同步所有相同索引的节点状态
+  if (node.index) {
+    const sameIndexNodes = findNodesWithSameIndex(trees, node.index);
+    sameIndexNodes.forEach((n) => {
+      if (n !== node && n.type === "extend") {
+        n.expanded = true;
+        n.collapsed = false;
       }
-    }
-  };
-  trees.forEach((tree) => {
-    if (!target) search(tree);
-  });
-  return target;
+    });
+  }
 }
 
 function wrapText(textSelection, width, boxHeight) {
   textSelection.each(function () {
     const text = d3.select(this);
     const textString = text.text();
+    const originalX = text.attr("x") || 0;
+    const originalY = text.attr("y") || 0;
+    const textAnchor = text.attr("text-anchor") || "start";
+
     // 清空原内容
     text.text("");
 
-    let lineNumber = 0;
-    const lineHeight = 1.1; // 行高（单位：em），可根据实际情况调整
-    const x = text.attr("x") || 0;
-    const y = text.attr("y") || 0;
-    const dy = parseFloat(text.attr("dy") || 0);
+    // 预处理步骤：计算文本需要多少行
+    let lines = [];
+    let words = textString.split(/\s+/);
 
-    // 新建第一个 tspan
-    let tspan = text
-      .append("tspan")
-      .attr("x", x)
-      .attr("y", y)
-      .attr("dy", dy + "em")
-      .text("");
+    // 如果只有一个词，考虑按字符拆分
+    if (words.length === 1) {
+      let chars = words[0].split("");
+      let currentLine = "";
 
-    let currentLine = "";
-    for (let i = 0; i < textString.length; i++) {
-      currentLine += textString[i];
-      tspan.text(currentLine);
-      if (tspan.node().getComputedTextLength() > width) {
-        // 超出宽度，去掉最后一个字符后换行
-        currentLine = currentLine.slice(0, -1);
-        tspan.text(currentLine);
-        currentLine = textString[i];
-        tspan = text
-          .append("tspan")
-          .attr("x", x)
-          .attr("y", y)
-          .attr("dy", ++lineNumber * lineHeight + dy + "em")
-          .text(currentLine);
+      for (let i = 0; i < chars.length; i++) {
+        const testLine = currentLine + chars[i];
+        // 创建临时tspan测量宽度
+        const tempTspan = text.append("tspan").text(testLine);
+        const lineWidth = tempTspan.node().getComputedTextLength();
+        tempTspan.remove();
+
+        if (lineWidth > width && currentLine) {
+          lines.push(currentLine);
+          currentLine = chars[i];
+        } else {
+          currentLine = testLine;
+        }
+      }
+
+      if (currentLine) {
+        lines.push(currentLine);
+      }
+    } else {
+      // 多个词的情况
+      let currentLine = "";
+
+      for (let i = 0; i < words.length; i++) {
+        const word = words[i];
+        const testLine = currentLine ? currentLine + " " + word : word;
+
+        // 创建临时tspan测量宽度
+        const tempTspan = text.append("tspan").text(testLine);
+        const lineWidth = tempTspan.node().getComputedTextLength();
+        tempTspan.remove();
+
+        if (lineWidth > width && currentLine) {
+          lines.push(currentLine);
+          currentLine = word;
+        } else {
+          currentLine = testLine;
+        }
+      }
+
+      if (currentLine) {
+        lines.push(currentLine);
       }
     }
 
-    // 计算整个文本的包围盒高度，并计算垂直偏移，使文本整体居中
-    const bbox = text.node().getBBox();
-    const offset = (boxHeight - bbox.height) / 2 - bbox.y;
-    text.attr("transform", `translate(0, ${offset})`);
+    // 计算文本区域的总高度
+    const lineHeight = 1.2; // em
+    const fontSize = parseFloat(window.getComputedStyle(this).fontSize);
+    const totalTextHeight = lines.length * lineHeight * fontSize;
+
+    // 计算文本区域的起始y坐标，使其在矩形中垂直居中
+    const startY = originalY - totalTextHeight / 2 + fontSize / 2;
+
+    // 添加每一行文本
+    lines.forEach((line, i) => {
+      text
+        .append("tspan")
+        .attr("x", originalX)
+        .attr("y", startY + i * lineHeight * fontSize)
+        .attr("text-anchor", textAnchor)
+        .text(line);
+    });
   });
 }
 
-// ============ 绘制三角形的函数 ==============
-function drawTriangle(nodeGroup, x, width, cellHeight, node, trees) {
+// 绘制三角形的函数
+function drawTriangle(nodeGroup, x, width, nodeHeight, node, trees) {
   // 只为extend节点且处于collapse状态的绘制三角形
-  if (node.type !== "extend" || !node.collapsed) return;
+  if (node.type === "extend" && !node.collapsed) return;
 
- // 检查是否有单一的link子节点
- let baseNode = node;
- if (node.children?.length === 1 && node.children[0].type === "link") {
-   const linkChild = node.children[0];
-   // 在所有树中查找与link节点同名的节点
-   const targetNode = findTargetNode(trees, linkChild.name);
-   if (targetNode) {
-     baseNode = targetNode;
-   }
- }
+  // 对于link类型节点，寻找对应的目标节点
+  let baseNode = node;
+  let triangleNode = node;
+
+  // 如果三角形节点不是extend类型或者没有折叠，则不绘制三角形
+  if (triangleNode.type !== "extend" || !triangleNode.collapsed) return;
 
   // 计算三角形的尺寸
   const depth = baseNode.depth || 1;
@@ -200,15 +258,174 @@ function drawTriangle(nodeGroup, x, width, cellHeight, node, trees) {
     .attr("stroke-width", 1);
 }
 
-// ============ MultiBarcodeTree 组件 ==============
+// Now, let's update how we track expanded nodes and their boundaries
+function processExpandedNodes(visibleNodes, nodeWidth, gap) {
+  // Create a map to store position info for all nodes
+  const nodesMap = {};
+  const expandedParents = new Map();
 
-/**
- * MultiBarcodeTree 组件采用横向排列显示，每一行代表一个数据组，
- * 每一列代表该部分出现过的树（指标或评价），同时在不同列之间增加列间距，
- * 并在图的右侧增加额外的空白区域（rightMargin）。
- */
+  // First pass: get basic position info for all nodes
+  visibleNodes.forEach((node, i) => {
+    if (!node.hasExpandedParent) return;
+
+    const x = i * (nodeWidth + gap);
+    const rightEdge = x + nodeWidth;
+
+    // Start with immediate parent and traverse up the hierarchy
+    let currentParent = node.expandedParent;
+    while (currentParent) {
+      if (currentParent.expanded) {
+        // Use unique parent ID based on name and index
+        const parentKey = `${currentParent.name}-${currentParent.index || ""}`;
+
+        if (!expandedParents.has(parentKey)) {
+          expandedParents.set(parentKey, {
+            parent: currentParent,
+            minX: x,
+            maxX: rightEdge,
+            children: [],
+          });
+        } else {
+          // Update existing parent's boundaries
+          const parentInfo = expandedParents.get(parentKey);
+          parentInfo.minX = Math.min(parentInfo.minX, x);
+          parentInfo.maxX = Math.max(parentInfo.maxX, rightEdge);
+        }
+
+        // Track this node as child of the parent
+        const parentInfo = expandedParents.get(parentKey);
+        if (!parentInfo.children.includes(node)) {
+          parentInfo.children.push(node);
+        }
+      }
+
+      // Move up the hierarchy
+      currentParent = currentParent.parentNode;
+    }
+  });
+
+  return { nodesMap, expandedParents: Array.from(expandedParents.values()) };
+}
+
+// 绘制展开节点的连接器（圆形+线）
+function drawExpandedConnector(
+  svg,
+  expandedParents,
+  cellHeight,
+  maxHeight,
+  onCollapseClick,
+  allTrees
+) {
+  // 基于层级的高度计算函数
+  const calculateHeight = (level, maxHeight) => {
+    if (level === 0) {
+      return maxHeight;
+    }
+    const LEVEL_DECREASE_RATIO = 0.2;
+    return Math.max(20, maxHeight * (1 - level * LEVEL_DECREASE_RATIO));
+  };
+  
+  // Sort connectors by level (deepest children first, then work upward)
+  const sortedConnectors = [...expandedParents].filter(info => {
+    // 过滤掉无效的连接器信息
+    return info && info.parent && info.minX !== undefined && 
+           info.maxX !== undefined && info.minX < info.maxX &&
+           info.children && info.children.length > 0;
+  }).sort((a, b) => {
+    // 安全地获取 level 属性 - 如果 parent 不存在或 level 不存在，使用默认值 0
+    const levelA = a && a.parent ? (a.parent.level || 0) : 0;
+    const levelB = b && b.parent ? (b.parent.level || 0) : 0;
+    return levelB - levelA; // 从深到浅排序
+  });
+  // 为每个展开的父节点绘制连接器
+  sortedConnectors.forEach((group) => {
+    const { parent, minX, maxX, children } = group;
+
+    // Skip if invalid range
+    if (minX === undefined || maxX === undefined || minX >= maxX) return;
+
+    // Calculate sizes
+    const parentHeight = calculateHeight(parent.level || 0, maxHeight);
+    const circleRadius = Math.max(4, parentHeight * 0.05);
+
+    // Calculate position
+    const circleX = minX + (maxX - minX) / 2;
+
+    // Use first child's level for vertical positioning
+    const firstChild = children[0];
+    const childLevel = firstChild.level || 0;
+    const childHeight = calculateHeight(childLevel, maxHeight);
+    const childY = (cellHeight - childHeight) / 2;
+    const circleY = childY - circleRadius;
+
+    // 绘制连接线
+    svg
+      .append("line")
+      .attr("x1", minX)
+      .attr("y1", circleY)
+      .attr("x2", maxX)
+      .attr("y2", circleY)
+      .attr("stroke", "#666")
+      .attr("stroke-width", 1.5);
+
+    svg
+      .append("line")
+      .attr("x1", minX)
+      .attr("y1", circleY)
+      .attr("x2", minX)
+      .attr("y2", circleY + circleRadius)
+      .attr("stroke", "#666")
+      .attr("stroke-width", 1.5);
+
+    svg
+      .append("line")
+      .attr("x1", maxX)
+      .attr("y1", circleY)
+      .attr("x2", maxX)
+      .attr("y2", circleY + circleRadius)
+      .attr("stroke", "#666")
+      .attr("stroke-width", 1.5);
+
+    // 绘制圆形
+    svg
+      .append("circle")
+      .attr("cx", circleX)
+      .attr("cy", circleY)
+      .attr("r", circleRadius)
+      .attr("fill", "#4A86E8")
+      .attr("stroke", "#666")
+      .attr("stroke-width", 1)
+      .attr("cursor", "pointer")
+      .on("click", () => {
+        // 同步所有具有相同索引的节点
+        if (parent.index && allTrees) {
+          // 找到所有具有相同索引的节点
+          allTrees.forEach((tree) => {
+            const findAndCollapse = (node) => {
+              if (node.index === parent.index && node.type === "extend") {
+                node.expanded = false;
+                node.collapsed = true;
+              }
+              if (node.children) {
+                node.children.forEach((child) => findAndCollapse(child));
+              }
+            };
+            findAndCollapse(tree);
+          });
+        } else {
+          // 如果没有索引或allTrees，只恢复当前父节点
+          parent.expanded = false;
+          parent.collapsed = true;
+        }
+
+        // 调用回调函数
+        onCollapseClick(parent);
+      });
+  });
+}
+
+// ============ MultiBarcodeTree 组件 ==============
 const MultiBarcodeTree = ({
-  data,
   width = 900,
   height = 400,
   margin = 20,
@@ -216,11 +433,245 @@ const MultiBarcodeTree = ({
 }) => {
   const svgRef = useRef(null);
   const [groups, setGroups] = useState(null);
+  const [data, setData] = useState([
+    [
+      [
+        {
+          name: "MACD",
+          type: "extend",
+          index: "1",
+          children: [
+            {
+              name: "EMA(close,12)",
+              type: "function",
+            },
+            {
+              name: "EMA(close,26)",
+              type: "function",
+            },
+          ],
+        },
+        {
+          name: "rsi",
+          type: "extend",
+          index: "2",
+          children: [
+            {
+              name: "rsi(close,14)",
+              type: "function",
+            },
+            {
+              name: "70",
+              type: "timeseries",
+            },
+            {
+              name: "30",
+              type: "timeseries",
+            },
+          ],
+        },
+        {
+          name: "boll",
+          type: "extend",
+          index: "3",
+          children: [
+            {
+              name: "close",
+              type: "timeseries",
+            },
+            {
+              name: "up",
+              type: "extend",
+              index: "3-1",
+              children: [
+                {
+                  name: "EMA(close,20)",
+                  type: "function",
+                },
+                {
+                  name: "movingstd(mid,20)",
+                  type: "function",
+                },
+                {
+                  name: "2",
+                  type: "timeseries",
+                },
+              ],
+            },
+            {
+              name: "down",
+              type: "extend",
+              index: "3-2",
+              children: [
+                {
+                  name: "EMA(close,20)",
+                  type: "function",
+                },
+                {
+                  name: "movingstd(mid,20)",
+                  type: "function",
+                },
+                {
+                  name: "2",
+                  type: "timeseries",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      [
+        {
+          name: "period",
+          type: "extend",
+          index: "1",
+          children: [
+            {
+              name: "2023-07-01 2024-07-01",
+              type: "context",
+            },
+          ],
+        },
+        {
+          name: "stop",
+          type: "extend",
+          index: "2",
+          children: [
+            {
+              name: "ahead",
+              type: "extend",
+              index: "2-1",
+              children: [
+                {
+                  name: "-1",
+                  type: "context",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    ],
+    [
+      [
+        {
+          name: "MACD",
+          type: "extend",
+          index: "1",
+          children: [
+            {
+              name: "EMA(close,12)",
+              type: "function",
+            },
+            {
+              name: "EMA(close,26)",
+              type: "function",
+            },
+          ],
+        },
+        {
+          name: "boll",
+          type: "extend",
+          index: "3",
+          children: [
+            {
+              name: "close",
+              type: "timeseries",
+            },
+            {
+              name: "up",
+              type: "extend",
+              index: "3-1",
+              children: [
+                {
+                  name: "EMA(close,20)",
+                  type: "function",
+                },
+                {
+                  name: "movingstd(mid,20)",
+                  type: "function",
+                },
+                {
+                  name: "2",
+                  type: "timeseries",
+                },
+              ],
+            },
+            {
+              name: "down",
+              type: "extend",
+              index: "3-2",
+              children: [
+                {
+                  name: "EMA(close,20)",
+                  type: "function",
+                },
+                {
+                  name: "movingstd(mid,20)",
+                  type: "function",
+                },
+                {
+                  name: "2",
+                  type: "timeseries",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+      [
+        {
+          name: "period",
+          type: "extend",
+          index: "1",
+          children: [
+            {
+              name: "2023-07-01 2024-07-01",
+              type: "context",
+            },
+          ],
+        },
+        {
+          name: "stop",
+          type: "extend",
+          index: "2",
+          children: [
+            {
+              name: "ahead",
+              type: "extend",
+              index: "2-1",
+              children: [
+                {
+                  name: "-1",
+                  type: "context",
+                },
+              ],
+            },
+          ],
+        },
+      ],
+    ],
+  ]);
+
+  // 基于层级的高度计算函数
+  const calculateHeight = (level, maxHeight) => {
+    // 如果是level 0(最高层节点)，使用最大高度
+    if (level === 0) {
+      return maxHeight;
+    }
+
+    // 否则，根据层级递减
+    const LEVEL_DECREASE_RATIO = 0.2; // 每层级减少20%的高度
+    return Math.max(20, maxHeight * (1 - level * LEVEL_DECREASE_RATIO));
+  };
 
   useEffect(() => {
+    if (!data) return;
+
     const groupsData = data.map((item) => {
       return { indicatorsData: item[0], evaluationData: item[1] };
     });
+
     const newGroups = groupsData.map((group) => ({
       indicatorsData: group.indicatorsData.map((tree) =>
         initTree(JSON.parse(JSON.stringify(tree)))
@@ -229,6 +680,7 @@ const MultiBarcodeTree = ({
         initTree(JSON.parse(JSON.stringify(tree)))
       ),
     }));
+
     setGroups(newGroups);
   }, [data]);
 
@@ -238,11 +690,12 @@ const MultiBarcodeTree = ({
     svg.selectAll("*").remove();
 
     // 右侧额外间距设置
-    const rightMargin = 20; // 新增右侧间距50像素
+    const rightMargin = 20;
 
-    // 整体可用区域（左边 margin 和右边 rightMargin 均需保留）
+    // 整体可用区域
     const availableWidth = width - margin - rightMargin;
     const availableHeight = height - margin * 2;
+
     // 分成两个部分（指标和评价），中间留 sectionGap
     const sectionGap = 20;
     const indicatorsSectionHeight = (availableHeight - sectionGap) / 2;
@@ -284,107 +737,128 @@ const MultiBarcodeTree = ({
       indicatorNames.forEach((indicatorName, colIndex) => {
         const x0 = margin + colIndex * (cellWidthIndicators + colGap);
         const y0 = margin + rowIndex * cellHeightIndicators;
+
+        // 为每个单元格创建一个组
         const cellGroup = svg
           .append("g")
           .attr("transform", `translate(${x0}, ${y0})`);
+
         const tree = group.indicatorsData.find((t) => t.name === indicatorName);
         if (tree) {
-          const visibleNodes = getVisibleNodes(tree);
-          const totalWeight = d3.sum(visibleNodes, (d) => d.weight);
+          const allTrees = groups.map((g) => g.indicatorsData).flat();
+          const visibleNodes = getVisibleNodes(tree, 0, allTrees);
           const n = visibleNodes.length;
-          const xScale = d3
-            .scaleLinear()
-            .domain([0, totalWeight])
-            .range([0, cellWidthIndicators - (n - 1) * gap]);
-          let cumulative = 0;
-          const allTrees = [
-            ...group.indicatorsData, 
-            ...group.evaluationData
-          ];
+
+          // 节点等宽，使用高度表示层级
+          const nodeWidth = (cellWidthIndicators - (n - 1) * gap) / n;
+
+          // Process nodes and track hierarchical relationships
+          const { nodesMap, expandedParents } = processExpandedNodes(
+            visibleNodes,
+            nodeWidth,
+            gap
+          );
+
+          // 首先，收集所有节点的位置信息
           visibleNodes.forEach((node, i) => {
-            const start = cumulative;
-            cumulative += node.weight;
-            const x = xScale(start) + i * gap;
-            const rectWidth = xScale(cumulative) - xScale(start);
+            const x = i * (nodeWidth + gap);
+
+            // 保存节点信息到映射
+            const nodeId = node.name + (node.index || "") + "-" + i;
+            nodesMap[nodeId] = {
+              node,
+              x,
+              width: nodeWidth,
+            };
+          });
+
+          // 然后绘制节点
+          visibleNodes.forEach((node, i) => {
+            const x = i * (nodeWidth + gap);
+
+            // 基于层级计算节点的高度
+            const nodeHeight = calculateHeight(
+              node.level,
+              cellHeightIndicators
+            );
+
+            // 计算垂直居中的y位置
+            const y = (cellHeightIndicators - nodeHeight) / 2;
+
             const gNode = cellGroup.append("g").attr("class", "node");
             let stroke = "black",
               dash = null,
               fill = "none";
             if (node.type === "extend") {
-              // fill = "#ADD8E6";
-              fill = "white";
+              fill = "#4A86E8"; // 使用蓝色填充extend节点
             } else if (node.type === "function") {
-              // 内部绘制柱状图，不设背景色
+              // 函数节点使用白色填充
+              fill = "white";
             } else if (node.type === "constant") {
               dash = null;
+              fill = "white";
             } else if (node.type === "timeseries") {
               dash = null;
-              fill = "none";
+              fill = "white";
             } else if (node.type === "context") {
               dash = null;
+              fill = "white";
             }
+
             gNode
               .append("rect")
               .attr("x", x)
-              .attr("y", 0)
-              .attr("width", rectWidth)
-              .attr("height", cellHeightIndicators)
+              .attr("y", y)
+              .attr("width", nodeWidth)
+              .attr("height", nodeHeight)
               .attr("fill", fill)
               .attr("stroke", stroke)
               .attr("stroke-dasharray", dash)
+              .attr("cursor", "pointer")
               .on("click", () => {
                 if (node.type === "extend") {
-                  if (node.children?.some((child) => child.type === "link")) {
-                    const linkChild = node.children.find(
-                      (child) => child.type === "link"
-                    );
-                    const localTarget = findTargetNode([tree], linkChild.name);
-                    if (localTarget) {
-                      // 在所有树中展开目标节点
-                      groups.forEach((group) => {
-                        expandAllNodes(
-                          [...group.indicatorsData, ...group.evaluationData],
-                          localTarget.name
-                        );
-                      });
-                      setGroups([...groups]);
-                      return;
-                    }
-                  }
-                  groups.forEach((group) => {
-                    toggleAllNodes(
-                      [...group.indicatorsData, ...group.evaluationData],
-                      node.name
-                    );
-                  });
-                  setGroups([...groups]);
+                  // 处理展开/折叠逻辑
+                  toggleNodeExpansion(node, allTrees);
+                  setGroups([...groups]); // 触发重绘
                 }
               });
-            // 为extend节点在上方绘制三角形
+
+            // 为折叠状态的extend节点绘制三角形
             if (
               rowIndex === 0 &&
               (node.type === "extend" || node.type === "link")
-            )
-              drawTriangle(
-                gNode,
-                x,
-                rectWidth,
-                cellHeightIndicators,
-                node,
-                allTrees
-              );
+            ) {
+              drawTriangle(gNode, x, nodeWidth, nodeHeight, node, allTrees);
+            }
 
             // 绘制文本标签
             const textElem = gNode
               .append("text")
-              .attr("x", x + rectWidth / 2)
-              .attr("y", cellHeightIndicators / 2)
+              .attr("x", x + nodeWidth / 2)
+              .attr("y", y + nodeHeight / 2)
               .attr("dy", ".35em")
               .attr("text-anchor", "middle")
+              .attr("fill", node.type === "extend" ? "white" : "black") // extend节点使用白色文本
               .text(node.name)
               .style("pointer-events", "none");
-            wrapText(textElem, rectWidth, cellHeightIndicators);
+            wrapText(textElem, nodeWidth, nodeHeight);
           });
+
+          // 绘制展开节点的连接器
+          if (expandedParents.length > 0) {
+            drawExpandedConnector(
+              cellGroup,
+              expandedParents,
+              cellHeightIndicators,
+              cellHeightIndicators,
+              (parent) => {
+                parent.expanded = false;
+                parent.collapsed = true;
+                setGroups([...groups]);
+              },
+              allTrees
+            );
+          }
         }
       });
     });
@@ -403,70 +877,126 @@ const MultiBarcodeTree = ({
           .attr("transform", `translate(${x0}, ${y0})`);
         const tree = group.evaluationData.find((t) => t.name === evalName);
         if (tree) {
-          const visibleNodes = getVisibleNodes(tree);
-          const totalWeight = d3.sum(visibleNodes, (d) => d.weight);
+          const allTrees = groups.map((g) => g.evaluationData).flat();
+          const visibleNodes = getVisibleNodes(tree, 0, allTrees);
           const n = visibleNodes.length;
-          const xScale = d3
-            .scaleLinear()
-            .domain([0, totalWeight])
-            .range([0, cellWidthEvaluation - (n - 1) * gap]);
-          let cumulative = 0;
+
+          // 节点等宽，使用高度表示层级
+          const nodeWidth = (cellWidthEvaluation - (n - 1) * gap) / n;
+
+          // Process nodes and track hierarchical relationships
+          const { nodesMap, expandedParents } = processExpandedNodes(
+            visibleNodes,
+            nodeWidth,
+            gap
+          );
+
+          // 首先，收集所有节点的位置信息
           visibleNodes.forEach((node, i) => {
-            const start = cumulative;
-            cumulative += node.weight;
-            const x = xScale(start) + i * gap;
-            const rectWidth = xScale(cumulative) - xScale(start);
+            const x = i * (nodeWidth + gap);
+
+            // 保存节点信息到映射
+            const nodeId = node.name + (node.index || "");
+            nodesMap[nodeId] = {
+              node,
+              x,
+              width: nodeWidth,
+            };
+
+            // 如果节点有展开的父节点，记录下来
+            if (node.hasExpandedParent && node.expandedParent) {
+              if (!expandedParents.includes(node.expandedParent)) {
+                expandedParents.push(node.expandedParent);
+              }
+            }
+          });
+
+          // 然后绘制节点
+          visibleNodes.forEach((node, i) => {
+            const x = i * (nodeWidth + gap);
+
+            // 基于层级计算节点的高度
+            const nodeHeight = calculateHeight(
+              node.level,
+              cellHeightEvaluation
+            );
+
+            // 计算垂直居中的y位置
+            const y = (cellHeightEvaluation - nodeHeight) / 2;
+
             const gNode = cellGroup.append("g").attr("class", "node");
-            let stroke = "black";
-            let dash = null;
-            let fill = "none";
+            let stroke = "black",
+              dash = null,
+              fill = "none";
             if (node.type === "extend") {
-              // fill = "#ADD8E6";
-              fill = "white";
+              fill = "#4A86E8"; // 使用蓝色填充extend节点
             } else if (node.type === "function") {
-              // 内部绘制柱状图
+              // 函数节点使用白色填充
+              fill = "white";
             } else if (node.type === "constant") {
               dash = null;
+              fill = "white";
             } else if (node.type === "timeseries") {
               dash = null;
-              fill = "none";
+              fill = "white";
             } else if (node.type === "context") {
               dash = null;
+              fill = "white";
             }
+
             gNode
               .append("rect")
               .attr("x", x)
-              .attr("y", 0)
-              .attr("width", rectWidth)
-              .attr("height", cellHeightEvaluation)
+              .attr("y", y)
+              .attr("width", nodeWidth)
+              .attr("height", nodeHeight)
               .attr("fill", fill)
               .attr("stroke", stroke)
               .attr("stroke-dasharray", dash)
+              .attr("cursor", "pointer")
               .on("click", () => {
                 if (node.type === "extend") {
-                  groups.forEach((group) => {
-                    toggleAllNodes(
-                      [...group.indicatorsData, ...group.evaluationData],
-                      node.name
-                    );
-                  });
-                  setGroups([...groups]);
+                  // 处理展开/折叠逻辑
+                  toggleNodeExpansion(node, allTrees);
+                  setGroups([...groups]); // 触发重绘
                 }
               });
 
-            // 为extend节点在上方绘制三角形
-            if (rowIndex === 0 && tree.type === "extend")
-              drawTriangle(gNode, x, rectWidth, cellHeightEvaluation, node);
+            // 为折叠状态的extend节点绘制三角形
+            if (
+              rowIndex === 0 &&
+              (node.type === "extend" || node.type === "link")
+            ) {
+              drawTriangle(gNode, x, nodeWidth, nodeHeight, node, allTrees);
+            }
+
             const textElem = gNode
               .append("text")
-              .attr("x", x + rectWidth / 2)
-              .attr("y", cellHeightEvaluation / 2)
+              .attr("x", x + nodeWidth / 2)
+              .attr("y", y + nodeHeight / 2)
               .attr("dy", ".35em")
               .attr("text-anchor", "middle")
+              .attr("fill", node.type === "extend" ? "white" : "black") // extend节点使用白色文本
               .text(node.name)
               .style("pointer-events", "none");
-            wrapText(textElem, rectWidth, cellHeightEvaluation);
+            wrapText(textElem, nodeWidth, nodeHeight);
           });
+
+          // 绘制展开节点的连接器
+          if (expandedParents.length > 0) {
+            drawExpandedConnector(
+              cellGroup,
+              expandedParents,
+              cellHeightIndicators,
+              cellHeightIndicators,
+              (parent) => {
+                parent.expanded = false;
+                parent.collapsed = true;
+                setGroups([...groups]);
+              },
+              allTrees
+            );
+          }
         }
       });
     });
