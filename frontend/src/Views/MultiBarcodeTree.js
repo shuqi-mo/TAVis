@@ -200,30 +200,8 @@ const data = [
             level: 1,
             collapse: true,
             depth: 2,
-            childCount: 3,
-            children: [
-              {
-                name: "EMA(close,20)",
-                type: "function",
-                level: 2,
-                depth: 1,
-                childCount: 0,
-              },
-              {
-                name: "movingstd(mid,20)",
-                type: "function",
-                level: 2,
-                depth: 1,
-                childCount: 0,
-              },
-              {
-                name: "2",
-                type: "timeseries",
-                level: 2,
-                depth: 1,
-                childCount: 0,
-              },
-            ],
+            sharedKey: "upDownChildren",
+            hidden: false, // 默认不隐藏
           },
           {
             name: "down",
@@ -232,30 +210,7 @@ const data = [
             level: 1,
             collapse: true,
             depth: 2,
-            childCount: 3,
-            children: [
-              {
-                name: "EMA(close,20)",
-                type: "function",
-                level: 2,
-                depth: 1,
-                childCount: 0,
-              },
-              {
-                name: "movingstd(mid,20)",
-                type: "function",
-                level: 2,
-                depth: 1,
-                childCount: 0,
-              },
-              {
-                name: "2",
-                type: "timeseries",
-                level: 2,
-                depth: 1,
-                childCount: 0,
-              },
-            ],
+            sharedKey: "upDownChildren",
           },
         ],
       },
@@ -422,25 +377,6 @@ function findNodesWithSameIndex(trees, targetIndex) {
 function toggleNodeExpansion(node, trees) {
   if (node.type !== "extend") return;
 
-  if (node.expanded) {
-    node.expanded = false;
-    node.collapsed = true;
-    // 如果节点被折叠，恢复隐藏的兄弟节点
-    if (node.sharedKey) {
-      const parent = node.parent;
-      if (parent && parent.children) {
-        parent.children.forEach((sibling) => {
-          if (sibling !== node && sibling.sharedKey === node.sharedKey) {
-            console.log(sibling);
-            sibling.hidden = false;  // 恢复兄弟节点
-            sibling.expanded = false;
-            sibling.collapsed = true;
-          }
-        });
-      }
-    }
-    return;
-  }
   node.expanded = true;
   node.collapsed = false;
   if (node.sharedKey) {
@@ -457,16 +393,29 @@ function toggleNodeExpansion(node, trees) {
         }
       });
     }
-  } else {
-    if (node.index) {
-      const sameIndexNodes = findNodesWithSameIndex(trees, node.index);
-      sameIndexNodes.forEach((n) => {
-        if (n !== node && n.type === "extend") {
-          n.expanded = true;
-          n.collapsed = false;
+  }
+  if (node.index) {
+    const sameIndexNodes = findNodesWithSameIndex(trees, node.index);
+    sameIndexNodes.forEach((n) => {
+      if (n !== node && n.type === "extend") {
+        n.expanded = true;
+        n.collapsed = false;
+      }
+      if (n.sharedKey) {
+        const p = n.parent;
+        if (p && p.children) {
+          p.children.forEach((sibling) => {
+            if (sibling !== n && sibling.sharedKey === n.sharedKey) {
+              // 把对方隐藏起来
+              sibling.hidden = n.expanded;
+              // 同时把对方折叠
+              sibling.expanded = false;
+              sibling.collapsed = true;
+            }
+          });
         }
-      });
-    }
+      }
+    });
   }
 }
 
@@ -684,9 +633,12 @@ function drawExpandedConnector(
                   const parent = node.parent;
                   if (parent && parent.children) {
                     parent.children.forEach((sibling) => {
-                      if (sibling !== node && sibling.sharedKey === node.sharedKey) {
+                      if (
+                        sibling !== node &&
+                        sibling.sharedKey === node.sharedKey
+                      ) {
                         console.log(sibling);
-                        sibling.hidden = false;  // 恢复兄弟节点
+                        sibling.hidden = false; // 恢复兄弟节点
                         sibling.expanded = false;
                         sibling.collapsed = true;
                       }
