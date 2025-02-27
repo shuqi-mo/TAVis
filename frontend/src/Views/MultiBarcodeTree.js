@@ -1,14 +1,350 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 
+// ============ 数据部分 ==============
+const data = [
+  [
+    [
+      {
+        name: "MACD",
+        type: "extend",
+        index: "1",
+        level: 0,
+        collapse: true,
+        depth: 2, // 根节点深度 2
+        childCount: 2, // 有两个直接子节点
+        children: [
+          {
+            name: "EMA(close,12)",
+            type: "function",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+          {
+            name: "EMA(close,26)",
+            type: "function",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+        ],
+      },
+      {
+        name: "rsi",
+        type: "extend",
+        index: "2",
+        level: 0,
+        collapse: true,
+        depth: 2,
+        childCount: 3,
+        children: [
+          {
+            name: "rsi(close,14)",
+            type: "function",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+          {
+            name: "70",
+            type: "timeseries",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+          {
+            name: "30",
+            type: "timeseries",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+        ],
+      },
+      {
+        name: "boll",
+        type: "extend",
+        index: "3",
+        level: 0,
+        collapse: true,
+        depth: 3,
+        childCount: 9,
+        children: [
+          {
+            name: "close",
+            type: "timeseries",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+          {
+            name: "up",
+            type: "extend",
+            index: "3-1",
+            level: 1,
+            collapse: true,
+            depth: 2,
+            sharedKey: "upDownChildren",
+            hidden: false, // 默认不隐藏
+          },
+          {
+            name: "down",
+            type: "extend",
+            index: "3-2",
+            level: 1,
+            collapse: true,
+            depth: 2,
+            sharedKey: "upDownChildren",
+          },
+        ],
+      },
+    ],
+    [
+      {
+        name: "period",
+        type: "extend",
+        index: "1",
+        level: 0,
+        collapse: true,
+        depth: 2,
+        childCount: 1,
+        children: [
+          {
+            name: "2023-07-01 2024-07-01",
+            type: "context",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+        ],
+      },
+      {
+        name: "stop",
+        type: "extend",
+        index: "2",
+        level: 0,
+        collapse: true,
+        depth: 2,
+        childCount: 1,
+        children: [
+          {
+            name: "ahead",
+            type: "extend",
+            index: "2-1",
+            level: 1,
+            collapse: true,
+            depth: 2,
+            childCount: 1,
+            children: [
+              {
+                name: "-1",
+                type: "context",
+                level: 2,
+                depth: 1,
+                childCount: 0,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  ],
+  [
+    [
+      {
+        name: "MACD",
+        type: "extend",
+        index: "1",
+        level: 0,
+        collapse: true,
+        depth: 2,
+        childCount: 2,
+        children: [
+          {
+            name: "EMA(close,12)",
+            type: "function",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+          {
+            name: "EMA(close,26)",
+            type: "function",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+        ],
+      },
+      {
+        name: "boll",
+        type: "extend",
+        index: "3",
+        level: 0,
+        collapse: true,
+        depth: 3,
+        childCount: 9,
+        children: [
+          {
+            name: "close",
+            type: "timeseries",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+          {
+            name: "up",
+            type: "extend",
+            index: "3-1",
+            level: 1,
+            collapse: true,
+            depth: 2,
+            childCount: 3,
+            children: [
+              {
+                name: "EMA(close,20)",
+                type: "function",
+                level: 2,
+                depth: 1,
+                childCount: 0,
+              },
+              {
+                name: "movingstd(mid,20)",
+                type: "function",
+                level: 2,
+                depth: 1,
+                childCount: 0,
+              },
+              {
+                name: "2",
+                type: "timeseries",
+                level: 2,
+                depth: 1,
+                childCount: 0,
+              },
+            ],
+          },
+          {
+            name: "down",
+            type: "extend",
+            index: "3-2",
+            level: 1,
+            collapse: true,
+            depth: 2,
+            childCount: 3,
+            children: [
+              {
+                name: "EMA(close,20)",
+                type: "function",
+                level: 2,
+                depth: 1,
+                childCount: 0,
+              },
+              {
+                name: "movingstd(mid,20)",
+                type: "function",
+                level: 2,
+                depth: 1,
+                childCount: 0,
+              },
+              {
+                name: "2",
+                type: "timeseries",
+                level: 2,
+                depth: 1,
+                childCount: 0,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    [
+      {
+        name: "period",
+        type: "extend",
+        index: "1",
+        level: 0,
+        collapse: true,
+        depth: 2,
+        childCount: 1,
+        children: [
+          {
+            name: "2023-07-01 2024-07-01",
+            type: "context",
+            level: 1,
+            depth: 1,
+            childCount: 0,
+          },
+        ],
+      },
+      {
+        name: "stop",
+        type: "extend",
+        index: "2",
+        level: 0,
+        collapse: true,
+        depth: 2,
+        childCount: 1,
+        children: [
+          {
+            name: "ahead",
+            type: "extend",
+            index: "2-1",
+            level: 1,
+            collapse: true,
+            depth: 2,
+            childCount: 1,
+            children: [
+              {
+                name: "-1",
+                type: "context",
+                level: 2,
+                depth: 1,
+                childCount: 0,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  ],
+];
+
+const sharedChildrenMap = {
+  upDownChildren: [
+    {
+      name: "EMA(close,20)",
+      type: "function",
+      level: 2,
+      depth: 1,
+      childCount: 0,
+    },
+    {
+      name: "movingstd(mid,20)",
+      type: "function",
+      level: 2,
+      depth: 1,
+      childCount: 0,
+    },
+    {
+      name: "2",
+      type: "timeseries",
+      level: 2,
+      depth: 1,
+      childCount: 0,
+    },
+  ],
+};
+
 // ============ 辅助函数 ==============
 
 // 仅设置 level、collapse 状态和父节点，不计算 depth 和 childCount（这些值直接写在 data 中）
 function initTree(node, level = 0) {
   node.level = level;
   if (node.type === "extend") {
-    node.collapsed =
-      typeof node.collapse === "boolean" ? node.collapse : true;
+    node.collapsed = typeof node.collapse === "boolean" ? node.collapse : true;
     node.expanded = !node.collapsed;
   }
   if (node.children && node.children.length > 0) {
@@ -21,18 +357,34 @@ function initTree(node, level = 0) {
 }
 
 // 在 getVisibleNodes 中直接使用数据中的 depth 与 childCount
-function getVisibleNodes(node, trees, parentPath = []) {
+function getVisibleNodes(node, trees, sharedChildrenMap, parentPath = []) {
   node.parentPath = [...parentPath];
   node.width = 1; // 固定宽度为1单位
 
+  // 如果节点被隐藏，则不渲染
+  if (node.hidden) return [];
+
   if (node.type === "extend" && node.expanded) {
     let arr = [];
+    if (node.sharedKey && sharedChildrenMap[node.sharedKey]) {
+      sharedChildrenMap[node.sharedKey].forEach((child) => {
+        child.hasExpandedParent = true;
+        child.expandedParent = node;
+        const newParentPath = [...parentPath, node];
+        arr = arr.concat(
+          getVisibleNodes(child, trees, sharedChildrenMap, newParentPath)
+        );
+      });
+      return arr;
+    }
     if (node.children && node.children.length > 0) {
       node.children.forEach((child) => {
         child.hasExpandedParent = true;
         child.expandedParent = node;
         const newParentPath = [...parentPath, node];
-        arr = arr.concat(getVisibleNodes(child, trees, newParentPath));
+        arr = arr.concat(
+          getVisibleNodes(child, trees, sharedChildrenMap, newParentPath)
+        );
       });
     }
     return arr;
@@ -43,7 +395,9 @@ function getVisibleNodes(node, trees, parentPath = []) {
   if (node.children && node.children.length > 0) {
     node.children.forEach((child) => {
       const newParentPath = [...parentPath, node];
-      arr = arr.concat(getVisibleNodes(child, trees, newParentPath));
+      arr = arr.concat(
+        getVisibleNodes(child, trees, sharedChildrenMap, newParentPath)
+      );
     });
   }
   return arr;
@@ -67,21 +421,52 @@ function findNodesWithSameIndex(trees, targetIndex) {
 
 function toggleNodeExpansion(node, trees) {
   if (node.type !== "extend") return;
+
   if (node.expanded) {
     node.expanded = false;
     node.collapsed = true;
+    // 如果节点被折叠，恢复隐藏的兄弟节点
+    if (node.sharedKey) {
+      const parent = node.parent;
+      if (parent && parent.children) {
+        parent.children.forEach((sibling) => {
+          if (sibling !== node && sibling.sharedKey === node.sharedKey) {
+            console.log(sibling);
+            sibling.hidden = false;  // 恢复兄弟节点
+            sibling.expanded = false;
+            sibling.collapsed = true;
+          }
+        });
+      }
+    }
     return;
   }
   node.expanded = true;
   node.collapsed = false;
-  if (node.index) {
-    const sameIndexNodes = findNodesWithSameIndex(trees, node.index);
-    sameIndexNodes.forEach((n) => {
-      if (n !== node && n.type === "extend") {
-        n.expanded = true;
-        n.collapsed = false;
-      }
-    });
+  if (node.sharedKey) {
+    // 找到同一个父节点下，sharedKey 一样的兄弟
+    const parent = node.parent;
+    if (parent && parent.children) {
+      parent.children.forEach((sibling) => {
+        if (sibling !== node && sibling.sharedKey === node.sharedKey) {
+          // 把对方隐藏起来
+          sibling.hidden = node.expanded;
+          // 同时把对方折叠
+          sibling.expanded = false;
+          sibling.collapsed = true;
+        }
+      });
+    }
+  } else {
+    if (node.index) {
+      const sameIndexNodes = findNodesWithSameIndex(trees, node.index);
+      sameIndexNodes.forEach((n) => {
+        if (n !== node && n.type === "extend") {
+          n.expanded = true;
+          n.collapsed = false;
+        }
+      });
+    }
   }
 }
 
@@ -295,6 +680,19 @@ function drawExpandedConnector(
               if (node.index === parent.index && node.type === "extend") {
                 node.expanded = false;
                 node.collapsed = true;
+                if (node.sharedKey) {
+                  const parent = node.parent;
+                  if (parent && parent.children) {
+                    parent.children.forEach((sibling) => {
+                      if (sibling !== node && sibling.sharedKey === node.sharedKey) {
+                        console.log(sibling);
+                        sibling.hidden = false;  // 恢复兄弟节点
+                        sibling.expanded = false;
+                        sibling.collapsed = true;
+                      }
+                    });
+                  }
+                }
               }
               if (node.children) {
                 node.children.forEach((child) => findAndCollapse(child));
@@ -308,6 +706,16 @@ function drawExpandedConnector(
         }
         onCollapseClick(parent);
       });
+    if (parent.sharedKey) {
+      svg
+        .append("circle")
+        .attr("cx", circleX + circleRadius + 5)
+        .attr("cy", circleY) // 比原先的圆再上面一点
+        .attr("r", circleRadius)
+        .attr("fill", "#4A86E8") // 你可以选别的颜色
+        .attr("stroke", "#666")
+        .attr("stroke-width", 1);
+    }
   });
 }
 
@@ -320,362 +728,6 @@ const MultiBarcodeTree = ({
 }) => {
   const svgRef = useRef(null);
   const [groups, setGroups] = useState(null);
-
-  // 数据中直接给出 depth 与 childCount 属性，不需要前端计算
-  const [data, setData] = useState([
-    [
-      [
-        {
-          name: "MACD",
-          type: "extend",
-          index: "1",
-          level: 0,
-          collapse: true,
-          depth: 2,       // 根节点深度 2
-          childCount: 2,  // 有两个直接子节点
-          children: [
-            {
-              name: "EMA(close,12)",
-              type: "function",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-            {
-              name: "EMA(close,26)",
-              type: "function",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-          ],
-        },
-        {
-          name: "rsi",
-          type: "extend",
-          index: "2",
-          level: 0,
-          collapse: true,
-          depth: 2,
-          childCount: 3,
-          children: [
-            {
-              name: "rsi(close,14)",
-              type: "function",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-            {
-              name: "70",
-              type: "timeseries",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-            {
-              name: "30",
-              type: "timeseries",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-          ],
-        },
-        {
-          name: "boll",
-          type: "extend",
-          index: "3",
-          level: 0,
-          collapse: true,
-          depth: 3,
-          childCount: 9,
-          children: [
-            {
-              name: "close",
-              type: "timeseries",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-            {
-              name: "up",
-              type: "extend",
-              index: "3-1",
-              level: 1,
-              collapse: true,
-              depth: 2,
-              childCount: 3,
-              children: [
-                {
-                  name: "EMA(close,20)",
-                  type: "function",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-                {
-                  name: "movingstd(mid,20)",
-                  type: "function",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-                {
-                  name: "2",
-                  type: "timeseries",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-              ],
-            },
-            {
-              name: "down",
-              type: "extend",
-              index: "3-2",
-              level: 1,
-              collapse: true,
-              depth: 2,
-              childCount: 3,
-              children: [
-                {
-                  name: "EMA(close,20)",
-                  type: "function",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-                {
-                  name: "movingstd(mid,20)",
-                  type: "function",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-                {
-                  name: "2",
-                  type: "timeseries",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      [
-        {
-          name: "period",
-          type: "extend",
-          index: "1",
-          level: 0,
-          collapse: true,
-          depth: 2,
-          childCount: 1,
-          children: [
-            {
-              name: "2023-07-01 2024-07-01",
-              type: "context",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-          ],
-        },
-        {
-          name: "stop",
-          type: "extend",
-          index: "2",
-          level: 0,
-          collapse: true,
-          depth: 2,
-          childCount: 1,
-          children: [
-            {
-              name: "ahead",
-              type: "extend",
-              index: "2-1",
-              level: 1,
-              collapse: true,
-              depth: 2,
-              childCount: 1,
-              children: [
-                {
-                  name: "-1",
-                  type: "context",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    ],
-    [
-      [
-        {
-          name: "MACD",
-          type: "extend",
-          index: "1",
-          level: 0,
-          collapse: true,
-          depth: 2,
-          childCount: 2,
-          children: [
-            {
-              name: "EMA(close,12)",
-              type: "function",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-            {
-              name: "EMA(close,26)",
-              type: "function",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-          ],
-        },
-        {
-          name: "boll",
-          type: "extend",
-          index: "3",
-          level: 0,
-          collapse: true,
-          depth: 3,
-          childCount: 9,
-          children: [
-            {
-              name: "close",
-              type: "timeseries",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-            {
-              name: "up",
-              type: "extend",
-              index: "3-1",
-              level: 1,
-              collapse: true,
-              depth: 2,
-              childCount: 3,
-              children: [
-                {
-                  name: "EMA(close,20)",
-                  type: "function",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-                {
-                  name: "movingstd(mid,20)",
-                  type: "function",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-                {
-                  name: "2",
-                  type: "timeseries",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-              ],
-            },
-            {
-              name: "down",
-              type: "extend",
-              index: "3-2",
-              level: 1,
-              collapse: true,
-              depth: 2,
-              childCount: 3,
-              children: [
-                {
-                  name: "EMA(close,20)",
-                  type: "function",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-                {
-                  name: "movingstd(mid,20)",
-                  type: "function",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-                {
-                  name: "2",
-                  type: "timeseries",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-      [
-        {
-          name: "period",
-          type: "extend",
-          index: "1",
-          level: 0,
-          collapse: true,
-          depth: 2,
-          childCount: 1,
-          children: [
-            {
-              name: "2023-07-01 2024-07-01",
-              type: "context",
-              level: 1,
-              depth: 1,
-              childCount: 0,
-            },
-          ],
-        },
-        {
-          name: "stop",
-          type: "extend",
-          index: "2",
-          level: 0,
-          collapse: true,
-          depth: 2,
-          childCount: 1,
-          children: [
-            {
-              name: "ahead",
-              type: "extend",
-              index: "2-1",
-              level: 1,
-              collapse: true,
-              depth: 2,
-              childCount: 1,
-              children: [
-                {
-                  name: "-1",
-                  type: "context",
-                  level: 2,
-                  depth: 1,
-                  childCount: 0,
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    ],
-  ]);
 
   const calculateHeight = (level, maxHeight) => {
     if (level === 0) return maxHeight;
@@ -749,7 +801,11 @@ const MultiBarcodeTree = ({
         const tree = group.indicatorsData.find((t) => t.name === indicatorName);
         if (tree) {
           const allTrees = groups.map((g) => g.indicatorsData).flat();
-          const visibleNodes = getVisibleNodes(tree, allTrees);
+          const visibleNodes = getVisibleNodes(
+            tree,
+            allTrees,
+            sharedChildrenMap
+          );
           const n = visibleNodes.length;
           const nodeWidth = (cellWidthIndicators - (n - 1) * gap) / n;
           const { nodesMap, expandedParents } = processExpandedNodes(
@@ -768,7 +824,10 @@ const MultiBarcodeTree = ({
           });
           visibleNodes.forEach((node, i) => {
             const x = i * (nodeWidth + gap);
-            const nodeHeight = calculateHeight(node.level, cellHeightIndicators);
+            const nodeHeight = calculateHeight(
+              node.level,
+              cellHeightIndicators
+            );
             const y = (cellHeightIndicators - nodeHeight) / 2;
             const gNode = cellGroup.append("g").attr("class", "node");
             let stroke = "black",
@@ -847,7 +906,11 @@ const MultiBarcodeTree = ({
         const tree = group.evaluationData.find((t) => t.name === evalName);
         if (tree) {
           const allTrees = groups.map((g) => g.evaluationData).flat();
-          const visibleNodes = getVisibleNodes(tree, allTrees);
+          const visibleNodes = getVisibleNodes(
+            tree,
+            allTrees,
+            sharedChildrenMap
+          );
           const n = visibleNodes.length;
           const nodeWidth = (cellWidthEvaluation - (n - 1) * gap) / n;
           const { nodesMap, expandedParents } = processExpandedNodes(
@@ -871,7 +934,10 @@ const MultiBarcodeTree = ({
           });
           visibleNodes.forEach((node, i) => {
             const x = i * (nodeWidth + gap);
-            const nodeHeight = calculateHeight(node.level, cellHeightEvaluation);
+            const nodeHeight = calculateHeight(
+              node.level,
+              cellHeightEvaluation
+            );
             const y = (cellHeightEvaluation - nodeHeight) / 2;
             const gNode = cellGroup.append("g").attr("class", "node");
             let stroke = "black",
