@@ -10,7 +10,7 @@ const data = [
         type: "extend",
         index: "1",
         level: 0,
-        collapse: true,
+        collapse: false,
         depth: 2, // 根节点深度 2
         childCount: 2, // 有两个直接子节点
         children: [
@@ -20,6 +20,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
+            diff: ["1-1", 0],
           },
           {
             name: "EMA(close,26)",
@@ -27,6 +28,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
+            diff: ["1-2", 0],
           },
         ],
       },
@@ -67,7 +69,7 @@ const data = [
         type: "extend",
         index: "3",
         level: 0,
-        collapse: true,
+        collapse: false,
         depth: 3,
         childCount: 9,
         children: [
@@ -77,6 +79,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
+            diff: ["3-1", 0],
           },
           {
             name: "up",
@@ -106,7 +109,7 @@ const data = [
         type: "extend",
         index: "1",
         level: 0,
-        collapse: true,
+        collapse: false,
         depth: 2,
         childCount: 1,
         children: [
@@ -116,6 +119,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
+            diff: ["evaluation-1", 0],
           },
         ],
       },
@@ -157,23 +161,25 @@ const data = [
         type: "extend",
         index: "1",
         level: 0,
-        collapse: true,
+        collapse: false,
         depth: 2,
         childCount: 2,
         children: [
           {
-            name: "EMA(close,12)",
+            name: "EMA(close,20)",
             type: "function",
             level: 1,
             depth: 1,
             childCount: 0,
+            diff: ["1-1", 0.4],
           },
           {
-            name: "EMA(close,26)",
+            name: "EMA(close,30)",
             type: "function",
             level: 1,
             depth: 1,
             childCount: 0,
+            diff: ["1-2", 0.2],
           },
         ],
       },
@@ -182,16 +188,17 @@ const data = [
         type: "extend",
         index: "3",
         level: 0,
-        collapse: true,
+        collapse: false,
         depth: 3,
         childCount: 9,
         children: [
           {
-            name: "close",
+            name: "open",
             type: "timeseries",
             level: 1,
             depth: 1,
             childCount: 0,
+            diff: ["3-1", 0.6],
           },
           {
             name: "up",
@@ -221,16 +228,17 @@ const data = [
         type: "extend",
         index: "1",
         level: 0,
-        collapse: true,
+        collapse: false,
         depth: 2,
         childCount: 1,
         children: [
           {
-            name: "2023-07-01 2024-07-01",
+            name: "2022-07-01 2024-07-01",
             type: "context",
             level: 1,
             depth: 1,
             childCount: 0,
+            diff: ["evaluation-1", 0.5],
           },
         ],
       },
@@ -618,7 +626,7 @@ function drawExpandedConnector(
       .attr("cx", circleX)
       .attr("cy", circleY)
       .attr("r", circleRadius)
-      .attr("fill", "#4A86E8")
+      .attr("fill", "black")
       .attr("stroke", "#666")
       .attr("stroke-width", 1)
       .attr("cursor", "pointer")
@@ -637,7 +645,6 @@ function drawExpandedConnector(
                         sibling !== node &&
                         sibling.sharedKey === node.sharedKey
                       ) {
-                        console.log(sibling);
                         sibling.hidden = false; // 恢复兄弟节点
                         sibling.expanded = false;
                         sibling.collapsed = true;
@@ -664,7 +671,7 @@ function drawExpandedConnector(
         .attr("cx", circleX + circleRadius + 5)
         .attr("cy", circleY) // 比原先的圆再上面一点
         .attr("r", circleRadius)
-        .attr("fill", "#4A86E8") // 你可以选别的颜色
+        .attr("fill", "black") // 你可以选别的颜色
         .attr("stroke", "#666")
         .attr("stroke-width", 1);
     }
@@ -708,6 +715,9 @@ const MultiBarcodeTree = ({
     if (!groups) return;
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
+
+    const baseColorScale = d3.scaleOrdinal(d3.schemeCategory10);
+
     const rightMargin = 20;
     const availableWidth = width - margin - rightMargin;
     const availableHeight = height - margin * 2;
@@ -786,12 +796,24 @@ const MultiBarcodeTree = ({
               dash = null,
               fill = "none";
             if (node.type === "extend") {
-              fill = "#4A86E8";
+              fill = "white";
             } else if (node.type === "function") {
               fill = "white";
             } else {
               fill = "white";
             }
+
+            if (
+              node.diff &&
+              Array.isArray(node.diff) &&
+              node.diff.length === 2
+            ) {
+              const diffCategory = node.diff[0];
+              const diffValue = node.diff[1];
+              const baseColor = baseColorScale(diffCategory);
+              fill = d3.interpolateLab(baseColor, "black")(diffValue);
+            }
+
             gNode
               .append("rect")
               .attr("x", x)
@@ -820,7 +842,7 @@ const MultiBarcodeTree = ({
               .attr("y", y + nodeHeight / 2)
               .attr("dy", ".35em")
               .attr("text-anchor", "middle")
-              .attr("fill", node.type === "extend" ? "white" : "black")
+              .attr("fill", "black")
               .text(node.name)
               .style("pointer-events", "none");
             wrapText(textElem, nodeWidth, nodeHeight);
@@ -896,12 +918,24 @@ const MultiBarcodeTree = ({
               dash = null,
               fill = "none";
             if (node.type === "extend") {
-              fill = "#4A86E8";
+              fill = "white";
             } else if (node.type === "function") {
               fill = "white";
             } else {
               fill = "white";
             }
+
+            if (
+              node.diff &&
+              Array.isArray(node.diff) &&
+              node.diff.length === 2
+            ) {
+              const diffCategory = node.diff[0];
+              const diffValue = node.diff[1];
+              const baseColor = baseColorScale(diffCategory);
+              fill = d3.interpolateLab(baseColor, "black")(diffValue);
+            }
+
             gNode
               .append("rect")
               .attr("x", x)
@@ -930,7 +964,7 @@ const MultiBarcodeTree = ({
               .attr("y", y + nodeHeight / 2)
               .attr("dy", ".35em")
               .attr("text-anchor", "middle")
-              .attr("fill", node.type === "extend" ? "white" : "black")
+              .attr("fill", "black")
               .text(node.name)
               .style("pointer-events", "none");
             wrapText(textElem, nodeWidth, nodeHeight);
