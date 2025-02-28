@@ -89,7 +89,6 @@ const data = [
             collapse: true,
             depth: 2,
             sharedKey: "upDownChildren",
-            hidden: false, // 默认不隐藏
           },
           {
             name: "down",
@@ -208,7 +207,6 @@ const data = [
             collapse: true,
             depth: 2,
             sharedKey: "upDownChildren",
-            hidden: false, // 默认不隐藏
           },
           {
             name: "down",
@@ -324,9 +322,6 @@ function getVisibleNodes(node, trees, sharedChildrenMap, parentPath = []) {
   node.parentPath = [...parentPath];
   node.width = 1; // 固定宽度为1单位
 
-  // 如果节点被隐藏，则不渲染
-  if (node.hidden) return [];
-
   if (node.type === "extend" && node.expanded) {
     let arr = [];
     if (node.sharedKey && sharedChildrenMap[node.sharedKey]) {
@@ -394,7 +389,7 @@ function toggleNodeExpansion(node, trees) {
       parent.children.forEach((sibling) => {
         if (sibling !== node && sibling.sharedKey === node.sharedKey) {
           // 把对方隐藏起来
-          sibling.hidden = node.expanded;
+          // sibling.hidden = node.expanded;
           // 同时把对方折叠
           sibling.expanded = false;
           sibling.collapsed = true;
@@ -415,7 +410,7 @@ function toggleNodeExpansion(node, trees) {
           p.children.forEach((sibling) => {
             if (sibling !== n && sibling.sharedKey === n.sharedKey) {
               // 把对方隐藏起来
-              sibling.hidden = n.expanded;
+              // sibling.hidden = n.expanded;
               // 同时把对方折叠
               sibling.expanded = false;
               sibling.collapsed = true;
@@ -595,7 +590,7 @@ function drawExpandedConnector(
     const firstChild = children[0];
     const childLevel = firstChild.level || 0;
     const childHeight = calculateHeight(childLevel, maxHeight);
-    const childY = (cellHeight - childHeight) / 2;
+    const childY = cellHeight - childHeight;
     const circleY = childY - circleRadius;
     svg
       .append("line")
@@ -622,10 +617,11 @@ function drawExpandedConnector(
       .attr("stroke", "#666")
       .attr("stroke-width", 1.5);
     svg
-      .append("circle")
-      .attr("cx", circleX)
-      .attr("cy", circleY)
-      .attr("r", circleRadius)
+      .append("rect")
+      .attr("x", circleX - (maxX - minX) / 8)
+      .attr("y", circleY - circleRadius)
+      .attr("width", (maxX - minX) / 4)
+      .attr("height", circleRadius * 2)
       .attr("fill", "black")
       .attr("stroke", "#666")
       .attr("stroke-width", 1)
@@ -645,7 +641,7 @@ function drawExpandedConnector(
                         sibling !== node &&
                         sibling.sharedKey === node.sharedKey
                       ) {
-                        sibling.hidden = false; // 恢复兄弟节点
+                        // sibling.hidden = false; // 恢复兄弟节点
                         sibling.expanded = false;
                         sibling.collapsed = true;
                       }
@@ -665,16 +661,22 @@ function drawExpandedConnector(
         }
         onCollapseClick(parent);
       });
-    if (parent.sharedKey) {
-      svg
-        .append("circle")
-        .attr("cx", circleX + circleRadius + 5)
-        .attr("cy", circleY) // 比原先的圆再上面一点
-        .attr("r", circleRadius)
-        .attr("fill", "black") // 你可以选别的颜色
-        .attr("stroke", "#666")
-        .attr("stroke-width", 1);
-    }
+      // gNode
+      // .append("rect")
+      // .attr("x", x)
+      // .attr("y", y)
+      // .attr("width", nodeWidth)
+      // .attr("height", nodeHeight)
+      // .attr("fill", fill)
+      // .attr("stroke", stroke)
+      // .attr("stroke-dasharray", dash)
+      // .attr("cursor", "pointer")
+      // .on("click", () => {
+      //   if (node.type === "extend") {
+      //     toggleNodeExpansion(node, allTrees);
+      //     setGroups([...groups]);
+      //   }
+      // });
   });
 }
 
@@ -790,7 +792,7 @@ const MultiBarcodeTree = ({
               node.level,
               cellHeightIndicators
             );
-            const y = (cellHeightIndicators - nodeHeight) / 2;
+            const y = cellHeightIndicators - nodeHeight;
             const gNode = cellGroup.append("g").attr("class", "node");
             let stroke = "black",
               dash = null,
@@ -832,7 +834,7 @@ const MultiBarcodeTree = ({
               });
             if (
               rowIndex === 0 &&
-              (node.type === "extend" || node.type === "link")
+              (node.type === "extend")
             ) {
               drawTriangle(gNode, x, nodeWidth, nodeHeight, node, allTrees);
             }
@@ -912,7 +914,7 @@ const MultiBarcodeTree = ({
               node.level,
               cellHeightEvaluation
             );
-            const y = (cellHeightEvaluation - nodeHeight) / 2;
+            const y = cellHeightEvaluation - nodeHeight;
             const gNode = cellGroup.append("g").attr("class", "node");
             let stroke = "black",
               dash = null,
