@@ -10,6 +10,7 @@ function Candle({
   width,
   height,
   examplerData,
+  colorAssignments
 }) {
   // 原主图边距
   const margin = { top: 20, right: 5, bottom: 20, left: 20 };
@@ -61,6 +62,7 @@ function Candle({
   const horizontalPadding = 2; // 水平方向的额外补白
 
   useEffect(() => {
+    if(!colorAssignments) return;
     checkElementExist(getSvg().selectAll("svg"));
 
     let selectedIndicator = null; // 当前选中的副图指标索引
@@ -735,12 +737,23 @@ function Candle({
 
         // 绘制该指标下的每条折线，并统一加上 class "exampler-line" 便于后续更新
         linesData.forEach((lineData, j) => {
+          // 默认使用 d3.schemeCategory10
+          let strokeColor = d3.schemeCategory10[j % 10];
+          // 如果 colorAssignments 存在，则查找与当前折线名称匹配的颜色
+          if (colorAssignments && Array.isArray(colorAssignments)) {
+            const match = colorAssignments.find(
+              (item) => item[0] === lineNames[j]
+            );
+            if (match) {
+              strokeColor = match[1];
+            }
+          }
           contentGroup
             .append("path")
             .datum(lineData)
             .attr("class", "exampler-line")
             .attr("fill", "none")
-            .attr("stroke", d3.schemeCategory10[j % 10])
+            .attr("stroke", strokeColor)
             .attr("stroke-width", 1.5)
             .attr("d", lineGeneratorSub);
         });
@@ -776,20 +789,30 @@ function Candle({
         const legendXStart = subWidth - totalLegendWidth - legendPaddingRight;
         const legendY = subMargin.top / 2; // 图例 y 坐标，位于副图上边距的一半位置
         lineNames.forEach((name, j) => {
+          // 根据折线名称匹配 colorAssignments 中的颜色
+          let legendColor = d3.schemeCategory10[j % 10];
+          if (colorAssignments && Array.isArray(colorAssignments)) {
+            const match = colorAssignments.find(
+              (item) => item[0] === name
+            );
+            if (match) {
+              legendColor = match[1];
+            }
+          }
           subChart
             .append("rect")
             .attr("x", legendXStart + j * legendItemWidth)
             .attr("y", legendY)
             .attr("width", 10)
             .attr("height", 10)
-            .attr("fill", d3.schemeCategory10[j % 10]);
+            .attr("fill", legendColor);
           subChart
             .append("text")
             .attr("x", legendXStart + j * legendItemWidth + 12)
             .attr("y", legendY + 10)
             .text(name)
             .style("font-size", "10px")
-            .attr("fill", d3.schemeCategory10[j % 10]);
+            .attr("fill", legendColor);
         });
       });
     }

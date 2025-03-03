@@ -85,7 +85,7 @@ def transform_data_ring(ring_indicator_stock):
     # 遍历每个元素
     for indicator, stock_list in ring_indicator_stock.items():
         indicator_node = {
-            "name": indicator.upper(),  # 将指标名称大写，如 'rsi' -> 'RSI'
+            "name": indicator,
             "value": 0,
             "children": []
         }   

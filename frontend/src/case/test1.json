@@ -2,29 +2,29 @@
   "indicators": [
     {
       "name": "MACD",
-      "shortterm": "EMA(close, 12)",
-      "longterm": "EMA(close, 26)",
-      "long": "cross(shortterm, longterm)",
-      "short": "cross(longterm, shortterm)"
+      "shortterm": "EMA(close,12)",
+      "longterm": "EMA(close,26)",
+      "long": "cross(shortterm,longterm)",
+      "short": "cross(longterm,shortterm)"
     },
     {
       "name": "rsi",
-      "price": "rsi(close, 14)",
+      "price": "rsi(close,14)",
       "up": 70,
       "down": 30,
-      "long": "cross(price, down)",
-      "short": "cross(up, price)"
+      "long": "cross(price,down)",
+      "short": "cross(up,price)"
     },
     {
       "name": "boll",
       "price": "close",
-      "mid": "EMA(close, 20)",
-      "band": "movingstd(price, 20)",
+      "mid": "EMA(close,20)",
+      "band": "movingstd(price,20)",
       "multiplier": 2,
       "up": "mid + multiplier * band",
       "down": "mid - multiplier * band",
-      "long": "cross(price, down)",
-      "short": "cross(up, price)"
+      "long": "cross(price,down)",
+      "short": "cross(up,price)"
     }
   ],
   "evaluation": {

@@ -1,12 +1,11 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const SunburstChart = ({ data, width, height }) => {
+const SunburstChart = ({ data, width, height, colorAssignments }) => {
   const ref = useRef(null);
-  // console.log(data);
 
   useEffect(() => {
-    if (!data) return;
+    if (!data || !colorAssignments) return;
 
     // 清空已有内容
     d3.select(ref.current).selectAll("*").remove();
@@ -156,20 +155,29 @@ const SunburstChart = ({ data, width, height }) => {
       .attr("d", arc)
       .attr("fill", (d) => {
         if (d.depth === 1) {
-          return indicatorColorScale(d.data.name);
+          const colorMatch = colorAssignments.find(
+            (item) => item[0] === d.data.name
+          );
+          return colorMatch ? colorMatch[1] : indicatorColorScale(d.data.name);
         } else if (d.depth === 2) {
           const median = d.data.profitStats?.median ?? 0;
           if (median < 0) {
             return "#fff"; // 白色填充
           } else {
-            return patternColorScale(d.data.name);
+            const colorMatch = colorAssignments.find(
+              (item) => item[0] === d.data.name
+            );
+            return colorMatch ? colorMatch[1] : patternColorScale(d.data.name);
           }
         }
         return "none";
       })
       .attr("stroke", (d) => {
         if (d.depth === 2) {
-          return patternColorScale(d.data.name);
+          const colorMatch = colorAssignments.find(
+            (item) => item[0] === d.data.name
+          );
+          return colorMatch ? colorMatch[1] : patternColorScale(d.data.name);
         } else {
           return "#fff";
         }
@@ -210,7 +218,13 @@ const SunburstChart = ({ data, width, height }) => {
         const zeroOffsetP = singleScale(zeroValP);
         minRadius = zeroRadius - zeroOffsetP;
       }
-      const strokeColor = patternColorScale(d.data.name);
+      // const strokeColor = patternColorScale(d.data.name);
+      const colorMatch = colorAssignments.find(
+        (item) => item[0] === d.data.name
+      );
+      let strokeColor = [];
+      if (colorMatch) strokeColor = colorMatch[1];
+      else strokeColor = patternColorScale(d.data.name);
       const sel = d3.select(this);
 
       // 竖线
@@ -289,7 +303,12 @@ const SunburstChart = ({ data, width, height }) => {
       .append("rect")
       .attr("width", 15)
       .attr("height", 15)
-      .attr("fill", (d) => patternColorScale(d));
+      .attr("fill", (d) => {
+        const colorMatch = colorAssignments.find(
+          (item) => item[0] === d
+        );
+        return colorMatch ? colorMatch[1] : patternColorScale(d);
+      });
 
     legendItems
       .append("text")
@@ -298,15 +317,9 @@ const SunburstChart = ({ data, width, height }) => {
       .attr("font-size", "12px")
       .attr("fill", "#000")
       .text((d) => d);
-  }, [data, width, height]);
+  }, [data, width, height, colorAssignments]);
 
-  return (
-    <div
-      ref={ref}
-      width={width}
-      height={height}
-    />
-  );
+  return <div ref={ref} width={width} height={height} />;
 };
 
 export default SunburstChart;

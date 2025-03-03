@@ -718,8 +718,6 @@ const MultiBarcodeTree = ({
     const svg = d3.select(svgRef.current);
     svg.selectAll("*").remove();
 
-    const baseColorScale = d3.scaleOrdinal(d3.schemeCategory10);
-
     const rightMargin = 20;
     const availableWidth = width - margin - rightMargin;
     const availableHeight = height - margin * 2;
@@ -736,7 +734,7 @@ const MultiBarcodeTree = ({
     });
     const numIndicatorRows = groups.length;
     const numIndicatorCols = indicatorNames.length;
-    const colGap = 0;
+    const colGap = 5;
     const cellWidthIndicators =
       (availableWidth - (numIndicatorCols - 1) * colGap) / numIndicatorCols;
     const cellHeightIndicators = indicatorsSectionHeight / numIndicatorRows;
@@ -812,8 +810,8 @@ const MultiBarcodeTree = ({
             ) {
               const diffCategory = node.diff[0];
               const diffValue = node.diff[1];
-              const baseColor = baseColorScale(diffCategory);
-              fill = d3.interpolateLab(baseColor, "black")(diffValue);
+              // const baseColor = baseColorScale(diffCategory);
+              // fill = d3.interpolateLab(baseColor, "black")(diffValue);
             }
 
             gNode
@@ -934,8 +932,8 @@ const MultiBarcodeTree = ({
             ) {
               const diffCategory = node.diff[0];
               const diffValue = node.diff[1];
-              const baseColor = baseColorScale(diffCategory);
-              fill = d3.interpolateLab(baseColor, "black")(diffValue);
+              // const baseColor = baseColorScale(diffCategory);
+              // fill = d3.interpolateLab(baseColor, "black")(diffValue);
             }
 
             gNode

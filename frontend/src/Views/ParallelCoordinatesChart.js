@@ -1,10 +1,11 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const ParallelCoordinatesChart = ({ data, width, height }) => {
+const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => {
   const svgRef = useRef(null);
 
   useEffect(() => {
+    if (!colorAssignments) return;
     // 2. 设置画布尺寸和边距
     const margin = { top: 30, right: 5, bottom: 50, left: 0 };
 
@@ -20,9 +21,9 @@ const ParallelCoordinatesChart = ({ data, width, height }) => {
       "totalProfit",
     ];
 
-    const colorScale = d3
-      .scaleOrdinal(d3.schemeCategory10)
-      .domain(data.map((d) => d.name));
+    // const colorScale = d3
+    //   .scaleOrdinal(d3.schemeCategory10)
+    //   .domain(data.map((d) => d.name));
 
     // 5. 为每个维度定义一个 yScale
     //    根据各维度的值域动态生成比例尺
@@ -60,7 +61,13 @@ const ParallelCoordinatesChart = ({ data, width, height }) => {
       .attr("class", "data-line")
       .attr("d", path)
       .attr("fill", "none")
-      .attr("stroke", (d) => colorScale(d.name))
+      .attr("stroke", (d) => {
+        // 从 colorAssignments 查找与数据名称匹配的颜色
+        const colorMatch = colorAssignments.find(
+          (item) => item[0] === d.name
+        );
+        return colorMatch ? colorMatch[1] : d3.schemeCategory10[0]; // 默认颜色
+      })
       .attr("stroke-width", 1)
       .attr("opacity", 0.7);
 
@@ -128,7 +135,13 @@ const ParallelCoordinatesChart = ({ data, width, height }) => {
         .attr("y", -6)
         .attr("width", 12)
         .attr("height", 12)
-        .style("fill", colorScale(name));
+        .style("fill", () => {
+          // 从 colorAssignments 查找与名字匹配的颜色
+          const colorMatch = colorAssignments.find(
+            (item) => item[0] === name
+          );
+          return colorMatch ? colorMatch[1] : d3.schemeCategory10[0]; // 默认颜色
+        });
 
       // 文本
       itemG
@@ -148,7 +161,7 @@ const ParallelCoordinatesChart = ({ data, width, height }) => {
 
     // 最后移除测量容器
     measureG.remove();
-  }, [data]);
+  }, [data, colorAssignments]);
 
   return (
     <div style={{ textAlign: "center" }}>
