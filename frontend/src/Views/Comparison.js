@@ -203,7 +203,7 @@ const Comparison = ({
   };
 
   return (
-    <Flex>
+    <Flex gap="small">
       <MultiBarcodeTree
         // data={groups}
         // data={groupsData}
@@ -213,7 +213,7 @@ const Comparison = ({
         gap={4}
       />
       <Flex vertical gap="small">
-        <Flex gap="small">
+        <Flex gap="small" style={{paddingTop: 10}}>
           <Select
             value={valueKey}
             onChange={(val) => setValueKey(val)}
@@ -233,11 +233,11 @@ const Comparison = ({
           <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
         </Flex>
 
-        <div style={{ border: "1px solid #ddd" }}>
+        <div style={{ border: "1px solid #ddd", borderRadius: "15px" }}>
           <StrategyMap
             data={treeData}
             width={300}
-            height={300}
+            height={310}
             onNodeClick={handleNodeClick}
             valueKey={valueKey}
             selectedNode={selectedNode}

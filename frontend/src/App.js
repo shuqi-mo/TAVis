@@ -538,7 +538,6 @@ function App() {
     // 保存颜色分配结果到一个数组中
     const tmpColorAssignments = [];
     collectColorAssignments(currentStrategyData, tmpColorAssignments);
-    console.log(tmpColorAssignments);
     setColorAssignments(tmpColorAssignments);
 
     axios
@@ -565,8 +564,8 @@ function App() {
           background: "white",
         }}
       >
-        <Flex gap="small">
-          <Flex vertical="true">
+        <Flex gap="middle">
+          <Flex vertical="true" className="view-box" style={{ maxheight: 870 }}>
             <div className="view-title">Candlestick View</div>
             {trade && examplerData && (
               <Candle
@@ -575,88 +574,121 @@ function App() {
                 indicatorsTrade={tradeByIndicators}
                 startDate={evaluation.startDate}
                 endDate={evaluation.endDate}
-                width={550}
-                height={840}
+                width={530}
+                height={820}
                 examplerData={examplerData}
                 colorAssignments={colorAssignments}
               />
             )}
           </Flex>
-          <Flex vertical="true">
-            <div className="view-title">Evaluation View</div>
-            <Flex>
-              <Flex vertical>
-                <div style={{ display: "flex", justifyContent: "center" }}>
-                  <Radio.Group
-                    size="small"
-                    value={position}
-                    onChange={(e) => setPosition(e.target.value)}
+          <Flex vertical="true" gap="middle">
+            <Flex vertical="true" className="view-box">
+              <div className="view-title">Evaluation View</div>
+              <Flex gap="small">
+                <Flex
+                  style={{ border: "1px solid #ddd", borderRadius: "15px" }}
+                >
+                  <Flex vertical>
+                    <div
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        paddingTop: "10px",
+                      }}
+                    >
+                      <Radio.Group
+                        size="small"
+                        value={position}
+                        onChange={(e) => setPosition(e.target.value)}
+                      >
+                        <Radio.Button value="current stock">
+                          indicators
+                        </Radio.Button>
+                        <Radio.Button value="selected stocks">
+                          stocks
+                        </Radio.Button>
+                      </Radio.Group>
+                    </div>
+                    {backtest && position === "current stock" && (
+                      <div style={{ padding: "5px", overflowY: "auto" }}>
+                        <ParallelCoordinatesChart
+                          data={backtest}
+                          width={250}
+                          height={340}
+                          colorAssignments={colorAssignments}
+                        />
+                      </div>
+                    )}
+                    {stockPerformance && position === "selected stocks" && (
+                      <div style={{ padding: "5px", overflowY: "auto" }}>
+                        <ParallelCoordinatesChart
+                          data={stockPerformance}
+                          width={250}
+                          height={340}
+                          colorAssignments={colorAssignments}
+                        />
+                      </div>
+                    )}
+                  </Flex>
+                  <div
+                    style={{
+                      width: 180,
+                      maxHeight: 380,
+                      overflowY: "auto",
+                      paddingTop: "10px",
+                    }}
                   >
-                    <Radio.Button value="current stock">
-                      indicators
-                    </Radio.Button>
-                    <Radio.Button value="selected stocks">stocks</Radio.Button>
-                  </Radio.Group>
-                </div>
-                {backtest && position === "current stock" && (
-                  <div style={{ padding: "5px", overflowY: "auto" }}>
-                    <ParallelCoordinatesChart
-                      data={backtest}
-                      width={250}
-                      height={350}
+                    {curveBoxplotData &&
+                      position === "current stock" &&
+                      curveBoxplotData.map((item) => (
+                        <CurveBoxplot
+                          boxplotData={item}
+                          width={160}
+                          height={120}
+                        />
+                      ))}
+                    {curveBoxplotDataForStocks &&
+                      position === "selected stocks" &&
+                      curveBoxplotDataForStocks.map((item) => (
+                        <CurveBoxplot
+                          boxplotData={item}
+                          width={160}
+                          height={120}
+                        />
+                      ))}
+                  </div>
+                  {position === "current stock" && (
+                    <SunburstChart
+                      data={ringDataIndicatorStock}
+                      width={330}
+                      height={380}
                       colorAssignments={colorAssignments}
                     />
-                  </div>
-                )}
-                {stockPerformance && position === "selected stocks" && (
-                  <div style={{ padding: "5px", overflowY: "auto" }}>
-                    <ParallelCoordinatesChart
-                      data={stockPerformance}
-                      width={250}
-                      height={350}
+                  )}
+                  {position === "selected stocks" && (
+                    <SunburstChart
+                      data={ringDataStockIndicator}
+                      width={330}
+                      height={380}
                       colorAssignments={colorAssignments}
                     />
-                  </div>
-                )}
+                  )}
+                </Flex>
+                <Flex
+                  style={{ border: "1px solid #ddd", borderRadius: "15px" }}
+                >
+                  <StockSelection
+                    indicators={indicators}
+                    evaluation={evaluation}
+                    selectStock={selectStock}
+                    stockList={stockList}
+                    onSelectStock={onSelectStock}
+                    onStockListChange={onStockListChange}
+                  />
+                </Flex>
               </Flex>
-              <div style={{ width: 180, maxHeight: 400, overflowY: "auto" }}>
-                {curveBoxplotData &&
-                  position === "current stock" &&
-                  curveBoxplotData.map((item) => (
-                    <CurveBoxplot boxplotData={item} width={160} height={120} />
-                  ))}
-                {curveBoxplotDataForStocks &&
-                  position === "selected stocks" &&
-                  curveBoxplotDataForStocks.map((item) => (
-                    <CurveBoxplot boxplotData={item} width={160} height={120} />
-                  ))}
-              </div>
-              {position === "current stock" && (
-                <SunburstChart
-                  data={ringDataIndicatorStock}
-                  width={300}
-                  height={400}
-                  colorAssignments={colorAssignments}
-                />
-              )}
-              {position === "selected stocks" && (
-                <SunburstChart
-                  data={ringDataStockIndicator}
-                  width={300}
-                  height={400}
-                  colorAssignments={colorAssignments}
-                />
-              )}
-              <StockSelection
-                indicators={indicators}
-                evaluation={evaluation}
-                selectStock={selectStock}
-                stockList={stockList}
-                onSelectStock={onSelectStock}
-                onStockListChange={onStockListChange}
-              />
             </Flex>
-            <Flex vertical="true">
+            <Flex vertical="true" className="view-box">
               <div className="view-title">Comparison View</div>
               <Flex>
                 <div style={{}}>

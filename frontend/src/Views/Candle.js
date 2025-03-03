@@ -10,21 +10,21 @@ function Candle({
   width,
   height,
   examplerData,
-  colorAssignments
+  colorAssignments,
 }) {
   // 原主图边距
-  const margin = { top: 20, right: 5, bottom: 20, left: 20 };
+  const margin = { top: 20, right: 10, bottom: 0, left: 25 };
   // 副图（Exampler）边距
-  const subMargin = { top: 20, right: 5, bottom: 20, left: 20 };
+  const subMargin = { top: 20, right: 10, bottom: 20, left: 25 };
   // --- 新布局参数 --- //
   // 固定主图区域高度
   const mainChartHeight = 350;
   // 固定刷选区域（上下文区域）高度
   const brushChartHeight = 40;
   // 主图与刷选区域之间的间隔
-  const gapBetweenMainAndBrush = 20;
+  const gapBetweenMainAndBrush = 30;
   // 刷选区域与副图区域之间的间隔
-  const gapBetweenBrushAndExampler = 20;
+  const gapBetweenBrushAndExampler = 30;
   // 副图区域起始 y 坐标
   const examplerRegionY =
     margin.top +
@@ -34,7 +34,7 @@ function Candle({
     gapBetweenBrushAndExampler;
   // 副图区域可用总高度
   const examplerTotalHeight = height - examplerRegionY - margin.bottom;
-
+  
   const d3Node = useRef(null);
   const getSvg = () => d3.select(d3Node.current);
   const checkElementExist = (element) => {
@@ -62,7 +62,7 @@ function Candle({
   const horizontalPadding = 2; // 水平方向的额外补白
 
   useEffect(() => {
-    if(!colorAssignments) return;
+    if (!colorAssignments) return;
     checkElementExist(getSvg().selectAll("svg"));
 
     let selectedIndicator = null; // 当前选中的副图指标索引
@@ -546,14 +546,14 @@ function Candle({
     // ===============================
     // 绘制副图区域（exampler）—— 在刷选区域下方
     // ===============================
-    // 若 examplerData 存在，计算每个副图的高度（若有多个指标，则均分）
+    // 当指标个数<=3时，每个副图高度均分 examplerTotalHeight
     const numExamplers = examplerData ? examplerData.length : 0;
-    // 如果指标个数<=3，则显示全部，否则只显示3个，剩余部分需要滚动查看
     const visibleCount = numExamplers <= 3 ? numExamplers : 3;
-    // 当指标个数<=4时，每个副图高度均分 examplerTotalHeight；当大于4时，固定每个副图高度 = examplerTotalHeight/4
     const eachExamplerHeightFixed = examplerTotalHeight / visibleCount;
-    // 总内容高度
-    const totalExamplerContentHeight = eachExamplerHeightFixed * numExamplers;
+
+    // 这里将原先的 totalExamplerContentHeight 改为加上副图间距
+    const totalExamplerContentHeight =
+      eachExamplerHeightFixed * numExamplers;
 
     // 定义 clipPath 用于副图容器
     svg
@@ -647,7 +647,10 @@ function Candle({
         const subChart = examplerContentGroup
           .append("g")
           .attr("class", "exampler-chart")
-          .attr("transform", `translate(0, ${i * eachExamplerHeightFixed})`);
+          .attr(
+            "transform",
+            `translate(0, ${i * eachExamplerHeightFixed})`
+          );
 
         // 添加一个透明覆盖矩形，捕获点击事件
         subChart
@@ -667,19 +670,28 @@ function Candle({
             d3.select(this.parentNode)
               .append("rect")
               .attr("class", "selected-border")
-              .attr("x", 0)
+              .attr("x", -margin.left)
               .attr("y", 0)
-              .attr("width", width - margin.left - margin.right)
+              .attr("width", width - margin.right)
               .attr("height", eachExamplerHeightFixed)
               .attr("fill", "none")
-              .attr("stroke", "blue")
-              .attr("stroke-width", 2)
+              .attr("stroke", "#8c8c8c")
+              .attr("stroke-width", 3)
               .style("pointer-events", "none");
             highlightMainChart(i); // 调用更新主图交易标记的函数
           });
 
         // 将当前副图的 yScale 挂载到 DOM 元素上
         subChart.node().yScale = yScaleSub;
+
+        // 根据指标标题从 colorAssignments 找到对应颜色（若未找到，则默认黑色）
+        let titleColor = "black";
+        if (colorAssignments && Array.isArray(colorAssignments)) {
+          const match = colorAssignments.find((item) => item[0] === title);
+          if (match) {
+            titleColor = match[1];
+          }
+        }
 
         // 绘制副图标题（指标名称）
         subChart
@@ -688,7 +700,9 @@ function Candle({
           .attr("x", subMargin.left)
           .attr("y", subMargin.top / 2)
           .style("font-size", "12px")
-          .attr("dominant-baseline", "middle");
+          .attr("dominant-baseline", "middle")
+          .style("font-weight", "bold")
+          .style("fill", titleColor);
 
         // 绘制副图 x 轴（与主图保持一致）
         subChart
@@ -792,9 +806,7 @@ function Candle({
           // 根据折线名称匹配 colorAssignments 中的颜色
           let legendColor = d3.schemeCategory10[j % 10];
           if (colorAssignments && Array.isArray(colorAssignments)) {
-            const match = colorAssignments.find(
-              (item) => item[0] === name
-            );
+            const match = colorAssignments.find((item) => item[0] === name);
             if (match) {
               legendColor = match[1];
             }

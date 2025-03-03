@@ -993,7 +993,7 @@ const MultiBarcodeTree = ({
       ref={svgRef}
       width={width}
       height={height}
-      style={{ border: "1px solid #ccc" }}
+      style={{ border: "1px solid #ccc", borderRadius: "15px" }}
     />
   );
 };

@@ -468,7 +468,7 @@ const StockSelection = ({
           filters={filterCriteria}
           selectedStocks={stockList}
           width={350}
-          height={350}
+          height={340}
         />
       </Spin>
     </div>

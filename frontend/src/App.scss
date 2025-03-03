@@ -7,7 +7,7 @@
 }
 
 .view-title {
-    background-color: #f0f0f0;
+    background-color: #d9d9d9;
     padding: 5px;
     font-weight: bold;
     border-radius: 25px;
@@ -15,4 +15,11 @@
 
 .custom-table {
     font-size: 10px;
+}
+
+.view-box {
+    border: 2px solid #fafafa;
+    border-radius: 15px;
+    background-color: #fafafa;
+    box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
 }
