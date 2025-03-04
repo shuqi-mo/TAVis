@@ -1,11 +1,11 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-const SunburstChart = ({ data, width, height, colorAssignments }) => {
+const SunburstChart = ({ data, anova, width, height, colorAssignments }) => {
   const ref = useRef(null);
 
   useEffect(() => {
-    if (!data || !colorAssignments) return;
+    if (!data || !colorAssignments || !anova) return;
 
     // 清空已有内容
     d3.select(ref.current).selectAll("*").remove();
@@ -14,6 +14,8 @@ const SunburstChart = ({ data, width, height, colorAssignments }) => {
     const radius = Math.min(width, height) / 2;
     const partition = d3.partition().size([2 * Math.PI, radius]);
     const offset = 40;
+    const margintop = 40;
+    const marginbottom = 40;
 
     const root = d3.hierarchy(data).sum((d) => d.value);
     partition(root);
@@ -55,7 +57,7 @@ const SunburstChart = ({ data, width, height, colorAssignments }) => {
       .scaleLinear()
       .domain([globalDiffMin, globalDiffMax])
       .range([0, 30]);
-    // 基准节点的 min 半径，即“0 位置”
+    // 基准节点的 min 半径，即"0 位置"
     const psRef = referenceNode.data.profitStats;
     const zeroVal = 0 - psRef.min;
     const zeroOffset = singleScale(zeroVal);
@@ -144,11 +146,66 @@ const SunburstChart = ({ data, width, height, colorAssignments }) => {
 
     const gMain = svg
       .append("g")
-      .attr("transform", `translate(${width / 2}, ${height / 2 - offset})`);
+      .attr(
+        "transform",
+        `translate(${width / 2}, ${height / 2 - offset + margintop})`
+      );
+
+    // 添加ANOVA全局信息显示区域
+    const anovaTextGroup = gMain.append("g").attr("class", "anova-text");
+
+    // 默认显示全局ANOVA信息
+    anovaTextGroup
+      .append("text")
+      .attr("class", "anova-title")
+      .attr("text-anchor", "middle")
+      .attr("y", -15)
+      .attr("fill", "#000")
+      .text("ANOVA for global");
+
+    anovaTextGroup
+      .append("text")
+      .attr("class", "anova-subtitle")
+      .attr("text-anchor", "middle")
+      .attr("y", 5)
+      .attr("fill", "#000")
+      .text("p value");
+
+    anovaTextGroup
+      .append("text")
+      .attr("class", "anova-value")
+      .attr("text-anchor", "middle")
+      .attr("y", 30)
+      .attr("fill", "#000")
+      .attr("font-weight", "bold")
+      .attr("font-size", "16px")
+      .text(anova[0][1]);
+
+    // 添加固定信息展示区域
+    const infoPanel = svg
+      .append("g")
+      .attr("class", "info-panel")
+      .attr("transform", `translate(${width / 2}, 20)`)
+      .style("visibility", "hidden");
+
+    infoPanel
+      .append("text")
+      .attr("class", "info-title")
+      .attr("text-anchor", "middle")
+      .attr("y", 0)
+      .attr("font-weight", "bold")
+      .attr("font-size", "12px");
+
+    infoPanel
+      .append("text")
+      .attr("class", "info-stats")
+      .attr("text-anchor", "middle")
+      .attr("y", 20)
+      .attr("font-size", "10px");
 
     //  绘制旭日图
     const nodes = root.descendants().filter((d) => d.depth > 0);
-    gMain
+    const paths = gMain
       .selectAll("path")
       .data(nodes)
       .join("path")
@@ -181,7 +238,8 @@ const SunburstChart = ({ data, width, height, colorAssignments }) => {
         } else {
           return "#fff";
         }
-      });
+      })
+      .attr("fill-opacity", 1);
 
     dashedCircle = gMain
       .append("circle")
@@ -259,18 +317,216 @@ const SunburstChart = ({ data, width, height, colorAssignments }) => {
         .attr("stroke-width", 2);
     });
 
+    // 鼠标交互事件
+    paths
+      .on("mouseover", function (event, d) {
+        // 设置当前节点和父节点正常显示，其他节点透明度降低
+        paths.attr("opacity", (node) => {
+          if (node === d || (d.parent && node === d.parent)) {
+            return 1;
+          }
+          return 0.3;
+        });
+
+        // 为线条组设置透明度，而不是单独的线条
+        gPatternLines.attr("opacity", patternNode => {
+          // 判断是否与当前选中节点相关
+          if (d.depth === 1) {
+            // 如果悬停在内环上，显示该内环下所有外环的线条
+            return patternNode.parent && patternNode.parent.data.name === d.data.name ? 1 : 0.3;
+          } else {
+            // 如果悬停在外环上，只显示该外环的线条
+            return patternNode === d ? 1 : 0.3;
+          }
+        });
+
+        // 根据内环或外环显示不同内容
+        if (d.depth === 1) {
+          // 内环
+          // 查找匹配的ANOVA值
+          const anovaItem = anova.find((item) => item[0] === d.data.name);
+          if (anovaItem) {
+            // 获取内环颜色
+            const colorMatch = colorAssignments.find(
+              (item) => item[0] === d.data.name
+            );
+            const color = colorMatch
+              ? colorMatch[1]
+              : indicatorColorScale(d.data.name);
+
+            // 更新中心显示
+            anovaTextGroup
+              .select(".anova-title")
+              .attr("fill", color)
+              .text(`ANOVA for ${d.data.name}`);
+
+            anovaTextGroup
+              .select(".anova-subtitle")
+              .attr("fill", color)
+              .text("p value");
+
+            anovaTextGroup
+              .select(".anova-value")
+              .attr("fill", color)
+              .text(anovaItem[1]);
+          }
+        } else if (d.depth === 2) {
+          // 外环
+          // 外环时显示其父节点（内环）的ANOVA信息
+          const parentNode = d.parent;
+          const anovaItem = anova.find(item => item[0] === parentNode.data.name);
+          if (anovaItem) {
+            // 获取父节点（内环）颜色
+            const colorMatch = colorAssignments.find(item => item[0] === parentNode.data.name);
+            const color = colorMatch ? colorMatch[1] : indicatorColorScale(parentNode.data.name);
+            
+            // 更新中心显示
+            anovaTextGroup.select(".anova-title")
+              .attr("fill", color)
+              .text(`ANOVA for ${parentNode.data.name}`);
+              
+            anovaTextGroup.select(".anova-subtitle")
+              .attr("fill", color)
+              .text("p value");
+              
+            anovaTextGroup.select(".anova-value")
+              .attr("fill", color)
+              .text(anovaItem[1]);
+          }
+          // 在固定位置显示外环信息
+          if (d.data.profitStats) {
+            const colorMatch = colorAssignments.find(
+              (item) => item[0] === d.data.name
+            );
+            const color = colorMatch
+              ? colorMatch[1]
+              : patternColorScale(d.data.name);
+
+            // 格式化数据为两位小数的百分比
+            const formatPercent = (value) => {
+              return (value * 100).toFixed(2) + "%";
+            };
+
+            // 更新标题，使用不同颜色区分父节点和当前节点
+            const parentNode = d.parent;
+            const parentColorMatch = colorAssignments.find(
+              (item) => item[0] === parentNode.data.name
+            );
+            const parentColor = parentColorMatch
+              ? parentColorMatch[1]
+              : indicatorColorScale(parentNode.data.name);
+
+            // 移除之前的标题文本
+            infoPanel.select(".info-title").remove();
+
+            // 创建包含两种颜色的标题
+            const titleGroup = infoPanel
+              .append("g")
+              .attr("class", "info-title")
+              .style("visibility", "visible");
+
+            // 父节点名称（使用父节点颜色）
+            titleGroup
+              .append("text")
+              .attr("text-anchor", "end")
+              .attr("x", -5) // 向左偏移，为分隔符留出空间
+              .attr("y", 0)
+              .attr("font-weight", "bold")
+              .attr("font-size", "12px")
+              .attr("fill", parentColor)
+              .text(parentNode.data.name);
+
+            // 分隔符
+            titleGroup
+              .append("text")
+              .attr("text-anchor", "middle")
+              .attr("x", 0)
+              .attr("y", 0)
+              .attr("font-weight", "bold")
+              .attr("font-size", "12px")
+              .attr("fill", "#333") // 中性颜色
+              .text(" / ");
+
+            // 当前节点名称（使用当前节点颜色）
+            titleGroup
+              .append("text")
+              .attr("text-anchor", "start")
+              .attr("x", 5) // 向右偏移，为分隔符留出空间
+              .attr("y", 0)
+              .attr("font-weight", "bold")
+              .attr("font-size", "12px")
+              .attr("fill", color)
+              .text(d.data.name);
+
+            // 更新统计数据
+            infoPanel
+              .select(".info-stats")
+              .style("visibility", "visible")
+              .attr("fill", color)
+              .text(
+                `Min: ${formatPercent(
+                  d.data.profitStats.min
+                )} | Q1: ${formatPercent(
+                  d.data.profitStats.q1
+                )} | Median: ${formatPercent(
+                  d.data.profitStats.median
+                )} | Q3: ${formatPercent(
+                  d.data.profitStats.q3
+                )} | Max: ${formatPercent(d.data.profitStats.max)}`
+              );
+
+            // 显示整个信息面板
+            infoPanel.style("visibility", "visible");
+          }
+        }
+      })
+      // 移除mousemove事件处理程序，因为信息面板是固定位置的
+      .on("mouseout", function () {
+        // 恢复所有节点的透明度
+        paths.attr("opacity", 1);
+
+        // 恢复所有线条的透明度
+        gPatternLines.attr("opacity", 1);
+
+        // 重置为全局ANOVA
+        anovaTextGroup
+          .select(".anova-title")
+          .attr("fill", "#000")
+          .text("ANOVA for global");
+
+        anovaTextGroup
+          .select(".anova-subtitle")
+          .attr("fill", "#000")
+          .text("p value");
+
+        anovaTextGroup
+          .select(".anova-value")
+          .attr("fill", "#000")
+          .text(anova[0][1]);
+
+        // 隐藏信息面板的所有文本
+        infoPanel.style("visibility", "hidden");
+        // 清除旧的标题组
+        infoPanel.select(".info-title").remove();
+        // 创建一个空的标题组，为下次使用做准备
+        infoPanel
+          .append("text")
+          .attr("class", "info-title")
+          .attr("text-anchor", "middle")
+          .attr("y", 0)
+          .attr("font-weight", "bold")
+          .attr("font-size", "12px");
+        // 隐藏统计信息
+        infoPanel.select(".info-stats").style("visibility", "hidden");
+        infoPanel.select(".info-stats-extra").style("visibility", "hidden");
+      });
+
     // 为内层圆环添加文字
     gMain
-      .selectAll("text")
+      .selectAll("text.indicator-label")
       .data(root.descendants().filter((d) => d.depth === 1))
       .join("text")
-      // .attr("transform", function (d) {
-      //   const x = (d.x0 + d.x1) / 2;
-      //   const y = (d.y0 + d.y1) / 2;
-      //   const rotate = ((x - Math.PI / 2) / Math.PI) * 180;
-      //   // 为了让文字在扇形内居中，做一个简单的移动和旋转
-      //   return `translate(${arc.centroid(d)}) rotate(${rotate})`;
-      // })
+      .attr("class", "indicator-label")
       .attr("transform", (d) => `translate(${arc.centroid(d)})`)
       .attr("text-anchor", "middle")
       .attr("font-size", "10px")
@@ -281,7 +537,7 @@ const SunburstChart = ({ data, width, height, colorAssignments }) => {
     // 添加图例
     const legend = svg
       .append("g")
-      .attr("transform", `translate(20, ${height - 80})`);
+      .attr("transform", `translate(20, ${height - marginbottom})`);
 
     const legendItemsPerRow = 3; // 每行显示最多 3 个
     const legendItemWidth = 100; // 每个图例的宽度
@@ -304,9 +560,7 @@ const SunburstChart = ({ data, width, height, colorAssignments }) => {
       .attr("width", 15)
       .attr("height", 15)
       .attr("fill", (d) => {
-        const colorMatch = colorAssignments.find(
-          (item) => item[0] === d
-        );
+        const colorMatch = colorAssignments.find((item) => item[0] === d);
         return colorMatch ? colorMatch[1] : patternColorScale(d);
       });
 
@@ -317,7 +571,9 @@ const SunburstChart = ({ data, width, height, colorAssignments }) => {
       .attr("font-size", "12px")
       .attr("fill", "#000")
       .text((d) => d);
-  }, [data, width, height, colorAssignments]);
+
+    // 组件卸载时不需要额外清理，因为所有元素都在SVG内部
+  }, [data, width, height, colorAssignments, anova]);
 
   return <div ref={ref} width={width} height={height} />;
 };

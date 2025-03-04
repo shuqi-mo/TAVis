@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import scipy.stats as stats
 
 def updatePeriod(stock, trade_origin, startDate=None, endDate=None):
     trade_origin = pd.Series(trade_origin)
@@ -15,13 +16,16 @@ def calBacktest(price, trade, ahead = -1):
     boxplotData = []
     totalprofit = 0
     positionAndProfit = []
+    logboxplotData = []
     for i in range(len(trade)):
         # 多头进场
         if trade[i] == 1:
             item = []
+            item_log = []
             if ahead == -1:
                 for j in range(i+1,len(trade)):
                     item.append((price[j]-price[i])/price[i])
+                    item_log.append(np.log(price[j] / price[i]))
                     if trade[j] == -1:
                         if price[i] < price[j]:
                             success.append(1)
@@ -31,6 +35,7 @@ def calBacktest(price, trade, ahead = -1):
                         profit.append(totalprofit)
                         profitpent.append((price[j]-price[i])/price[i])
                         boxplotData.append(item)
+                        logboxplotData.append(item_log)
                         positionAndProfit.append([i, price[j] - price[i]])
                         break
             else:
@@ -47,12 +52,15 @@ def calBacktest(price, trade, ahead = -1):
                 for j in range(1,ahead+1):
                     item.append((price[j]-price[i])/price[i])
                 boxplotData.append(item)
+                logboxplotData.append(item_log)
         # 空头进场
         if trade[i] == -1:
             item = []
+            item_log = []
             if ahead == -1:
                 for j in range(i+1,len(trade)):
                     item.append((price[i]-price[j])/price[i])
+                    item_log.append(np.log(price[i] / price[j]))
                     if trade[j] == 1:
                         if price[i] > price[j]:
                             success.append(1)
@@ -63,6 +71,7 @@ def calBacktest(price, trade, ahead = -1):
                         profitpent.append((price[i]-price[j])/price[i])
                         positionAndProfit.append([i, price[i] - price[j]])
                         boxplotData.append(item)
+                        logboxplotData.append(item_log)
                         break
             else:
                 if i + ahead >= len(trade):
@@ -78,7 +87,8 @@ def calBacktest(price, trade, ahead = -1):
                 for j in range(1,ahead+1):
                     item.append((price[i]-price[j])/price[i])
                 boxplotData.append(item)
-    return [success,profit,profitpent,boxplotData,positionAndProfit]
+                logboxplotData.append(item_log)
+    return [success,profit,profitpent,boxplotData,positionAndProfit, logboxplotData]
 
 def transform_data_ring(ring_indicator_stock):
     result = {"name": "root", "children": []}
@@ -118,3 +128,24 @@ def transform_data_ring(ring_indicator_stock):
             indicator_node["children"].append(stock_node)
         result["children"].append(indicator_node)
     return result
+
+def anova_analysis(data):
+    res = []
+
+    merged_data = {}
+    for indicator in data:
+        for stock, values in data[indicator]:
+            if stock not in merged_data:
+                merged_data[stock] = []
+            merged_data[stock].extend(values)
+    f_stat, p_value = stats.f_oneway(*merged_data.values())
+    res.append(["global", round(p_value,2)])
+
+    for key, value in data.items():
+        # 将每只股票的数据提取出来
+        stock_data = [x[1] for x in value]
+        # 执行ANOVA
+        f_stat, p_value = stats.f_oneway(*stock_data)
+        res.append([key, round(p_value,2)])
+
+    return res

@@ -137,6 +137,8 @@ def process_stock():
                 avgReturnList.append(r)
             for r in res_singlestock[3]:
                 curve.append(r)
+                # current_performance.append(r[-1])
+            for r in res_singlestock[5]:
                 current_performance.append(r[-1])
             ring_indicator_stock[data["indicatorName"][i]].append([item, current_performance])
             ring_stock_indicator[item].append([data["indicatorName"][i], current_performance])
@@ -145,8 +147,10 @@ def process_stock():
     
     ring_indicator_stock_format = transform_data_ring(ring_indicator_stock)
     ring_stock_indicator_format = transform_data_ring(ring_stock_indicator)
+    anova_analysis_indicator_stock = anova_analysis(ring_indicator_stock)
+    anova_analysis_stock_indicator = anova_analysis(ring_stock_indicator)
 
-    return jsonify([float_trade, performance, boxplotData, res_stock, res_curve, ring_indicator_stock_format, ring_stock_indicator_format])
+    return jsonify([float_trade, performance, boxplotData, res_stock, res_curve, ring_indicator_stock_format, ring_stock_indicator_format, anova_analysis_indicator_stock, anova_analysis_stock_indicator])
 
 @app.route('/process_exampler', methods=['POST'])
 def process_exampler():

@@ -162,6 +162,8 @@ function App() {
   const [examplerData, setExamplerData] = useState(null);
   const [ringDataIndicatorStock, setRingDataIndicatorStock] = useState(null);
   const [ringDataStockIndicator, setRingDataStockIndicator] = useState(null);
+  const [anovaIndicatorStock, setAnovaIndicatorStock] = useState(null);
+  const [anovaStockIndicator, setAnovaStockIndicator] = useState(null);
 
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState("current stock");
@@ -512,6 +514,8 @@ function App() {
       setCurveBoxplotDataForStocks(response.data[4]);
       setRingDataIndicatorStock(response.data[5]);
       setRingDataStockIndicator(response.data[6]);
+      setAnovaIndicatorStock(response.data[7]);
+      setAnovaStockIndicator(response.data[8]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -660,6 +664,7 @@ function App() {
                   {position === "current stock" && (
                     <SunburstChart
                       data={ringDataIndicatorStock}
+                      anova={anovaIndicatorStock}
                       width={330}
                       height={380}
                       colorAssignments={colorAssignments}
@@ -668,6 +673,7 @@ function App() {
                   {position === "selected stocks" && (
                     <SunburstChart
                       data={ringDataStockIndicator}
+                      anova = {anovaStockIndicator}
                       width={330}
                       height={380}
                       colorAssignments={colorAssignments}
