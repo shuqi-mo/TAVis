@@ -20,7 +20,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
-            diff: ["1-1", 0],
+            diff: "1-1",
           },
           {
             name: "EMA(close,26)",
@@ -28,7 +28,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
-            diff: ["1-2", 0],
+            diff: "1-2",
           },
         ],
       },
@@ -79,7 +79,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
-            diff: ["3-1", 0],
+            diff: "3-1",
           },
           {
             name: "up",
@@ -118,7 +118,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
-            diff: ["evaluation-1", 0],
+            diff: "evaluation-1",
           },
         ],
       },
@@ -170,7 +170,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
-            diff: ["1-1", 0.4],
+            diff: "1-1",
           },
           {
             name: "EMA(close,30)",
@@ -178,7 +178,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
-            diff: ["1-2", 0.2],
+            diff: "1-2",
           },
         ],
       },
@@ -197,7 +197,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
-            diff: ["3-1", 0.6],
+            diff: "3-1",
           },
           {
             name: "up",
@@ -236,7 +236,7 @@ const data = [
             level: 1,
             depth: 1,
             childCount: 0,
-            diff: ["evaluation-1", 0.5],
+            diff: "evaluation-1",
           },
         ],
       },
@@ -661,22 +661,22 @@ function drawExpandedConnector(
         }
         onCollapseClick(parent);
       });
-      // gNode
-      // .append("rect")
-      // .attr("x", x)
-      // .attr("y", y)
-      // .attr("width", nodeWidth)
-      // .attr("height", nodeHeight)
-      // .attr("fill", fill)
-      // .attr("stroke", stroke)
-      // .attr("stroke-dasharray", dash)
-      // .attr("cursor", "pointer")
-      // .on("click", () => {
-      //   if (node.type === "extend") {
-      //     toggleNodeExpansion(node, allTrees);
-      //     setGroups([...groups]);
-      //   }
-      // });
+    // gNode
+    // .append("rect")
+    // .attr("x", x)
+    // .attr("y", y)
+    // .attr("width", nodeWidth)
+    // .attr("height", nodeHeight)
+    // .attr("fill", fill)
+    // .attr("stroke", stroke)
+    // .attr("stroke-dasharray", dash)
+    // .attr("cursor", "pointer")
+    // .on("click", () => {
+    //   if (node.type === "extend") {
+    //     toggleNodeExpansion(node, allTrees);
+    //     setGroups([...groups]);
+    //   }
+    // });
   });
 }
 
@@ -803,15 +803,12 @@ const MultiBarcodeTree = ({
               fill = "white";
             }
 
-            if (
-              node.diff &&
-              Array.isArray(node.diff) &&
-              node.diff.length === 2
-            ) {
-              const diffCategory = node.diff[0];
-              const diffValue = node.diff[1];
+            if (node.diff) {
+              // const diffCategory = node.diff[0];
+              // const diffValue = node.diff[1];
               // const baseColor = baseColorScale(diffCategory);
               // fill = d3.interpolateLab(baseColor, "black")(diffValue);
+              stroke = "red";
             }
 
             gNode
@@ -830,10 +827,7 @@ const MultiBarcodeTree = ({
                   setGroups([...groups]);
                 }
               });
-            if (
-              rowIndex === 0 &&
-              (node.type === "extend")
-            ) {
+            if (rowIndex === 0 && node.type === "extend") {
               drawTriangle(gNode, x, nodeWidth, nodeHeight, node, allTrees);
             }
             const textElem = gNode
@@ -925,15 +919,12 @@ const MultiBarcodeTree = ({
               fill = "white";
             }
 
-            if (
-              node.diff &&
-              Array.isArray(node.diff) &&
-              node.diff.length === 2
-            ) {
-              const diffCategory = node.diff[0];
-              const diffValue = node.diff[1];
+            if (node.diff) {
+              // const diffCategory = node.diff[0];
+              // const diffValue = node.diff[1];
               // const baseColor = baseColorScale(diffCategory);
               // fill = d3.interpolateLab(baseColor, "black")(diffValue);
+              stroke = "red";
             }
 
             gNode

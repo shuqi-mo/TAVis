@@ -213,7 +213,8 @@ const Comparison = ({
         gap={4}
       />
       <Flex vertical gap="small">
-        <Flex gap="small" style={{paddingTop: 10}}>
+        <Flex gap="small">
+          <Flex gap="small" style={{paddingTop: 15}}>
           <Select
             value={valueKey}
             onChange={(val) => setValueKey(val)}
@@ -230,6 +231,7 @@ const Comparison = ({
           <Button danger onClick={handleDelete}>
             Delete
           </Button>
+          </Flex>
           <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
         </Flex>
 

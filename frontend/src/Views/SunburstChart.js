@@ -56,7 +56,7 @@ const SunburstChart = ({ data, anova, width, height, colorAssignments }) => {
     const singleScale = d3
       .scaleLinear()
       .domain([globalDiffMin, globalDiffMax])
-      .range([0, 30]);
+      .range([0, 40]);
     // 基准节点的 min 半径，即"0 位置"
     const psRef = referenceNode.data.profitStats;
     const zeroVal = 0 - psRef.min;

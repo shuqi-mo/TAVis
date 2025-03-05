@@ -388,7 +388,7 @@ const StockSelection = ({
   return (
     <div>
       {/* 按钮区域 */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+      <div style={{ display: "flex", gap: "10px", marginBottom: "16px", paddingTop: "10px", marginLeft: "20px" }}>
         <Button
           onClick={() => handleExecute()}
           style={{ border: "none", background: "none", cursor: "pointer" }}
@@ -438,7 +438,7 @@ const StockSelection = ({
         <Select
           value={valueKey}
           onChange={(val) => setValueKey(val)}
-          style={{ width: 80 }}
+          style={{ width: 100 }}
         >
           <Option value="totalTrades">totalTrades</Option>
           <Option value="successRate">successRate</Option>
@@ -468,7 +468,7 @@ const StockSelection = ({
           filters={filterCriteria}
           selectedStocks={stockList}
           width={350}
-          height={340}
+          height={330}
         />
       </Spin>
     </div>
