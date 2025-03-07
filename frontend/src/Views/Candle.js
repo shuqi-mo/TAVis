@@ -353,26 +353,26 @@ function Candle({
 
     // —— 绘制主图中的交易信号标记 —— //
 
-    // 买入标记：矩形（位于 K 线最高价上方）
+    // 卖出标记：矩形（位于 K 线最高价上方）
     candlestick
-      .selectAll(".buy-marker-rect")
-      .data(stackData.filter((d) => d.trade === 1))
+      .selectAll(".sell-marker-rect")
+      .data(stackData.filter((d) => d.trade === -1))
       .enter()
       .append("rect")
-      .attr("class", "buy-marker-rect")
+      .attr("class", "sell-marker-rect")
       .attr("width", (d) => candlestickWidth())
       .attr("height", rectHeight)
       .attr("x", (d) => xScale(d.index))
       .attr("y", (d) => yScale(d.max) - markerOffset - rectHeight)
       .attr("fill", "blue");
 
-    // 买入标记：三角形（尖角朝下）
+    // 卖出标记：三角形（尖角朝下）
     candlestick
-      .selectAll(".buy-marker-triangle")
-      .data(stackData.filter((d) => d.trade === 1))
+      .selectAll(".sell-marker-triangle")
+      .data(stackData.filter((d) => d.trade === -1))
       .enter()
       .append("polygon")
-      .attr("class", "buy-marker-triangle")
+      .attr("class", "sell-marker-triangle")
       .attr("points", (d) => {
         const x1 = xScale(d.index) - horizontalPadding;
         const x2 = xScale(d.index) + candlestickWidth() + horizontalPadding;
@@ -383,26 +383,26 @@ function Candle({
       })
       .attr("fill", "blue");
 
-    // 卖出标记：矩形（位于 K 线最低价下方）
+    // 买入标记：矩形（位于 K 线最低价下方）
     candlestick
-      .selectAll(".sell-marker-rect")
-      .data(stackData.filter((d) => d.trade === -1))
+      .selectAll(".buy-marker-rect")
+      .data(stackData.filter((d) => d.trade === 1))
       .enter()
       .append("rect")
-      .attr("class", "sell-marker-rect")
+      .attr("class", "buy-marker-rect")
       .attr("width", (d) => candlestickWidth())
       .attr("height", rectHeight)
       .attr("x", (d) => xScale(d.index))
       .attr("y", (d) => yScale(d.min) + markerOffset)
       .attr("fill", "blue");
 
-    // 卖出标记：三角形（尖角朝上）
+    // 买入标记：三角形（尖角朝上）
     candlestick
-      .selectAll(".sell-marker-triangle")
-      .data(stackData.filter((d) => d.trade === -1))
+      .selectAll(".buy-marker-triangle")
+      .data(stackData.filter((d) => d.trade === 1))
       .enter()
       .append("polygon")
-      .attr("class", "sell-marker-triangle")
+      .attr("class", "buy-marker-triangle")
       .attr("points", (d) => {
         const x1 = xScale(d.index) - horizontalPadding;
         const x2 = xScale(d.index) + candlestickWidth() + horizontalPadding;

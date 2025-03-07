@@ -21,9 +21,9 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
       "totalProfit",
     ];
 
-    // const colorScale = d3
-    //   .scaleOrdinal(d3.schemeCategory10)
-    //   .domain(data.map((d) => d.name));
+    const colorScale = d3
+      .scaleOrdinal(d3.schemeCategory10)
+      .domain(data.map((d) => d.name));
 
     // 5. 为每个维度定义一个 yScale
     //    根据各维度的值域动态生成比例尺
@@ -66,7 +66,7 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
         const colorMatch = colorAssignments.find(
           (item) => item[0] === d.name
         );
-        return colorMatch ? colorMatch[1] : d3.schemeCategory10[0]; // 默认颜色
+        return colorMatch ? colorMatch[1] : colorScale(d.name); // 默认颜色
       })
       .attr("stroke-width", 1)
       .attr("opacity", 0.7);
@@ -140,7 +140,7 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
           const colorMatch = colorAssignments.find(
             (item) => item[0] === name
           );
-          return colorMatch ? colorMatch[1] : d3.schemeCategory10[0]; // 默认颜色
+          return colorMatch ? colorMatch[1] : colorScale(name); // 默认颜色
         });
 
       // 文本
