@@ -209,8 +209,80 @@ def process_stock_all():
 @app.route('/process_code', methods=['POST'])
 def process_code():
     data = request.get_json()
-    indicatorsData, evaluationData = transform_code(eval(data["initialCode"]))
-    return jsonify([indicatorsData, evaluationData])
+    for i in range(len(data["codeList"])):
+        data["codeList"][i] = eval(data["codeList"][i])
+    # 1. 将每个策略转换为指标树和评估树
+    strategies = process_strategies(data["codeList"])
+
+     # 2. 为每个策略的所有节点计算 level、depth 与 childCount
+    for strat in strategies:
+        for tree in strat[0]:  # indicators
+            assign_levels_and_counts(tree, 0)
+        for tree in strat[1]:  # evaluation
+            assign_levels_and_counts(tree, 0)
+    
+    # 3. 选取指标数量最多的策略作为基准策略
+    baseline_idx = max(range(len(strategies)), key=lambda i: len(strategies[i][0]))
+    baseline_strategy = strategies[baseline_idx]
+    
+    # 4. 为基准策略的指标树和评估树分配 index
+    assign_index_baseline(baseline_strategy[0])
+    assign_index_evaluation(baseline_strategy[1])
+    
+    # 构造基准映射（归一化结构作为 key）
+    baseline_ind_map = {}
+    for node in baseline_strategy[0]:
+        baseline_ind_map[normalized_structure(node)] = node
+    baseline_eval_map = {}
+    for node in baseline_strategy[1]:
+        baseline_eval_map[normalized_structure(node)] = node
+    
+    # 5. 对非基准策略，根据归一化结构比较赋予相同 index，并比较差异设置 diff
+    for i, strat in enumerate(strategies):
+        if i == baseline_idx:
+            continue
+        # 对指标部分
+        for node in strat[0]:
+            norm = normalized_structure(node)
+            if norm in baseline_ind_map:
+                compare_and_assign_symmetric(baseline_ind_map[norm], node, strategies)
+            else:
+                # 未匹配到则按本策略顺序赋 index
+                pass
+        # 对评估部分
+        for node in strat[1]:
+            norm = normalized_structure(node)
+            if norm in baseline_eval_map:
+                compare_and_assign_symmetric(baseline_eval_map[norm], node, strategies)
+            else:
+                pass
+        # 若顶级节点未设置 index，则按本策略顺序赋 index
+        for j, node in enumerate(strat[0], start=1):
+            if "index" not in node:
+                node["index"] = str(j)
+                assign_index_rec(node, node["index"])
+        for j, node in enumerate(strat[1], start=1):
+            if "index" not in node:
+                node["index"] = str(j)
+                assign_index_rec(node, node["index"])
+    
+    # 6. 更新 collapse：若直接子节点中存在 diff，则父节点 collapse = false，否则为 true
+    for strat in strategies:
+        for node in strat[0]:
+            update_collapse(node)
+        for node in strat[1]:
+            update_collapse(node)
+    
+    # 7. 对指标树中同级 extend 节点去重，生成 sharedChildrenMap
+    sharedChildrenMap = {}
+    counter = [1]  # 用于生成唯一 sharedKey
+    for strat in strategies:
+        for node in strat[0]:
+            deduplicate_children(node, sharedChildrenMap, counter)
+    
+    # 最终输出数据：每个策略均输出 [indicatorsData, evaluationData]
+    output_data = strategies
+    return jsonify([output_data, sharedChildrenMap])
 
 @app.route('/process_strategy', methods=['POST'])
 def process_strategy():

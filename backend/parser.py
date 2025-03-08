@@ -1,8 +1,5 @@
 import ast
 import re
-import random
-
-random.seed(42)
 
 # ─────────────────────────────
 # 利用 AST 提取表达式中的变量名称
@@ -84,8 +81,7 @@ def type_priority(t):
         "function": 1,
         "timeseries": 2,
         "extend": 3,
-        "link": 4,
-        "context": 5
+        "context": 4
     }
     return mapping.get(t, 99)
 
@@ -114,39 +110,6 @@ def process_indicator(indicator):
     node["children"] = children
     return node
 
-
-# ─────────────────────────────
-# 为去重比较定义归一化函数
-# 对于 extend 类型的节点，忽略自身的 name，只考虑 children 结构
-def normalized_structure(node):
-    t = node["type"]
-    if t == "extend":
-        # 对 extend 节点，只取 children 结构（若没有 children，则视为空元组）
-        return (t, tuple(normalized_structure(child) for child in node.get("children", [])))
-    else:
-        # 对于其它节点，比较 type 和 name
-        return (t, node.get("name"))
-
-
-# 对同级节点中的 extend 类型节点进行去重：
-# 如果某个 extend 节点的 children 结构与之前的某个 extend 节点相同，
-# 则用一个 link 节点替换其 children，引用第一次出现的节点的 name。
-def deduplicate_indicator_children(children):
-    seen = {}
-    for child in children:
-        if child["type"] == "extend" and "children" in child:
-            # 归一化子树结构（仅比较 children 部分）
-            key = tuple(normalized_structure(c) for c in child["children"])
-            if key in seen:
-                # 找到了相同结构的子树，将当前节点的 children 替换为 link 节点
-                child["children"] = [{"name": seen[key], "type": "link"}]
-            else:
-                seen[key] = child["name"]
-        # 递归处理每个子节点的 children
-        if "children" in child:
-            deduplicate_indicator_children(child["children"])
-
-
 # ─────────────────────────────
 # 处理 evaluation 部分，输出为数组形式
 def process_evaluation(evaluation):
@@ -173,17 +136,143 @@ def process_evaluation(evaluation):
             eval_list.append(node)
     return eval_list
 
+# ─────────────────────────────
+# 将多个策略（每个策略包含 indicators 与 evaluation）转换为树结构
+def process_strategies(codes):
+    strategies = []
+    for code in codes:
+        indicators_tree = []
+        for indicator in code.get("indicators", []):
+            node = process_indicator(indicator)
+            indicators_tree.append(node)
+        evaluation_tree = process_evaluation(code.get("evaluation", {}))
+        strategies.append([indicators_tree, evaluation_tree])
+    return strategies
 
 # ─────────────────────────────
-# 主转换函数，返回 indicatorsData 与 evaluationData（均为数组形式）
-def transform_code(code):
-    # 处理 indicators 部分
-    indicators_list = []
-    for indicator in code.get("indicators", []):
-        node = process_indicator(indicator)
-        # 在每个指标的 children 中进行去重
-        deduplicate_indicator_children(node["children"])
-        indicators_list.append(node)
-    # 处理 evaluation 部分
-    evaluation_list = process_evaluation(code.get("evaluation", {}))
-    return indicators_list, evaluation_list
+# 递归计算并添加 level, depth 与 childCount
+def assign_levels_and_counts(node, level=0):
+    node["level"] = level
+    if "children" in node and node["children"]:
+        for child in node["children"]:
+            assign_levels_and_counts(child, level + 1)
+        node["depth"] = 1 + max(child["depth"] for child in node["children"])
+        node["childCount"] = sum(1 + child.get("childCount", 0) for child in node["children"])
+    else:
+        node["depth"] = 1
+        node["childCount"] = 0
+
+# ─────────────────────────────
+# 为基准策略递归分配 index（顶级指标 index 为 "1","2",...；子节点 index 为 "父index-序号"）
+def assign_index_rec(node, prefix):
+    if "children" in node and node["children"]:
+        for i, child in enumerate(node["children"], start=1):
+            child["index"] = prefix + "-" + str(i)
+            assign_index_rec(child, child["index"])
+
+def assign_index_baseline(indicators):
+    for i, node in enumerate(indicators, start=1):
+        node["index"] = str(i)
+        assign_index_rec(node, node["index"])
+
+def assign_index_evaluation(evaluations):
+    for i, node in enumerate(evaluations, start=1):
+        node["index"] = str(i)
+        assign_index_rec(node, node["index"])
+
+# ─────────────────────────────
+# 归一化结构：对于 extend 节点，仅比较 children 结构；其它节点比较 type 与 name
+def normalized_structure(node):
+    t = node["type"]
+    if t == "extend":
+        children = node.get("children")
+        if children:
+            return (t, tuple(normalized_structure(child) for child in children))
+        else:
+            return (t, ())
+    else:
+        return (t, None)
+
+# ─────────────────────────────
+# 判断两个节点结构是否一致（对于 extend 节点，忽略自身 name，只比较 children 结构）
+def same_structure(baseline, node):
+    if baseline["type"] != node["type"]:
+        return False
+    if baseline["type"] == "extend":
+        b_children = baseline.get("children", [])
+        n_children = node.get("children", [])
+        if len(b_children) != len(n_children):
+            return False
+        return all(same_structure(bc, nc) for bc, nc in zip(b_children, n_children))
+    else:
+        return True
+
+# ─────────────────────────────
+# 递归比较节点：若结构一致，则赋予基准节点的 index；对于非 extend 节点，若名称不同则标记 diff
+def compare_and_assign_symmetric(baseline, node, strategies):
+    # 同步赋予非基准节点基准的 index
+    node["index"] = baseline.get("index")
+    
+    # 对于叶子节点或 context 节点
+    if baseline["type"] != "extend":
+        if baseline.get("name") != node.get("name"):
+            # 基准节点添加 diff 标记
+            baseline["diff"] = node.get("index")
+            node["diff"] = baseline.get("index")
+            
+            # 遍历其他策略，同样在相同位置的节点添加 diff
+            for strat in strategies:
+                for strat_node in strat[0]:  # 遍历所有指标树
+                    if normalized_structure(strat_node) == normalized_structure(baseline):
+                        strat_node["diff"] = baseline["index"]
+                for strat_node in strat[1]:  # 遍历所有评估树
+                    if normalized_structure(strat_node) == normalized_structure(baseline):
+                        strat_node["diff"] = baseline["index"]
+
+    # 递归比较 children
+    b_children = baseline.get("children", [])
+    n_children = node.get("children", [])
+    if b_children and n_children and len(b_children) == len(n_children):
+        for bc, nc in zip(b_children, n_children):
+            compare_and_assign_symmetric(bc, nc, strategies)
+
+# ─────────────────────────────
+# 更新 collapse 属性：若直接子节点中有 diff，则 collapse 为 false，否则为 true
+def update_collapse(node):
+    if "children" in node and node["children"]:
+        node["collapse"] = False if any("diff" in child for child in node["children"]) else True
+        for child in node["children"]:
+            update_collapse(child)
+
+# ─────────────────────────────
+# 对同级 extend 节点进行去重：若 children 结构相同则生成 sharedKey，并将该子树存入全局 sharedChildrenMap
+def deduplicate_children(node, shared_map, counter):
+    if "children" in node and node["children"]:
+        groups = {}
+        for child in node["children"]:
+            if child["type"] == "extend" and "children" in child and child.get("children"):
+                key = tuple(normalized_structure(c) for c in child["children"])
+                groups.setdefault(key, []).append(child)
+        for group in groups.values():
+            if len(group) > 1:
+                # 若组内节点名称依次为 "up" 和 "down"，则使用 "upDownChildren"
+                names = [child["name"] for child in group]
+                if names == ["up", "down"]:
+                    shared_key = "upDownChildren"
+                else:
+                    shared_key = "sharedKey" + str(counter[0])
+                    counter[0] += 1
+                # 将组内节点 children 提取出来（以第一个为准）
+                shared_children = group[0].pop("children", [])
+                for child in group:
+                    child["sharedKey"] = shared_key
+                    if "children" in child:
+                        child.pop("children")
+                if shared_key not in shared_map:
+                    # 调整 shared children 的 level（设为组内节点 level+1）
+                    for sc in shared_children:
+                        sc["level"] = group[0]["level"] + 1
+                        assign_levels_and_counts(sc, sc["level"])
+                    shared_map[shared_key] = shared_children
+        for child in node.get("children", []):
+            deduplicate_children(child, shared_map, counter)

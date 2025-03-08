@@ -50,6 +50,8 @@ const Comparison = ({
   const [selectedNode, setSelectedNode] = useState(null);
   const [valueKey, setValueKey] = useState("totalTrades");
   const [groups, setGroups] = useState([]);
+  const [codeList, setCodeList] = useState([initialCode]);
+  const [sharedChildrenMap, setShareChildrenMap] = useState(null);
 
   useEffect(() => {
     if (!initialCode) return;
@@ -92,19 +94,23 @@ const Comparison = ({
       } catch (error) {
         console.error("Error fetching initial node data:", error);
       }
-      // 调用 process_code 接口，传入 initialCode，将返回的数据追加到 groups 中
-      try {
-        const codeResponse = await axios.post(`${API_URL}/process_code`, {
-          initialCode,
-        });
-        setGroups((prev) => [...prev, codeResponse.data]);
-        // console.log(codeResponse.data);
-      } catch (error) {
-        console.error("Error fetching process_code for initial node:", error);
-      }
     };
     fetchInitialData();
   }, [stockList]);
+
+  useEffect(()=>{
+    // console.log(codeList);
+    axios
+      .post(`${API_URL}/process_code`, { codeList })
+      .then((response) => {
+        // console.log(response.data);
+        setGroups(response.data[0]);
+        setShareChildrenMap(response.data[1]);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  },[codeList]);
 
   const { minVal, maxVal } = useMemo(() => {
     // 1) 将树拍平(或用 d3.hierarchy 也行)
@@ -174,14 +180,7 @@ const Comparison = ({
       setTreeData(newTree);
       setSelectedNode(null);
 
-      try {
-        const codeResponse = await axios.post(`${API_URL}/process_code`, {
-          initialCode: newNode.code,
-        });
-        setGroups((prev) => [...prev, codeResponse.data]);
-      } catch (error) {
-        console.error("Error fetching process_code for new node:", error);
-      }
+      setCodeList((prevCodeList) => [...prevCodeList, newNode.code]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -205,7 +204,8 @@ const Comparison = ({
   return (
     <Flex gap="small">
       <MultiBarcodeTree
-        // data={groups}
+        data={groups}
+        sharedChildrenMap={sharedChildrenMap}
         // data={groupsData}
         width={780}
         height={400}
