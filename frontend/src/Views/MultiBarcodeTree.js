@@ -1,304 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 
-// ============ 数据部分 ==============
-// const data = [
-//   [
-//     [
-//       {
-//         name: "MACD",
-//         type: "extend",
-//         index: "1",
-//         level: 0,
-//         collapse: false,
-//         depth: 2, // 根节点深度 2
-//         childCount: 2, // 有两个直接子节点
-//         children: [
-//           {
-//             name: "EMA(close,12)",
-//             type: "function",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//             diff: "1-1",
-//           },
-//           {
-//             name: "EMA(close,26)",
-//             type: "function",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//             diff: "1-2",
-//           },
-//         ],
-//       },
-//       {
-//         name: "rsi",
-//         type: "extend",
-//         index: "2",
-//         level: 0,
-//         collapse: true,
-//         depth: 2,
-//         childCount: 3,
-//         children: [
-//           {
-//             name: "rsi(close,14)",
-//             type: "function",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//           },
-//           {
-//             name: "70",
-//             type: "timeseries",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//           },
-//           {
-//             name: "30",
-//             type: "timeseries",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//           },
-//         ],
-//       },
-//       {
-//         name: "boll",
-//         type: "extend",
-//         index: "3",
-//         level: 0,
-//         collapse: false,
-//         depth: 3,
-//         childCount: 9,
-//         children: [
-//           {
-//             name: "close",
-//             type: "timeseries",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//             diff: "3-1",
-//           },
-//           {
-//             name: "up",
-//             type: "extend",
-//             index: "3-1",
-//             level: 1,
-//             collapse: true,
-//             depth: 2,
-//             sharedKey: "upDownChildren",
-//           },
-//           {
-//             name: "down",
-//             type: "extend",
-//             index: "3-2",
-//             level: 1,
-//             collapse: true,
-//             depth: 2,
-//             sharedKey: "upDownChildren",
-//           },
-//         ],
-//       },
-//     ],
-//     [
-//       {
-//         name: "period",
-//         type: "extend",
-//         index: "1",
-//         level: 0,
-//         collapse: false,
-//         depth: 2,
-//         childCount: 1,
-//         children: [
-//           {
-//             name: "2023-07-01 2024-07-01",
-//             type: "context",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//             diff: "evaluation-1",
-//           },
-//         ],
-//       },
-//       {
-//         name: "stop",
-//         type: "extend",
-//         index: "2",
-//         level: 0,
-//         collapse: true,
-//         depth: 2,
-//         childCount: 1,
-//         children: [
-//           {
-//             name: "ahead",
-//             type: "extend",
-//             index: "2-1",
-//             level: 1,
-//             collapse: true,
-//             depth: 2,
-//             childCount: 1,
-//             children: [
-//               {
-//                 name: "-1",
-//                 type: "context",
-//                 level: 2,
-//                 depth: 1,
-//                 childCount: 0,
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//     ],
-//   ],
-//   [
-//     [
-//       {
-//         name: "MACD",
-//         type: "extend",
-//         index: "1",
-//         level: 0,
-//         collapse: false,
-//         depth: 2,
-//         childCount: 2,
-//         children: [
-//           {
-//             name: "EMA(close,20)",
-//             type: "function",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//             diff: "1-1",
-//           },
-//           {
-//             name: "EMA(close,30)",
-//             type: "function",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//             diff: "1-2",
-//           },
-//         ],
-//       },
-//       {
-//         name: "boll",
-//         type: "extend",
-//         index: "3",
-//         level: 0,
-//         collapse: false,
-//         depth: 3,
-//         childCount: 9,
-//         children: [
-//           {
-//             name: "open",
-//             type: "timeseries",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//             diff: "3-1",
-//           },
-//           {
-//             name: "up",
-//             type: "extend",
-//             index: "3-1",
-//             level: 1,
-//             collapse: true,
-//             depth: 2,
-//             sharedKey: "upDownChildren",
-//           },
-//           {
-//             name: "down",
-//             type: "extend",
-//             index: "3-2",
-//             level: 1,
-//             collapse: true,
-//             depth: 2,
-//             sharedKey: "upDownChildren",
-//           },
-//         ],
-//       },
-//     ],
-//     [
-//       {
-//         name: "period",
-//         type: "extend",
-//         index: "1",
-//         level: 0,
-//         collapse: false,
-//         depth: 2,
-//         childCount: 1,
-//         children: [
-//           {
-//             name: "2022-07-01 2024-07-01",
-//             type: "context",
-//             level: 1,
-//             depth: 1,
-//             childCount: 0,
-//             diff: "evaluation-1",
-//           },
-//         ],
-//       },
-//       {
-//         name: "stop",
-//         type: "extend",
-//         index: "2",
-//         level: 0,
-//         collapse: true,
-//         depth: 2,
-//         childCount: 1,
-//         children: [
-//           {
-//             name: "ahead",
-//             type: "extend",
-//             index: "2-1",
-//             level: 1,
-//             collapse: true,
-//             depth: 2,
-//             childCount: 1,
-//             children: [
-//               {
-//                 name: "-1",
-//                 type: "context",
-//                 level: 2,
-//                 depth: 1,
-//                 childCount: 0,
-//               },
-//             ],
-//           },
-//         ],
-//       },
-//     ],
-//   ],
-// ];
-
-// const sharedChildrenMap = {
-//   upDownChildren: [
-//     {
-//       name: "EMA(close,20)",
-//       type: "function",
-//       level: 2,
-//       depth: 1,
-//       childCount: 0,
-//     },
-//     {
-//       name: "movingstd(mid,20)",
-//       type: "function",
-//       level: 2,
-//       depth: 1,
-//       childCount: 0,
-//     },
-//     {
-//       name: "2",
-//       type: "timeseries",
-//       level: 2,
-//       depth: 1,
-//       childCount: 0,
-//     },
-//   ],
-// };
-
 // ============ 辅助函数 ==============
 
 // 仅设置 level、collapse 状态和父节点，不计算 depth 和 childCount（这些值直接写在 data 中）
@@ -724,8 +426,9 @@ const MultiBarcodeTree = ({
     const availableWidth = width - margin - rightMargin;
     const availableHeight = height - margin * 2;
     const sectionGap = 20;
-    const indicatorsSectionHeight = (availableHeight - sectionGap) / 2;
-    const evaluationSectionHeight = (availableHeight - sectionGap) / 2;
+    const indicatorsSectionWidth = (availableWidth - sectionGap) * 0.8;
+    const evaluationSectionWidth = (availableWidth - sectionGap) * 0.2;
+    const rowHeight = availableHeight / groups.length;
     let indicatorNames = [];
     groups.forEach((group) => {
       group.indicatorsData.forEach((tree) => {
@@ -734,12 +437,11 @@ const MultiBarcodeTree = ({
         }
       });
     });
-    const numIndicatorRows = groups.length;
     const numIndicatorCols = indicatorNames.length;
     const colGap = 5;
     const cellWidthIndicators =
-      (availableWidth - (numIndicatorCols - 1) * colGap) / numIndicatorCols;
-    const cellHeightIndicators = indicatorsSectionHeight / numIndicatorRows;
+      (indicatorsSectionWidth - (numIndicatorCols - 1) * colGap) / numIndicatorCols;
+    const cellHeightIndicators = rowHeight;
     let evaluationNames = [];
     groups.forEach((group) => {
       group.evaluationData.forEach((tree) => {
@@ -748,17 +450,17 @@ const MultiBarcodeTree = ({
         }
       });
     });
-    const numEvaluationRows = groups.length;
     const numEvaluationCols = evaluationNames.length;
     const cellWidthEvaluation =
-      (availableWidth - (numEvaluationCols - 1) * colGap) / numEvaluationCols;
-    const cellHeightEvaluation = evaluationSectionHeight / numEvaluationRows;
+      (evaluationSectionWidth - (numEvaluationCols - 1) * colGap) /
+      numEvaluationCols;
+    const cellHeightEvaluation = rowHeight;
 
     // ======= 绘制指标部分 =======
     groups.forEach((group, rowIndex) => {
       indicatorNames.forEach((indicatorName, colIndex) => {
         const x0 = margin + colIndex * (cellWidthIndicators + colGap);
-        const y0 = margin + rowIndex * cellHeightIndicators;
+        const y0 = margin + rowIndex * rowHeight;
         const cellGroup = svg
           .append("g")
           .attr("transform", `translate(${x0}, ${y0})`);
@@ -864,12 +566,12 @@ const MultiBarcodeTree = ({
     // ======= 绘制评价部分 =======
     groups.forEach((group, rowIndex) => {
       evaluationNames.forEach((evalName, colIndex) => {
-        const x0 = margin + colIndex * (cellWidthEvaluation + colGap);
-        const y0 =
+        const x0 =
           margin +
-          indicatorsSectionHeight +
+          indicatorsSectionWidth +
           sectionGap +
-          rowIndex * cellHeightEvaluation;
+          colIndex * (cellWidthEvaluation + colGap);
+        const y0 = margin + rowIndex * cellHeightEvaluation;
         const cellGroup = svg
           .append("g")
           .attr("transform", `translate(${x0}, ${y0})`);

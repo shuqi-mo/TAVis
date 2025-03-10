@@ -106,6 +106,8 @@ def process_stock():
         price, trade = updatePeriod(data_df, trade_origin, data["startDate"], data["endDate"])
         res = calBacktest(price, trade, data["getAheadStopTime"])
         totalTrade = len(res[0])
+        if totalTrade == 0:
+            continue
         successRate = sum(res[0]) / totalTrade
         totalProfit = res[1][-1]
         averProfit = sum(res[2]) / len(res[2])
@@ -131,6 +133,10 @@ def process_stock():
             price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
             res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
             tradeCount += len(res_singlestock[0])
+            if len(res_singlestock[0]) == 0:
+                if ring_indicator_stock.get(data["indicatorName"][i]) is not None:
+                    del ring_indicator_stock[data["indicatorName"][i]]
+                continue
             successCount += sum(res_singlestock[0])
             profitCount += res_singlestock[1][-1]
             for r in res_singlestock[2]:
@@ -147,6 +153,7 @@ def process_stock():
     
     ring_indicator_stock_format = transform_data_ring(ring_indicator_stock)
     ring_stock_indicator_format = transform_data_ring(ring_stock_indicator)
+    print(ring_indicator_stock)
     anova_analysis_indicator_stock = anova_analysis(ring_indicator_stock)
     anova_analysis_stock_indicator = anova_analysis(ring_stock_indicator)
 
@@ -302,6 +309,8 @@ def process_strategy():
             price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
             res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
             tradeCount += len(res_singlestock[0])
+            if len(res_singlestock[0]) == 0:
+                continue
             successCount += sum(res_singlestock[0])
             profitCount += res_singlestock[1][-1]
             for r in res_singlestock[2]:

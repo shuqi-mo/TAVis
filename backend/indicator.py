@@ -81,12 +81,14 @@ def cross(short, long):
         long = np.full_like(short, long)
     
     n = max(len(short), len(long))  # 确保n是较长数组的长度
-    trade = np.zeros(n)
+    trade = np.zeros(n, dtype=int)
     for i in range(n-1):
         if short[i] == 0 or long[i] == 0 or short[i+1] == 0 or long[i+1] == 0:
             continue
         if short[i] < long[i] and short[i+1] > long[i+1]:
             trade[i+1] = 1
+    for i in range(len(trade)):
+        trade[i] = int(trade[i])
     return trade
 
 def SMA(price, days):
