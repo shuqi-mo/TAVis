@@ -80,7 +80,6 @@ def process_stock():
     float_trade = []
     performance = []
     boxplotData = []
-    indiatorPerformance = []
 
     # 多个股票处理结果
     res_stock = []
@@ -94,7 +93,7 @@ def process_stock():
     for item in data["stockList"]:
         ring_stock_indicator[item] = []
 
-    # 单个股票数据处理
+    # 单个股票数据处理，k线图交易信号
     for i in range(len(data["indicatorName"])):
         name = data["indicatorName"][i]
         long = execute_expr(data["exprLongList"][i], data_df)
@@ -104,18 +103,37 @@ def process_stock():
         trade_origin = process_trades(long, short)
         float_trade.append([float(x) for x in trade_origin])
         price, trade = updatePeriod(data_df, trade_origin, data["startDate"], data["endDate"])
-        res = calBacktest(price, trade, data["getAheadStopTime"])
-        totalTrade = len(res[0])
-        if totalTrade == 0:
-            continue
-        successRate = sum(res[0]) / totalTrade
-        totalProfit = res[1][-1]
-        averProfit = sum(res[2]) / len(res[2])
-        performance.append([name, totalTrade, successRate, averProfit, totalProfit])
-        boxplotData.append([name, res[3]])
-        indiatorPerformance.append([name, res[4]])
     
-    # 多个股票数据处理
+    # 多个股票数据，指标维度
+    for i in range(len(data["indicatorName"])):
+        name = data["indicatorName"][i]
+        tradeCount = 0
+        successCount = 0
+        profitCount = 0
+        avgReturnList = []
+        curve = []
+        for item in data["stockList"]:
+            stock = pd.read_csv(stock_file_path + item + ".csv")
+            long = execute_expr(data["exprLongList"][i], stock)
+            short = execute_expr(data["exprShortList"][i], stock)
+            long = CustomList(long)
+            short = CustomList(short)
+            trade_origin = process_trades(long, short)
+            price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
+            res = calBacktest(price, trade, data["getAheadStopTime"])
+            tradeCount += len(res[0])
+            if len(res[0]) == 0:
+                continue
+            successCount += sum(res[0])
+            profitCount += res[1][-1]
+            for r in res[2]:
+                avgReturnList.append(r)
+            for r in res[3]:
+                curve.append(r)
+        performance.append([name, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
+        boxplotData.append([name, curve])
+    
+    # 多个股票数据处理，股票维度
     for item in data["stockList"]:
         stock = pd.read_csv(stock_file_path + item + ".csv")
         tradeCount = 0
@@ -161,7 +179,6 @@ def process_stock():
     ring_stock_indicator_format = transform_data_ring(ring_stock_indicator)
     anova_analysis_indicator_stock = anova_analysis(ring_indicator_stock)
     anova_analysis_stock_indicator = anova_analysis(ring_stock_indicator)
-    print(anova_analysis_indicator_stock)
     return jsonify([float_trade, performance, boxplotData, res_stock, res_curve, ring_indicator_stock_format, ring_stock_indicator_format, anova_analysis_indicator_stock, anova_analysis_stock_indicator])
 
 @app.route('/process_exampler', methods=['POST'])

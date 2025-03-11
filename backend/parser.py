@@ -389,25 +389,65 @@ def generate_basic_config(variable_name, value):
 def get_used_variables(indicator):
     """
     根据指标的 long 与 short 表达式提取出用到的变量名称，
-    仅保留在原始指标定义（除 name, long, short 之外）的变量。
+    并递归替换那些可展开的变量。
+    
+    逻辑说明：
+      1. 从 long 与 short 表达式中提取初始变量（排除 "cross"）。
+      2. 递归查找：如果某个变量在指标中有定义且其值是字符串，
+         则解析该字符串中出现的标识符，如果在指标中有对应定义，则加入依赖集合。
+      3. 对于集合中的每个变量，如果其定义是一个纯算术表达式（只包含数字、变量和 + - * /，
+         且所有参与运算的标识符均在指标中有定义），则认为它是派生的，可被替换，
+         最终过滤掉这类变量，只保留基本的变量定义。
     """
-    tokens = set()
+    # 1. 从 long 和 short 中提取初始变量（排除 cross）
+    initial_tokens = set()
     for key in ["long", "short"]:
         expr = indicator.get(key, "")
         found = re.findall(r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', expr)
-        # 排除函数 cross
         for token in found:
             if token != "cross":
-                tokens.add(token)
-    raw_keys = set(indicator.keys()) - {"name", "long", "short"}
-    used = {}
-    for token in tokens:
-        if token in raw_keys:
-            used[token] = indicator[token]
+                initial_tokens.add(token)
+
+    # 2. 递归查找依赖的变量
+    all_tokens = set(initial_tokens)
+    changed = True
+    while changed:
+        changed = False
+        for token in list(all_tokens):
+            if token in indicator:
+                value = indicator[token]
+                if isinstance(value, str):
+                    found = re.findall(r'\b[a-zA-Z_][a-zA-Z0-9_]*\b', value)
+                    for t in found:
+                        if t in indicator and t not in all_tokens:
+                            all_tokens.add(t)
+                            changed = True
+
+    # 3. 定义一个判断纯算术表达式的辅助函数
+    def is_arithmetic_expression(expr):
+        # 去除空格后判断是否只由数字、变量和 + - * / 组成
+        expr_no_space = expr.replace(" ", "")
+        # 匹配形如 token (运算符 token)+ 的表达式（不含括号、逗号等）
+        pattern = r'^(?:\d+(?:\.\d+)?|[A-Za-z_][A-Za-z0-9_]*)(?:[\+\-\*\/](?:\d+(?:\.\d+)?|[A-Za-z_][A-Za-z0-9_]*))+$'
+        return re.match(pattern, expr_no_space) is not None
+
+    # 4. 过滤那些完全为算术表达式的变量（认为它们是派生的，可替换掉）
+    final_tokens = set()
+    for token in all_tokens:
+        if token in indicator:
+            value = indicator[token]
+            if isinstance(value, str) and is_arithmetic_expression(value):
+                # 如果表达式中的所有标识符（非数字部分）都在 indicator 中有定义，则认为它是派生的
+                parts = re.findall(r'\b[A-Za-z_][A-Za-z0-9_]*\b', value)
+                if all(part in indicator for part in parts if not part.isdigit()):
+                    continue  # 过滤掉派生的变量
+            final_tokens.add(token)
         else:
-            # 若 long/short 中出现未定义的变量，直接使用该 token
-            used[token] = token
-    return used
+            final_tokens.add(token)
+
+    # 5. 结果中只保留在指标中已有定义的变量
+    result = {token: indicator[token] for token in final_tokens if token in indicator}
+    return result
 
 def generate_single_indicator_config(indicator):
     """

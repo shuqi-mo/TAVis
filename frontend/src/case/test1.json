@@ -25,39 +25,6 @@
       "down": "mid - multiplier * band",
       "long": "cross(price,down)",
       "short": "cross(up,price)"
-    },
-    {
-      "name": "rsi&MACD",
-      "price": "rsi(close,14)",
-      "up": 70,
-      "down": 30,
-      "shortterm": "EMA(close,12)",
-      "longterm": "EMA(close,26)",
-      "long": "cross(price,down) & (shortterm > longterm)",
-      "short": "cross(up,price) & (longterm > shortterm)"
-    },
-    {
-      "name": "MACD&rsi",
-      "price": "rsi(close,14)",
-      "up": 70,
-      "down": 30,
-      "shortterm": "EMA(close,12)",
-      "longterm": "EMA(close,26)",
-      "long": "cross(shortterm,longterm) & (price < up)",
-      "short": "cross(longterm,shortterm) & (price > down)"
-    },
-    {
-      "name": "MACD&boll",
-      "price": "close",
-      "mid": "EMA(price,20)",
-      "band": "movingstd(price,20)",
-      "multiplier": 2,
-      "up": "mid + multiplier * band",
-      "down": "mid - multiplier * band",
-      "shortterm": "EMA(close,12)",
-      "longterm": "EMA(close,26)",
-      "long": "cross(shortterm,longterm) & (price < up)",
-      "short": "cross(longterm,shortterm) & (price > down)"
     }
   ],
   "evaluation": {
