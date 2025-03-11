@@ -146,6 +146,7 @@ def anova_analysis(data):
         stock_data = [x[1] for x in value]
         # 执行ANOVA
         f_stat, p_value = stats.f_oneway(*stock_data)
-        res.append([key, round(p_value,2)])
+        if not np.isnan(p_value):
+            res.append([key, round(p_value,2)])
 
     return res

@@ -474,7 +474,6 @@ function App() {
         getTakeProfitThreshold,
         getAheadStopTime,
       });
-      // console.log(response.data);
       setTradeByIndicators(response.data[0]);
       var t = [];
       for (let i = 0; i < response.data[0][0].length; i++) {

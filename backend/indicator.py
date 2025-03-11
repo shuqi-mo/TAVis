@@ -6,8 +6,30 @@ class CustomList:
         self.data = data
 
     def __lt__(self, other):
-        # 返回比较结果的布尔列表
-        return CustomList([1 if a < b else 0 for a, b in zip(self.data, other.data)])
+        # 当 other 是 CustomList 实例时，逐元素比较
+        if isinstance(other, CustomList) and isinstance(self, CustomList):
+            return CustomList([1 if a < b else 0 for a, b in zip(self.data, other.data)])
+        # 当 other 是标量（比如 int 或 float）时，使用新的比较规则：
+        # 如果 a <= other 返回 0，否则返回 1
+        elif isinstance(other, (int, float)):
+            return CustomList([0 if a < other else 1 for a in self.data])
+        elif isinstance(self, (int, float)):
+            return CustomList([0 if self < a else 1 for a in other.data])
+        else:
+            raise TypeError(f"Unsupported type for comparison: {type(other)}")
+    
+    def __gt__(self, other):
+       # 当 other 是 CustomList 实例时，逐元素比较
+        if isinstance(other, CustomList) and isinstance(self, CustomList):
+            return CustomList([1 if a > b else 0 for a, b in zip(self.data, other.data)])
+        # 当 other 是标量（比如 int 或 float）时，使用新的比较规则：
+        # 如果 a <= other 返回 0，否则返回 1
+        elif isinstance(other, (int, float)):
+            return CustomList([0 if a > other else 1 for a in self.data])
+        elif isinstance(self, (int, float)):
+            return CustomList([0 if self > a else 1 for a in other.data])
+        else:
+            raise TypeError(f"Unsupported type for comparison: {type(other)}")
 
     def __and__(self, other):
         # 对两个 CustomList 实例的 data 属性进行按位与运算

@@ -58,6 +58,20 @@
       "longterm": "EMA(close,26)",
       "long": "cross(price,down) & (shortterm > longterm)",
       "short": "cross(up,price) & (longterm > shortterm)"
+    },
+    {
+      "name": "rsi&boll",
+      "price": "rsi(close,14)",
+      "up": 70,
+      "down": 30,
+      "price_boll": "close",
+      "mid": "EMA(price,20)",
+      "band": "movingstd(price,20)",
+      "multiplier": 2,
+      "up_boll": "mid + multiplier * band",
+      "down_boll": "mid - multiplier * band",
+      "long": "cross(price,down) & (price_boll < down_boll)",
+      "short": "cross(up,price) & (price_boll > up_boll)"
     }
   ],
   "restrictions": [

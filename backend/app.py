@@ -134,8 +134,6 @@ def process_stock():
             res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
             tradeCount += len(res_singlestock[0])
             if len(res_singlestock[0]) == 0:
-                if ring_indicator_stock.get(data["indicatorName"][i]) is not None:
-                    del ring_indicator_stock[data["indicatorName"][i]]
                 continue
             successCount += sum(res_singlestock[0])
             profitCount += res_singlestock[1][-1]
@@ -148,15 +146,22 @@ def process_stock():
                 current_performance.append(r[-1])
             ring_indicator_stock[data["indicatorName"][i]].append([item, current_performance])
             ring_stock_indicator[item].append([data["indicatorName"][i], current_performance])
+        if tradeCount == 0:
+            res_stock.append([item, 0, 0, 0, 0])
+            res_curve.append([item, curve])
+            break
         res_stock.append([item, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
         res_curve.append([item, curve])
     
+    keys_to_remove = [key for key, value in ring_indicator_stock.items() if value is None or len(value) <= 1]
+    for key in keys_to_remove:
+        del ring_indicator_stock[key]
+    
     ring_indicator_stock_format = transform_data_ring(ring_indicator_stock)
     ring_stock_indicator_format = transform_data_ring(ring_stock_indicator)
-    print(ring_indicator_stock)
     anova_analysis_indicator_stock = anova_analysis(ring_indicator_stock)
     anova_analysis_stock_indicator = anova_analysis(ring_stock_indicator)
-
+    print(anova_analysis_indicator_stock)
     return jsonify([float_trade, performance, boxplotData, res_stock, res_curve, ring_indicator_stock_format, ring_stock_indicator_format, anova_analysis_indicator_stock, anova_analysis_stock_indicator])
 
 @app.route('/process_exampler', methods=['POST'])
@@ -315,6 +320,8 @@ def process_strategy():
             profitCount += res_singlestock[1][-1]
             for r in res_singlestock[2]:
                 avgReturnList.append(r)
+    if tradeCount == 0:
+        return jsonify([0, 0, 0, 0])
     return jsonify([tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
 
 if __name__ == '__main__':
