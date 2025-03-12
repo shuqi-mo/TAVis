@@ -347,7 +347,7 @@ function App() {
 
   // 创建 Evaluation 实例
   const evaluation = new Evaluation(evaluationData.period, evaluationData.stop);
-
+  
   const updateCode = (newValue) => {
     setCode(newValue);
   };

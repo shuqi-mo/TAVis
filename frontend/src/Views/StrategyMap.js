@@ -6,7 +6,7 @@ const StrategyMap = ({
   width,
   height,
   onNodeClick,
-  valueKey = "totalTrades",
+  valueKey,
   selectedNode,
 }) => {
   const svgRef = useRef(null);
@@ -39,6 +39,9 @@ const StrategyMap = ({
     // 获取所有节点和连线
     const nodes = root.descendants();
     const links = root.links();
+
+    // 计算最大深度
+    const maxDepth = d3.max(nodes, (d) => d.depth);
 
     // 颜色比例尺，根据节点的 value 映射颜色
     const maxValue = d3.max(nodes, (d) => d.data[valueKey]) || 1;
@@ -115,11 +118,12 @@ const StrategyMap = ({
       // 计算容器相对于页面的偏移
       const rect = containerRef.current.getBoundingClientRect();
 
-      // 让 tooltip 跟随鼠标，但要减去容器的 left/top
-      const x = event.clientX - rect.left + 10;
+      // 如果是深度最大的节点，tooltip显示在节点左侧；否则显示在右侧
+      const offsetX = d.depth === maxDepth ? -140 : 10;
+      const x = event.clientX - rect.left + offsetX;
       const y = event.clientY - rect.top + 10;
 
-      // 你想显示的内容，比如节点的 name、value1、value2、value3
+      // 你想显示的内容，比如节点的 totalTrades、successRate、avgReturn、totalProfit
       const { totalTrades, successRate, avgReturn, totalProfit } = d.data;
       const content = `
         <div>totalTrades: ${totalTrades ?? "-"}</div>

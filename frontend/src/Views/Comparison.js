@@ -48,7 +48,7 @@ const Comparison = ({
 
   const [treeData, setTreeData] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
-  const [valueKey, setValueKey] = useState("totalTrades");
+  const [valueKey, setValueKey] = useState("successRate");
   const [groups, setGroups] = useState([]);
   const [codeList, setCodeList] = useState([initialCode]);
   const [sharedChildrenMap, setShareChildrenMap] = useState(null);
@@ -235,7 +235,7 @@ const Comparison = ({
           <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
         </Flex>
 
-        <div style={{ border: "1px solid #ddd", borderRadius: "15px" }}>
+        <div style={{ border: "1px solid #ddd", borderRadius: "15px", paddingLeft: "10px" }}>
           <StrategyMap
             data={treeData}
             width={300}
