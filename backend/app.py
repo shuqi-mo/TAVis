@@ -1,9 +1,9 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import pandas as pd
-import numpy as np
 import os
-from sklearn.manifold import TSNE
+from sklearn.preprocessing import StandardScaler
+import umap.umap_ as umap
 import csv
 import json
 from stable_baselines3.common.env_checker import check_env
@@ -38,7 +38,7 @@ def get_all_stocks():
 
 @app.route('/get_scatterdata_default')
 def get_scatterdata_default():
-    csv_file_path = os.path.join('static', 'stock_embedding.csv')
+    csv_file_path = os.path.join('static', 'stock embedding default.csv')
     scatter_data = []  # 存储所有三维数组
     try:
         with open(csv_file_path, 'r', encoding='utf-8') as csvfile:
@@ -61,6 +61,31 @@ def get_scatterdata_default():
     except Exception as e:
         print(f"读取 CSV 文件时发生错误: {e}")
     return jsonify(scatter_data)
+
+@app.route('/get_scatterdata', methods=['POST'])
+def get_scatterdata():
+    data = request.get_json()
+    feature_cols = data["options"]
+    csv_file_path = os.path.join('static', 'stock information.csv')
+    df_info = pd.read_csv(csv_file_path)
+    X = df_info[feature_cols].values
+    ts_codes_for_plot = df_info["ts_code"].values
+
+    # 标准化
+    scaler = StandardScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    # 降维
+    umap_model = umap.UMAP(n_components=2, n_neighbors=15, min_dist=0.1, random_state=42)
+    X_umap_2d = umap_model.fit_transform(X_scaled)
+
+    df_embedding = pd.DataFrame({
+        "ts_code": ts_codes_for_plot,
+        "x": X_umap_2d[:, 0],
+        "y": X_umap_2d[:, 1]
+    })
+
+    return jsonify(df_embedding.values.tolist())
 
 @app.route('/update_single_stock_data', methods=['POST'])
 def update_single_stock_data():

@@ -12,6 +12,7 @@ const ScatterPlot = ({
   height,
 }) => {
   const svgRef = useRef(null);
+  console.log(data)
 
   useEffect(() => {
     if (!data || data.length === 0) return;

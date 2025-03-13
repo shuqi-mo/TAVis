@@ -258,10 +258,10 @@ const Comparison = ({
           <ColorLegend minVal={minVal} maxVal={maxVal} valueKey={valueKey} />
         </Flex>
 
-        <div style={{ border: "1px solid #ddd", borderRadius: "15px", paddingLeft: "10px" }}>
+        <div style={{ border: "1px solid #ddd", borderRadius: "15px", paddingLeft: "5px", width: 350 }}>
           <StrategyMap
             data={treeData}
-            width={300}
+            width={290}
             height={310}
             onNodeClick={handleNodeClick}
             valueKey={valueKey}
@@ -274,8 +274,8 @@ const Comparison = ({
 };
 
 function ColorLegend({ minVal, maxVal, valueKey }) {
-  const legendWidth = 100;
-  const legendHeight = 15;
+  const legendWidth = 70;
+  const legendHeight = 6;
   const colorScale = d3
     .scaleSequential(d3.interpolateBlues)
     .domain([minVal, maxVal]);
@@ -296,7 +296,7 @@ function ColorLegend({ minVal, maxVal, valueKey }) {
 
   return (
     <div style={{ marginBottom: 10 }}>
-      <div style={{ fontWeight: "bold", marginBottom: 4 }}>{valueKey}</div>
+      <div style={{ fontWeight: "bold", marginBottom: 4 ,fontSize: "12px", marginTop: 10}}>{valueKey}</div>
       <div
         style={{
           position: "relative",
@@ -310,6 +310,7 @@ function ColorLegend({ minVal, maxVal, valueKey }) {
           display: "flex",
           justifyContent: "space-between",
           width: legendWidth,
+          fontSize: "10px"
         }}
       >
         <span>{formatValue(minVal, valueKey)}</span>

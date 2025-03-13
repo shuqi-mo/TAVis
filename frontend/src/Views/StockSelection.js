@@ -7,6 +7,7 @@ import {
   PlayCircleOutlined,
   StarFilled,
   StarOutlined,
+  RedoOutlined,
 } from "@ant-design/icons";
 import * as d3 from "d3";
 import ScatterPlot from "./ScatterPlot";
@@ -185,7 +186,12 @@ function FilterPopoverContent({ performance, onConfirm, initialFilters }) {
 
 // color legend 组件（使用从绿色到红色的渐变）
 function ColorLegend({ minVal, maxVal, medianVal, valueKey }) {
-  const legendWidth = 80;
+  if (!minVal || !maxVal || !medianVal) {
+    minVal = 0;
+    maxVal = 0;
+    medianVal = 0;
+  }
+  const legendWidth = 70;
   const legendHeight = 6;
   // 构造 diverging color scale，注意：使用反转插值使得最小值为绿色，最大值为红色
   const colorScale = d3
@@ -209,7 +215,9 @@ function ColorLegend({ minVal, maxVal, medianVal, valueKey }) {
 
   return (
     <div style={{ marginLeft: 5 }}>
-      <div style={{ fontWeight: "bold", marginBottom: 2 }}>{valueKey}</div>
+      <div style={{ fontWeight: "bold", marginBottom: 2, fontSize: "12px" }}>
+        {valueKey}
+      </div>
       <div
         style={{
           position: "relative",
@@ -223,7 +231,7 @@ function ColorLegend({ minVal, maxVal, medianVal, valueKey }) {
           display: "flex",
           justifyContent: "space-between",
           width: legendWidth,
-          fontSize: "12px",
+          fontSize: "10px",
         }}
       >
         <span>{formatValue(minVal, valueKey)}</span>
@@ -291,6 +299,11 @@ const StockSelection = ({
   const [filterPopoverVisible, setFilterPopoverVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const [allStocks, setAllStocks] = useState([]);
+  const [redoVisible, setRedoVisible] = useState(false);
+  const [redoSelection, setRedoSelection] = useState([
+    "mean_log_return",
+    "industry_embedding",
+  ]);
 
   // mapping: 性能数据中各指标在数组中的位置
   const metricIndex = {
@@ -379,6 +392,23 @@ const StockSelection = ({
       });
   };
 
+  // 定义确认按钮的处理函数，将选项传给后端
+  const handleRedoConfirm = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(`${API_URL}/get_scatterdata`, {
+        options: redoSelection,
+      });
+      setDefaultData(response.data);
+    } catch (error) {
+      console.error("Redo error:", error);
+    } finally {
+      // 确认后关闭弹出层
+      setRedoVisible(false);
+      setLoading(false);
+    }
+  };
+
   // 组件加载时自动获取数据
   useEffect(() => {
     fetchData();
@@ -388,12 +418,56 @@ const StockSelection = ({
   return (
     <div>
       {/* 按钮区域 */}
-      <div style={{ display: "flex", gap: "10px", marginBottom: "16px", paddingTop: "10px", marginLeft: "20px" }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "5px",
+          marginBottom: "10px",
+          paddingTop: "10px",
+          marginLeft: "5px",
+        }}
+      >
+        <Popover
+          content={
+            <div>
+              <Select
+                mode="multiple"
+                style={{ width: 200 }}
+                value={redoSelection}
+                onChange={(value) => setRedoSelection(value)}
+              >
+                <Option value="mean_price">mean_price</Option>
+                <Option value="std_price">std_price</Option>
+                <Option value="mean_log_return">mean_log_return</Option>
+                <Option value="std_log_return">std_log_return</Option>
+                <Option value="industry_embedding">industry_embedding</Option>
+              </Select>
+              <Button
+                type="primary"
+                onClick={handleRedoConfirm}
+                style={{ marginTop: 8, marginLeft: 5 }}
+              >
+                Confirm
+              </Button>
+            </div>
+          }
+          title="Stock embedding recalculation"
+          trigger="click"
+          visible={redoVisible}
+          onVisibleChange={(visible) => setRedoVisible(visible)}
+        >
+          <Button
+            style={{ border: "none", background: "none", cursor: "pointer" }}
+            onClick={() => setRedoVisible(true)}
+          >
+            <RedoOutlined style={{ fontSize: "12px" }} />
+          </Button>
+        </Popover>
         <Button
           onClick={() => handleExecute()}
           style={{ border: "none", background: "none", cursor: "pointer" }}
         >
-          <PlayCircleOutlined style={{ fontSize: "18px" }} />
+          <PlayCircleOutlined style={{ fontSize: "12px" }} />
         </Button>
         {/* 将 FilterOutlined 按钮用 Popover 包裹 */}
         <Popover
@@ -414,7 +488,7 @@ const StockSelection = ({
           <Button
             style={{ border: "none", background: "none", cursor: "pointer" }}
           >
-            <FilterOutlined style={{ fontSize: "18px" }} />
+            <FilterOutlined style={{ fontSize: "12px" }} />
           </Button>
         </Popover>
         {/* 设置按钮：点击后弹出 Transfer 穿梭框 */}
@@ -430,15 +504,17 @@ const StockSelection = ({
           }
           trigger="click"
         >
-          <Button style={{ border: "none", background: "none", cursor: "pointer" }}>
-            <SettingOutlined style={{ fontSize: "18px" }} />
+          <Button
+            style={{ border: "none", background: "none", cursor: "pointer" }}
+          >
+            <SettingOutlined style={{ fontSize: "12px" }} />
           </Button>
         </Popover>
         {/* 单选框：选择用于散点图上色的指标 */}
         <Select
           value={valueKey}
           onChange={(val) => setValueKey(val)}
-          style={{ width: 100 }}
+          style={{ width: 50 }}
         >
           <Option value="totalTrades">totalTrades</Option>
           <Option value="successRate">successRate</Option>
@@ -446,16 +522,14 @@ const StockSelection = ({
           <Option value="totalProfit">totalProfit</Option>
         </Select>
         {/* Color legend */}
-        {minVal !== undefined &&
-          maxVal !== undefined &&
-          medianVal !== undefined && (
-            <ColorLegend
-              minVal={minVal}
-              maxVal={maxVal}
-              medianVal={medianVal}
-              valueKey={valueKey}
-            />
-          )}
+        {
+          <ColorLegend
+            minVal={minVal}
+            maxVal={maxVal}
+            medianVal={medianVal}
+            valueKey={valueKey}
+          />
+        }
       </div>
 
       {/* 散点图区域，加载时显示 Spin */}
