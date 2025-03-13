@@ -1,0 +1,1640 @@
+2025-03-13 13:08:02,123 - INFO - 当前步骤: 0
+2025-03-13 13:08:02,137 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:02,137 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'true', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:02,137 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:08:02,276 - INFO - 当前步骤: 0
+2025-03-13 13:08:02,276 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 1.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:02,276 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:02,276 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:08:02,419 - INFO - 当前步骤: 1
+2025-03-13 13:08:02,419 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 1.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:02,419 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:02,419 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:08:02,564 - INFO - 当前步骤: 2
+2025-03-13 13:08:02,564 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 1.         0.5        0.5        0.35       0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:02,569 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:02,569 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:08:02,714 - INFO - 当前步骤: 3
+2025-03-13 13:08:02,715 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 1.         0.5        0.5        0.35       0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.65       0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:02,715 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 23, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:02,715 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:08:02,853 - INFO - 当前步骤: 4
+2025-03-13 13:08:02,853 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 1.         0.5        0.5        0.35       0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.65       0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:02,853 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 23, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:02,853 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:08:02,985 - INFO - 当前步骤: 5
+2025-03-13 13:08:02,985 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 1.         0.5        0.5        0.35       0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:02,985 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:02,985 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:08:03,129 - INFO - 当前步骤: 6
+2025-03-13 13:08:03,131 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.65       0.         0.         1.
+ 1.         0.5        0.5        0.35       0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:03,131 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:03,131 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:08:03,269 - INFO - 当前步骤: 7
+2025-03-13 13:08:03,271 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.8        0.65       0.         0.         1.
+ 1.         0.5        0.5        0.35       0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:03,271 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 26, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:03,271 - INFO - 对应的 reward 值: 0.7777777777777778
+2025-03-13 13:08:03,404 - INFO - 当前步骤: 8
+2025-03-13 13:08:03,404 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.35       0.8        0.65       0.         0.         1.
+ 1.         0.5        0.5        0.35       0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:03,404 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 17, 'param_7': 26, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:03,406 - INFO - 对应的 reward 值: 0.7777777777777778
+2025-03-13 13:08:03,538 - INFO - 当前步骤: 9
+2025-03-13 13:08:03,538 - INFO - 当前参数状态: [0.         0.5        0.5        0.8        0.         0.33333334
+ 0.35       0.8        0.65       0.         0.         1.
+ 1.         0.5        0.5        0.35       0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:03,538 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 39, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 17, 'param_7': 26, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:03,538 - INFO - 对应的 reward 值: 0.7777777777777778
+2025-03-13 13:08:06,132 - INFO - 当前步骤: 0
+2025-03-13 13:08:06,132 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:06,132 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:06,134 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:08:06,134 - INFO - 新的最佳参数! Reward: 0.7777777777777778
+2025-03-13 13:08:06,134 - INFO - 参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 26, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 25, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:06,307 - INFO - 当前步骤: 1
+2025-03-13 13:08:06,307 - INFO - 当前参数状态: [0.         0.65       0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:06,307 - INFO - 当前参数: {'param_0': 'close', 'param_1': 16, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:06,307 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:08:06,471 - INFO - 当前步骤: 2
+2025-03-13 13:08:06,472 - INFO - 当前参数状态: [0.         0.65       0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:06,472 - INFO - 当前参数: {'param_0': 'close', 'param_1': 16, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:06,472 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:08:06,636 - INFO - 当前步骤: 3
+2025-03-13 13:08:06,636 - INFO - 当前参数状态: [0.         0.65       0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:06,636 - INFO - 当前参数: {'param_0': 'close', 'param_1': 16, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:06,636 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:08:06,828 - INFO - 当前步骤: 4
+2025-03-13 13:08:06,828 - INFO - 当前参数状态: [0.         0.49285713 0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:06,828 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:06,828 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:08:06,995 - INFO - 当前步骤: 5
+2025-03-13 13:08:06,995 - INFO - 当前参数状态: [0.         0.49285713 0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:06,995 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:06,997 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:08:07,177 - INFO - 当前步骤: 6
+2025-03-13 13:08:07,178 - INFO - 当前参数状态: [0.         0.49285713 0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:07,178 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:07,178 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:08:07,350 - INFO - 当前步骤: 7
+2025-03-13 13:08:07,352 - INFO - 当前参数状态: [0.         0.49285713 0.5        0.5        0.         0.6666667
+ 0.19999999 0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:07,352 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 14, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:07,352 - INFO - 对应的 reward 值: 0.782608695652174
+2025-03-13 13:08:07,352 - INFO - 新的最佳参数! Reward: 0.782608695652174
+2025-03-13 13:08:07,352 - INFO - 参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 14, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:07,524 - INFO - 当前步骤: 8
+2025-03-13 13:08:07,524 - INFO - 当前参数状态: [0.         0.49285713 0.5        0.5        0.         0.6666667
+ 0.19999999 0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:07,524 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 14, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:07,524 - INFO - 对应的 reward 值: 0.782608695652174
+2025-03-13 13:08:07,694 - INFO - 当前步骤: 9
+2025-03-13 13:08:07,694 - INFO - 当前参数状态: [0.         0.49285713 0.5        0.5        0.         0.6666667
+ 0.19999999 0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.33333334 0.33333334
+ 0.19999999 0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:07,694 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 14, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 14, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:07,694 - INFO - 对应的 reward 值: 0.782608695652174
+2025-03-13 13:08:07,866 - INFO - 当前步骤: 10
+2025-03-13 13:08:07,868 - INFO - 当前参数状态: [0.         0.49285713 0.5        0.5        0.         0.6666667
+ 0.19999999 0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.33333334 0.33333334
+ 0.19999999 0.5        0.5        1.         0.         0.6666667
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:08:07,868 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 14, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 14, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'WMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:08:07,868 - INFO - 对应的 reward 值: 0.782608695652174
+2025-03-13 13:08:08,036 - INFO - 当前步骤: 11
+2025-03-13 13:08:08,036 - INFO - 当前参数状态: [0.         0.49285713 0.5        0.5        0.         0.6666667
+ 0.19999999 0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.33333334 0.33333334
+ 0.19999999 0.5        0.5        1.         0.         0.6666667
+ 0.5        0.5        0.5        0.         0.5        0.65
+ 0.5       ]
+2025-03-13 13:08:08,036 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 14, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 14, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'WMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 105, 'param_30': 30}
+2025-03-13 13:08:08,036 - INFO - 对应的 reward 值: 0.782608695652174
+2025-03-13 13:08:08,039 - INFO - 训练完成，最佳参数:
+2025-03-13 13:08:08,039 - INFO - 最佳 Reward: 0.782608695652174
+2025-03-13 13:08:08,039 - INFO - 最佳参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 14, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,601 - INFO - 当前步骤: 0
+2025-03-13 13:49:30,602 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.8        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,602 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 3, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,602 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:49:30,622 - INFO - 当前步骤: 0
+2025-03-13 13:49:30,623 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         1.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,623 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'false', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,623 - INFO - 对应的 reward 值: 0
+2025-03-13 13:49:30,641 - INFO - 当前步骤: 1
+2025-03-13 13:49:30,642 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         1.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,642 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'false', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,642 - INFO - 对应的 reward 值: 0
+2025-03-13 13:49:30,660 - INFO - 当前步骤: 2
+2025-03-13 13:49:30,662 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         1.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,662 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'false', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,662 - INFO - 对应的 reward 值: 0
+2025-03-13 13:49:30,681 - INFO - 当前步骤: 3
+2025-03-13 13:49:30,682 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         1.         1.
+ 0.         0.5        0.5        0.5        0.         0.
+ 0.5        0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,682 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'false', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 20, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,682 - INFO - 对应的 reward 值: 0
+2025-03-13 13:49:30,702 - INFO - 当前步骤: 4
+2025-03-13 13:49:30,702 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         1.         1.
+ 0.         0.19999999 0.5        0.5        0.         0.
+ 0.5        0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,702 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'false', 'param_11': 'false', 'param_12': 'close', 'param_13': 10, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 20, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,702 - INFO - 对应的 reward 值: 0
+2025-03-13 13:49:30,722 - INFO - 当前步骤: 5
+2025-03-13 13:49:30,722 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         1.         1.
+ 0.         0.19999999 0.5        0.5        0.         0.
+ 0.35       0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,722 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'false', 'param_11': 'false', 'param_12': 'close', 'param_13': 10, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 17, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,723 - INFO - 对应的 reward 值: 0
+2025-03-13 13:49:30,851 - INFO - 当前步骤: 6
+2025-03-13 13:49:30,851 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.19999999 0.5        0.5        0.         0.
+ 0.35       0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,852 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 10, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 17, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,852 - INFO - 对应的 reward 值: 0.8571428571428571
+2025-03-13 13:49:30,983 - INFO - 当前步骤: 7
+2025-03-13 13:49:30,989 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.19999999 0.5        0.5        0.         0.
+ 0.35       0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:30,989 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 10, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 17, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:30,989 - INFO - 对应的 reward 值: 0.8571428571428571
+2025-03-13 13:49:31,116 - INFO - 当前步骤: 8
+2025-03-13 13:49:31,118 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.19999999 0.5        0.5        0.         0.
+ 0.35       0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.35
+ 0.5       ]
+2025-03-13 13:49:31,118 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 10, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 17, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 77, 'param_30': 30}
+2025-03-13 13:49:31,118 - INFO - 对应的 reward 值: 0.8571428571428571
+2025-03-13 13:49:31,240 - INFO - 当前步骤: 9
+2025-03-13 13:49:31,240 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.19999999 0.5        0.5        0.         0.
+ 0.35       0.65       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.35
+ 0.5       ]
+2025-03-13 13:49:31,244 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 10, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 17, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 77, 'param_30': 30}
+2025-03-13 13:49:31,244 - INFO - 对应的 reward 值: 0.8571428571428571
+2025-03-13 13:49:33,501 - INFO - 当前步骤: 0
+2025-03-13 13:49:33,501 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:33,509 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:33,509 - INFO - 对应的 reward 值: 0.7333333333333333
+2025-03-13 13:49:33,509 - INFO - 新的最佳参数! Reward: 0.8571428571428571
+2025-03-13 13:49:33,509 - INFO - 参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 10, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 17, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:33,666 - INFO - 当前步骤: 1
+2025-03-13 13:49:33,666 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:33,666 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:33,666 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:49:33,824 - INFO - 当前步骤: 2
+2025-03-13 13:49:33,824 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.6666667
+ 0.5        0.5        0.8        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:33,824 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 20, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:33,824 - INFO - 对应的 reward 值: 0.75
+2025-03-13 13:49:33,981 - INFO - 当前步骤: 3
+2025-03-13 13:49:33,983 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.6666667
+ 0.65       0.5        0.8        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:33,983 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:33,983 - INFO - 对应的 reward 值: 0.625
+2025-03-13 13:49:34,251 - INFO - 当前步骤: 4
+2025-03-13 13:49:34,251 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.6666667
+ 0.65       0.5        0.8        0.         0.         0.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:34,252 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:34,252 - INFO - 对应的 reward 值: 0.625
+2025-03-13 13:49:34,521 - INFO - 当前步骤: 5
+2025-03-13 13:49:34,521 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.6666667
+ 0.65       0.5        0.8        0.         0.         0.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:34,521 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:34,523 - INFO - 对应的 reward 值: 0.625
+2025-03-13 13:49:34,798 - INFO - 当前步骤: 6
+2025-03-13 13:49:34,799 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.6666667
+ 0.65       0.5        1.         0.         0.         0.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:34,799 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:34,799 - INFO - 对应的 reward 值: 0.625
+2025-03-13 13:49:35,085 - INFO - 当前步骤: 7
+2025-03-13 13:49:35,085 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.6666667
+ 0.65       0.5        1.         0.         0.         0.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:35,085 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'WMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'SMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:35,085 - INFO - 对应的 reward 值: 0.625
+2025-03-13 13:49:35,322 - INFO - 当前步骤: 8
+2025-03-13 13:49:35,322 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         1.
+ 0.65       0.5        1.         0.         0.         0.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:35,322 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'SMMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'SMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:35,322 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:49:35,561 - INFO - 当前步骤: 9
+2025-03-13 13:49:35,561 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         1.
+ 0.65       0.5        1.         0.         0.         0.
+ 0.         0.5        0.8        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:35,561 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'SMMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 118, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'SMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:35,561 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:49:35,798 - INFO - 当前步骤: 10
+2025-03-13 13:49:35,798 - INFO - 当前参数状态: [0.         0.5        0.5        0.19999999 0.         1.
+ 0.65       0.5        1.         0.         0.         0.
+ 0.         0.5        0.8        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:35,798 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 21, 'param_4': 'close', 'param_5': 'SMMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 118, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'SMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:35,798 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:49:36,032 - INFO - 当前步骤: 11
+2025-03-13 13:49:36,032 - INFO - 当前参数状态: [0.         0.5        0.5        0.19999999 0.         1.
+ 0.65       0.5        1.         0.         0.         0.
+ 0.         0.5        0.8        0.5        0.         0.33333334
+ 0.5        0.35       0.5        1.         0.         0.
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:49:36,033 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 21, 'param_4': 'close', 'param_5': 'SMMA', 'param_6': 23, 'param_7': 20, 'param_8': 3, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 118, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 17, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'SMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:49:36,033 - INFO - 对应的 reward 值: 0.7142857142857143
+2025-03-13 13:49:36,033 - INFO - 训练完成，最佳参数:
+2025-03-13 13:49:36,033 - INFO - 最佳 Reward: 0.8571428571428571
+2025-03-13 13:49:36,034 - INFO - 最佳参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 10, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 17, 'param_19': 23, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:28,067 - INFO - 当前步骤: 0
+2025-03-13 13:59:28,068 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:28,068 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:28,068 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:28,211 - INFO - 当前步骤: 0
+2025-03-13 13:59:28,211 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:28,211 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:28,211 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:28,344 - INFO - 当前步骤: 1
+2025-03-13 13:59:28,344 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:28,344 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:28,347 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:28,478 - INFO - 当前步骤: 2
+2025-03-13 13:59:28,478 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:28,478 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:28,478 - INFO - 对应的 reward 值: 33.35000000000005
+2025-03-13 13:59:28,611 - INFO - 当前步骤: 3
+2025-03-13 13:59:28,611 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:28,611 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:28,611 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:28,744 - INFO - 当前步骤: 4
+2025-03-13 13:59:28,744 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.19999999 0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:28,744 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:28,744 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:28,876 - INFO - 当前步骤: 5
+2025-03-13 13:59:28,878 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.65       0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.19999999 0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:28,878 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 23, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:28,878 - INFO - 对应的 reward 值: 83.07000000000002
+2025-03-13 13:59:29,007 - INFO - 当前步骤: 6
+2025-03-13 13:59:29,010 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.65       0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.19999999 0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:29,010 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 23, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:29,010 - INFO - 对应的 reward 值: 83.07000000000002
+2025-03-13 13:59:29,140 - INFO - 当前步骤: 7
+2025-03-13 13:59:29,143 - INFO - 当前参数状态: [1.         0.5        0.5        0.5        0.         0.33333334
+ 0.65       0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.19999999 0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:29,143 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 23, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:29,143 - INFO - 对应的 reward 值: 73.67000000000002
+2025-03-13 13:59:29,273 - INFO - 当前步骤: 8
+2025-03-13 13:59:29,273 - INFO - 当前参数状态: [1.         0.5        0.5        0.5        0.         0.33333334
+ 0.65       0.5        0.5        0.         0.         1.
+ 1.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.19999999 0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:29,273 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 23, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:29,273 - INFO - 对应的 reward 值: 73.67000000000002
+2025-03-13 13:59:29,447 - INFO - 当前步骤: 9
+2025-03-13 13:59:29,447 - INFO - 当前参数状态: [1.         0.5        0.5        0.5        0.         0.33333334
+ 0.65       0.5        0.5        0.         0.         1.
+ 1.         0.5        0.5        0.5        0.         0.
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.19999999 0.         0.19999999 0.5
+ 0.5       ]
+2025-03-13 13:59:29,448 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 23, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'low', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'SMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1, 'param_27': 'close', 'param_28': 10, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:29,448 - INFO - 对应的 reward 值: 73.67000000000002
+2025-03-13 13:59:31,583 - INFO - 当前步骤: 0
+2025-03-13 13:59:31,583 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:31,583 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:31,583 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:31,584 - INFO - 新的最佳参数! Reward: 85.44000000000005
+2025-03-13 13:59:31,584 - INFO - 参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:31,713 - INFO - 当前步骤: 1
+2025-03-13 13:59:31,713 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.8        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:31,713 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 26, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:31,723 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:31,857 - INFO - 当前步骤: 2
+2025-03-13 13:59:31,863 - INFO - 当前参数状态: [0.         0.5        0.65       0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.8        0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:31,863 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 26, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:31,863 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:31,993 - INFO - 当前步骤: 3
+2025-03-13 13:59:31,993 - INFO - 当前参数状态: [0.         0.5        0.65       0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:31,993 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:31,993 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:32,131 - INFO - 当前步骤: 4
+2025-03-13 13:59:32,133 - INFO - 当前参数状态: [0.         0.5        0.65       0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:32,133 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:32,133 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:32,263 - INFO - 当前步骤: 5
+2025-03-13 13:59:32,263 - INFO - 当前参数状态: [0.         0.5        0.65       0.5        0.         0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:32,263 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:32,263 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 13:59:32,400 - INFO - 当前步骤: 6
+2025-03-13 13:59:32,400 - INFO - 当前参数状态: [0.         0.5        0.65       0.5        0.         0.33333334
+ 0.8        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:32,400 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 26, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:32,403 - INFO - 对应的 reward 值: 82.17000000000002
+2025-03-13 13:59:32,533 - INFO - 当前步骤: 7
+2025-03-13 13:59:32,533 - INFO - 当前参数状态: [0.         0.8        0.65       0.5        0.         0.33333334
+ 0.8        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:32,533 - INFO - 当前参数: {'param_0': 'close', 'param_1': 18, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 26, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:32,533 - INFO - 对应的 reward 值: 82.17000000000002
+2025-03-13 13:59:32,663 - INFO - 当前步骤: 8
+2025-03-13 13:59:32,668 - INFO - 当前参数状态: [0.         0.8        0.65       0.5        0.         0.33333334
+ 0.8        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.35       0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:32,668 - INFO - 当前参数: {'param_0': 'close', 'param_1': 18, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 26, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 17, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:32,668 - INFO - 对应的 reward 值: 82.17000000000002
+2025-03-13 13:59:32,813 - INFO - 当前步骤: 9
+2025-03-13 13:59:32,813 - INFO - 当前参数状态: [0.         0.8        0.65       0.5        0.         0.33333334
+ 0.8        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.35       0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:32,813 - INFO - 当前参数: {'param_0': 'close', 'param_1': 18, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 26, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 17, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:32,813 - INFO - 对应的 reward 值: 82.17000000000002
+2025-03-13 13:59:32,953 - INFO - 当前步骤: 10
+2025-03-13 13:59:32,953 - INFO - 当前参数状态: [0.         0.8        0.65       0.5        0.         0.33333334
+ 0.8        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.35       0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:32,953 - INFO - 当前参数: {'param_0': 'close', 'param_1': 18, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 26, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 17, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:32,953 - INFO - 对应的 reward 值: 82.17000000000002
+2025-03-13 13:59:33,088 - INFO - 当前步骤: 11
+2025-03-13 13:59:33,088 - INFO - 当前参数状态: [0.         0.8        0.65       0.5        0.         0.33333334
+ 0.8        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.19999999 0.5        0.         0.33333334
+ 0.95       0.5        0.5        1.         0.         0.33333334
+ 0.35       0.5        0.35       0.         0.5        0.5
+ 0.5       ]
+2025-03-13 13:59:33,088 - INFO - 当前参数: {'param_0': 'close', 'param_1': 18, 'param_2': 105, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 26, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 64, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 29, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 17, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 13:59:33,088 - INFO - 对应的 reward 值: 82.17000000000002
+2025-03-13 13:59:33,092 - INFO - 训练完成，最佳参数:
+2025-03-13 13:59:33,092 - INFO - 最佳 Reward: 85.44000000000005
+2025-03-13 13:59:33,092 - INFO - 最佳参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'close', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 2, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'close', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 2, 'param_21': 'false', 'param_22': 'close', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 2, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:16,128 - INFO - 当前步骤: 0
+2025-03-13 14:03:16,131 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         0.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:16,131 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'true', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.5, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:16,131 - INFO - 对应的 reward 值: 70.20999999999992
+2025-03-13 14:03:16,374 - INFO - 当前步骤: 0
+2025-03-13 14:03:16,378 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:16,378 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.5, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:16,378 - INFO - 对应的 reward 值: 70.20999999999992
+2025-03-13 14:03:16,628 - INFO - 当前步骤: 1
+2025-03-13 14:03:16,628 - INFO - 当前参数状态: [0.         0.5        0.19999999 0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:16,628 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.5, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:16,628 - INFO - 对应的 reward 值: 76.76999999999998
+2025-03-13 14:03:16,883 - INFO - 当前步骤: 2
+2025-03-13 14:03:16,883 - INFO - 当前参数状态: [1.         0.5        0.19999999 0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:16,883 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.5, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:16,883 - INFO - 对应的 reward 值: 147.14999999999998
+2025-03-13 14:03:17,132 - INFO - 当前步骤: 3
+2025-03-13 14:03:17,132 - INFO - 当前参数状态: [1.         0.5        0.19999999 0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:17,132 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.5, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:17,132 - INFO - 对应的 reward 值: 147.14999999999998
+2025-03-13 14:03:17,389 - INFO - 当前步骤: 4
+2025-03-13 14:03:17,389 - INFO - 当前参数状态: [1.         0.5        0.2032967  0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:17,389 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.5, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:17,389 - INFO - 对应的 reward 值: 147.14999999999998
+2025-03-13 14:03:17,643 - INFO - 当前步骤: 5
+2025-03-13 14:03:17,643 - INFO - 当前参数状态: [1.         0.5        0.2032967  0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:17,643 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.5, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:17,643 - INFO - 对应的 reward 值: 147.14999999999998
+2025-03-13 14:03:17,893 - INFO - 当前步骤: 6
+2025-03-13 14:03:17,893 - INFO - 当前参数状态: [1.         0.5        0.2032967  0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.8        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:17,893 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.9500000178813934, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:17,893 - INFO - 对应的 reward 值: 147.14999999999998
+2025-03-13 14:03:18,143 - INFO - 当前步骤: 7
+2025-03-13 14:03:18,143 - INFO - 当前参数状态: [1.         0.5        0.2032967  0.5        0.33333334 0.33333334
+ 0.5        0.5        0.35       0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.8        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:18,153 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.2749999910593033, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.9500000178813934, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:18,153 - INFO - 对应的 reward 值: 178.74999999999986
+2025-03-13 14:03:18,404 - INFO - 当前步骤: 8
+2025-03-13 14:03:18,404 - INFO - 当前参数状态: [1.         0.5        0.2032967  0.5        0.33333334 0.33333334
+ 0.5        0.5        0.35       0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.8        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.8
+ 0.5       ]
+2025-03-13 14:03:18,404 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.2749999910593033, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.9500000178813934, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 118, 'param_30': 30}
+2025-03-13 14:03:18,404 - INFO - 对应的 reward 值: 178.74999999999986
+2025-03-13 14:03:18,662 - INFO - 当前步骤: 9
+2025-03-13 14:03:18,662 - INFO - 当前参数状态: [1.         0.5        0.2032967  0.5        0.6666667  0.33333334
+ 0.5        0.5        0.35       0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.8        0.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.8
+ 0.5       ]
+2025-03-13 14:03:18,662 - INFO - 当前参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.2749999910593033, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.9500000178813934, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 118, 'param_30': 30}
+2025-03-13 14:03:18,662 - INFO - 对应的 reward 值: 137.89999999999992
+2025-03-13 14:03:18,812 - INFO - 当前步骤: 0
+2025-03-13 14:03:18,812 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:18,812 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.5, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:18,812 - INFO - 对应的 reward 值: 70.20999999999992
+2025-03-13 14:03:18,812 - INFO - 新的最佳参数! Reward: 178.74999999999986
+2025-03-13 14:03:18,812 - INFO - 参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.2749999910593033, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.9500000178813934, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:18,949 - INFO - 当前步骤: 1
+2025-03-13 14:03:18,949 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:18,949 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:18,949 - INFO - 对应的 reward 值: 70.20999999999992
+2025-03-13 14:03:19,075 - INFO - 当前步骤: 2
+2025-03-13 14:03:19,082 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:19,082 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:19,082 - INFO - 对应的 reward 值: 70.20999999999992
+2025-03-13 14:03:19,212 - INFO - 当前步骤: 3
+2025-03-13 14:03:19,212 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.33333334
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:19,212 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:19,212 - INFO - 对应的 reward 值: 70.20999999999992
+2025-03-13 14:03:19,342 - INFO - 当前步骤: 4
+2025-03-13 14:03:19,342 - INFO - 当前参数状态: [0.         0.5        0.5        0.5        0.6666667  0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.33333334
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:19,342 - INFO - 当前参数: {'param_0': 'close', 'param_1': 14, 'param_2': 91, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:19,342 - INFO - 对应的 reward 值: 38.49999999999996
+2025-03-13 14:03:19,479 - INFO - 当前步骤: 5
+2025-03-13 14:03:19,479 - INFO - 当前参数状态: [0.         0.35       0.5        0.5        0.6666667  0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.33333334
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:19,480 - INFO - 当前参数: {'param_0': 'close', 'param_1': 12, 'param_2': 91, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:19,480 - INFO - 对应的 reward 值: 25.57999999999996
+2025-03-13 14:03:19,615 - INFO - 当前步骤: 6
+2025-03-13 14:03:19,615 - INFO - 当前参数状态: [0.         0.35       0.5        0.5        0.6666667  0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.33333334
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:19,615 - INFO - 当前参数: {'param_0': 'close', 'param_1': 12, 'param_2': 91, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:19,615 - INFO - 对应的 reward 值: 25.57999999999996
+2025-03-13 14:03:19,757 - INFO - 当前步骤: 7
+2025-03-13 14:03:19,757 - INFO - 当前参数状态: [0.         0.35       0.5        0.5        0.6666667  0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.5        0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:19,757 - INFO - 当前参数: {'param_0': 'close', 'param_1': 12, 'param_2': 91, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'SMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:19,758 - INFO - 对应的 reward 值: 25.57999999999996
+2025-03-13 14:03:19,892 - INFO - 当前步骤: 8
+2025-03-13 14:03:19,892 - INFO - 当前参数状态: [0.         0.35       0.5        0.5        0.6666667  0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.35       0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:19,892 - INFO - 当前参数: {'param_0': 'close', 'param_1': 12, 'param_2': 91, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'SMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 17, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:19,893 - INFO - 对应的 reward 值: 25.57999999999996
+2025-03-13 14:03:20,024 - INFO - 当前步骤: 9
+2025-03-13 14:03:20,025 - INFO - 当前参数状态: [0.         0.35714287 0.5        0.5        0.6666667  0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.35       0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:20,025 - INFO - 当前参数: {'param_0': 'close', 'param_1': 12, 'param_2': 91, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'SMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 17, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:20,025 - INFO - 对应的 reward 值: 25.57999999999996
+2025-03-13 14:03:20,155 - INFO - 当前步骤: 10
+2025-03-13 14:03:20,155 - INFO - 当前参数状态: [0.         0.35714287 0.8        0.5        0.6666667  0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.
+ 0.5        0.5        0.35       1.         0.33333334 0.33333334
+ 0.5        0.35       0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:20,155 - INFO - 当前参数: {'param_0': 'close', 'param_1': 12, 'param_2': 118, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'SMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 17, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:20,155 - INFO - 对应的 reward 值: 38.49999999999996
+2025-03-13 14:03:20,293 - INFO - 当前步骤: 11
+2025-03-13 14:03:20,294 - INFO - 当前参数状态: [0.         0.35714287 0.8        0.5        0.6666667  0.33333334
+ 0.5        0.5        0.5        0.         0.         1.
+ 0.         0.5        0.5        0.65       0.33333334 0.
+ 0.5        0.8        0.35       1.         0.33333334 0.33333334
+ 0.5        0.35       0.5        0.         0.5        0.5
+ 0.5       ]
+2025-03-13 14:03:20,294 - INFO - 当前参数: {'param_0': 'close', 'param_1': 12, 'param_2': 118, 'param_3': 30, 'param_4': 'high', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.5, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 34, 'param_16': 'open', 'param_17': 'SMA', 'param_18': 20, 'param_19': 26, 'param_20': 1.2749999910593033, 'param_21': 'false', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 17, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:03:20,294 - INFO - 对应的 reward 值: 38.49999999999996
+2025-03-13 14:03:20,295 - INFO - 训练完成，最佳参数:
+2025-03-13 14:03:20,295 - INFO - 最佳 Reward: 178.74999999999986
+2025-03-13 14:03:20,295 - INFO - 最佳参数: {'param_0': 'low', 'param_1': 14, 'param_2': 64, 'param_3': 30, 'param_4': 'open', 'param_5': 'EMA', 'param_6': 20, 'param_7': 20, 'param_8': 1.2749999910593033, 'param_9': 'true', 'param_10': 'true', 'param_11': 'false', 'param_12': 'close', 'param_13': 14, 'param_14': 91, 'param_15': 30, 'param_16': 'open', 'param_17': 'EMA', 'param_18': 20, 'param_19': 20, 'param_20': 1.9500000178813934, 'param_21': 'true', 'param_22': 'open', 'param_23': 'EMA', 'param_24': 20, 'param_25': 20, 'param_26': 1.5, 'param_27': 'close', 'param_28': 14, 'param_29': 91, 'param_30': 30}
+2025-03-13 14:23:49,402 - INFO - 当前步骤: 0
+2025-03-13 14:23:49,402 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.19999999 0.5        0.        ]
+2025-03-13 14:23:49,402 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 14, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:23:49,402 - INFO - 对应的 reward 值: 27
+2025-03-13 14:23:49,536 - INFO - 当前步骤: 0
+2025-03-13 14:23:49,536 - INFO - 当前参数状态: [0.33333334 0.         0.5        0.5        0.5        0.        ]
+2025-03-13 14:23:49,536 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:23:49,536 - INFO - 对应的 reward 值: 26
+2025-03-13 14:23:49,673 - INFO - 当前步骤: 1
+2025-03-13 14:23:49,673 - INFO - 当前参数状态: [0.6666667 0.        0.5       0.5       0.5       0.       ]
+2025-03-13 14:23:49,673 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:23:49,673 - INFO - 对应的 reward 值: 24
+2025-03-13 14:23:49,806 - INFO - 当前步骤: 2
+2025-03-13 14:23:49,806 - INFO - 当前参数状态: [0.6666667 0.        0.5       0.5       0.65      0.       ]
+2025-03-13 14:23:49,806 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:23:49,806 - INFO - 对应的 reward 值: 19
+2025-03-13 14:23:49,920 - INFO - 当前步骤: 3
+2025-03-13 14:23:49,927 - INFO - 当前参数状态: [0.6666667 1.        0.5       0.5       0.65      0.       ]
+2025-03-13 14:23:49,927 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:23:49,927 - INFO - 对应的 reward 值: 13
+2025-03-13 14:23:50,041 - INFO - 当前步骤: 4
+2025-03-13 14:23:50,041 - INFO - 当前参数状态: [0.6666667 1.        0.8       0.5       0.65      0.       ]
+2025-03-13 14:23:50,041 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:23:50,041 - INFO - 对应的 reward 值: 11
+2025-03-13 14:23:50,043 - INFO - 当前步骤: 5
+2025-03-13 14:23:50,043 - INFO - 当前参数状态: [0.6666667 1.        0.8       0.5       0.65      1.       ]
+2025-03-13 14:23:50,043 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'false'}
+2025-03-13 14:23:50,043 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:50,043 - INFO - 当前步骤: 6
+2025-03-13 14:23:50,045 - INFO - 当前参数状态: [0.6666667 1.        0.8       0.5       0.65      1.       ]
+2025-03-13 14:23:50,045 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'false'}
+2025-03-13 14:23:50,045 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:50,045 - INFO - 当前步骤: 7
+2025-03-13 14:23:50,045 - INFO - 当前参数状态: [0.6666667 1.        0.8       0.5       0.65      1.       ]
+2025-03-13 14:23:50,045 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'false'}
+2025-03-13 14:23:50,046 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:50,046 - INFO - 当前步骤: 8
+2025-03-13 14:23:50,046 - INFO - 当前参数状态: [0.6666667 1.        0.8       0.5       0.95      1.       ]
+2025-03-13 14:23:50,046 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 20, 'param_4': 2.1749999821186066, 'param_5': 'false'}
+2025-03-13 14:23:50,046 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:50,047 - INFO - 当前步骤: 9
+2025-03-13 14:23:50,047 - INFO - 当前参数状态: [1.   1.   0.8  0.5  0.95 1.  ]
+2025-03-13 14:23:50,047 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 20, 'param_4': 2.1749999821186066, 'param_5': 'false'}
+2025-03-13 14:23:50,047 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:52,298 - INFO - 当前步骤: 0
+2025-03-13 14:23:52,298 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.19999999 0.        ]
+2025-03-13 14:23:52,298 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.0499999821186066, 'param_5': 'true'}
+2025-03-13 14:23:52,298 - INFO - 对应的 reward 值: 33
+2025-03-13 14:23:52,298 - INFO - 新的最佳参数! Reward: 33
+2025-03-13 14:23:52,298 - INFO - 参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.0499999821186066, 'param_5': 'true'}
+2025-03-13 14:23:52,305 - INFO - 当前步骤: 1
+2025-03-13 14:23:52,305 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.19999999 1.        ]
+2025-03-13 14:23:52,306 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.0499999821186066, 'param_5': 'false'}
+2025-03-13 14:23:52,306 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:52,306 - INFO - 当前步骤: 2
+2025-03-13 14:23:52,306 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.04999998 1.        ]
+2025-03-13 14:23:52,306 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'false'}
+2025-03-13 14:23:52,306 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:52,306 - INFO - 当前步骤: 3
+2025-03-13 14:23:52,306 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.04999998 1.        ]
+2025-03-13 14:23:52,306 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'false'}
+2025-03-13 14:23:52,306 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:52,424 - INFO - 当前步骤: 4
+2025-03-13 14:23:52,424 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.04999998 0.        ]
+2025-03-13 14:23:52,424 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'true'}
+2025-03-13 14:23:52,424 - INFO - 对应的 reward 值: 35
+2025-03-13 14:23:52,424 - INFO - 新的最佳参数! Reward: 35
+2025-03-13 14:23:52,424 - INFO - 参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'true'}
+2025-03-13 14:23:52,426 - INFO - 当前步骤: 5
+2025-03-13 14:23:52,426 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.04999998 1.        ]
+2025-03-13 14:23:52,426 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'false'}
+2025-03-13 14:23:52,426 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:52,426 - INFO - 当前步骤: 6
+2025-03-13 14:23:52,426 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.04999998 1.        ]
+2025-03-13 14:23:52,426 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'false'}
+2025-03-13 14:23:52,426 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:52,426 - INFO - 当前步骤: 7
+2025-03-13 14:23:52,426 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.04999998 1.        ]
+2025-03-13 14:23:52,426 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'false'}
+2025-03-13 14:23:52,426 - INFO - 对应的 reward 值: 0
+2025-03-13 14:23:52,537 - INFO - 当前步骤: 8
+2025-03-13 14:23:52,537 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.04999998 0.        ]
+2025-03-13 14:23:52,537 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'true'}
+2025-03-13 14:23:52,537 - INFO - 对应的 reward 值: 34
+2025-03-13 14:23:52,659 - INFO - 当前步骤: 9
+2025-03-13 14:23:52,659 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.04999998 0.        ]
+2025-03-13 14:23:52,659 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'true'}
+2025-03-13 14:23:52,659 - INFO - 对应的 reward 值: 34
+2025-03-13 14:23:52,819 - INFO - 当前步骤: 10
+2025-03-13 14:23:52,820 - INFO - 当前参数状态: [0.         0.6666667  0.5        0.5        0.04999998 0.        ]
+2025-03-13 14:23:52,820 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'true'}
+2025-03-13 14:23:52,820 - INFO - 对应的 reward 值: 50
+2025-03-13 14:23:52,820 - INFO - 新的最佳参数! Reward: 50
+2025-03-13 14:23:52,820 - INFO - 参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'true'}
+2025-03-13 14:23:52,969 - INFO - 当前步骤: 11
+2025-03-13 14:23:52,969 - INFO - 当前参数状态: [0.         0.6666667  0.8        0.5        0.04999998 0.        ]
+2025-03-13 14:23:52,969 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 26, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'true'}
+2025-03-13 14:23:52,969 - INFO - 对应的 reward 值: 36
+2025-03-13 14:23:52,969 - INFO - 训练完成，最佳参数:
+2025-03-13 14:23:52,969 - INFO - 最佳 Reward: 50
+2025-03-13 14:23:52,969 - INFO - 最佳参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 20, 'param_3': 20, 'param_4': 0.8249999731779099, 'param_5': 'true'}
+2025-03-13 14:25:42,564 - INFO - 当前步骤: 0
+2025-03-13 14:25:42,565 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.8        0.5        0.        ]
+2025-03-13 14:25:42,565 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:25:42,565 - INFO - 对应的 reward 值: 72.03999999999994
+2025-03-13 14:25:42,680 - INFO - 当前步骤: 0
+2025-03-13 14:25:42,680 - INFO - 当前参数状态: [0.33333334 0.33333334 0.65       0.5        0.5        0.        ]
+2025-03-13 14:25:42,680 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:25:42,680 - INFO - 对应的 reward 值: 62.83999999999999
+2025-03-13 14:25:42,792 - INFO - 当前步骤: 1
+2025-03-13 14:25:42,792 - INFO - 当前参数状态: [0.33333334 0.33333334 0.65       0.5        0.65       0.        ]
+2025-03-13 14:25:42,792 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:25:42,792 - INFO - 对应的 reward 值: 29.890000000000033
+2025-03-13 14:25:42,926 - INFO - 当前步骤: 2
+2025-03-13 14:25:42,926 - INFO - 当前参数状态: [0.33333334 0.         0.65       0.5        0.65       0.        ]
+2025-03-13 14:25:42,926 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMA', 'param_2': 23, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:25:42,926 - INFO - 对应的 reward 值: 22.909999999999986
+2025-03-13 14:25:43,064 - INFO - 当前步骤: 3
+2025-03-13 14:25:43,071 - INFO - 当前参数状态: [0.33333334 0.         0.65       0.5        0.65       0.        ]
+2025-03-13 14:25:43,071 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMA', 'param_2': 23, 'param_3': 20, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:25:43,071 - INFO - 对应的 reward 值: 22.909999999999986
+2025-03-13 14:25:43,216 - INFO - 当前步骤: 4
+2025-03-13 14:25:43,216 - INFO - 当前参数状态: [0.33333334 0.         0.65       0.65       0.65       0.        ]
+2025-03-13 14:25:43,216 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMA', 'param_2': 23, 'param_3': 23, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:25:43,216 - INFO - 对应的 reward 值: 44.79999999999995
+2025-03-13 14:25:43,325 - INFO - 当前步骤: 5
+2025-03-13 14:25:43,331 - INFO - 当前参数状态: [0.33333334 1.         0.65       0.65       0.65       0.        ]
+2025-03-13 14:25:43,331 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 23, 'param_3': 23, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:25:43,331 - INFO - 对应的 reward 值: 72.95999999999998
+2025-03-13 14:25:43,445 - INFO - 当前步骤: 6
+2025-03-13 14:25:43,446 - INFO - 当前参数状态: [0.33333334 1.         0.65       0.65       0.49999997 0.        ]
+2025-03-13 14:25:43,446 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 23, 'param_3': 23, 'param_4': 1.4999999552965164, 'param_5': 'true'}
+2025-03-13 14:25:43,446 - INFO - 对应的 reward 值: 20.159999999999997
+2025-03-13 14:25:43,559 - INFO - 当前步骤: 7
+2025-03-13 14:25:43,559 - INFO - 当前参数状态: [0.33333334 1.         0.8        0.65       0.49999997 0.        ]
+2025-03-13 14:25:43,559 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 23, 'param_4': 1.4999999552965164, 'param_5': 'true'}
+2025-03-13 14:25:43,559 - INFO - 对应的 reward 值: 80.08999999999996
+2025-03-13 14:25:43,675 - INFO - 当前步骤: 8
+2025-03-13 14:25:43,675 - INFO - 当前参数状态: [0.33333334 1.         0.8        0.65       0.65       0.        ]
+2025-03-13 14:25:43,675 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 23, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:25:43,675 - INFO - 对应的 reward 值: 54.67999999999998
+2025-03-13 14:25:43,677 - INFO - 当前步骤: 9
+2025-03-13 14:25:43,677 - INFO - 当前参数状态: [0.33333334 1.         0.8        0.65       0.65       1.        ]
+2025-03-13 14:25:43,677 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 23, 'param_4': 1.7249999642372131, 'param_5': 'false'}
+2025-03-13 14:25:43,677 - INFO - 对应的 reward 值: 0
+2025-03-13 14:25:43,796 - INFO - 当前步骤: 0
+2025-03-13 14:25:43,796 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.19999999 0.5        0.        ]
+2025-03-13 14:25:43,796 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 14, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:25:43,799 - INFO - 对应的 reward 值: 44.07999999999996
+2025-03-13 14:25:43,799 - INFO - 新的最佳参数! Reward: 80.08999999999996
+2025-03-13 14:25:43,799 - INFO - 参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 23, 'param_4': 1.4999999552965164, 'param_5': 'true'}
+2025-03-13 14:25:43,911 - INFO - 当前步骤: 1
+2025-03-13 14:25:43,916 - INFO - 当前参数状态: [0.6666667  0.33333334 0.5        0.19999999 0.5        0.        ]
+2025-03-13 14:25:43,916 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 20, 'param_3': 14, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:25:43,916 - INFO - 对应的 reward 值: 61.27999999999998
+2025-03-13 14:25:44,045 - INFO - 当前步骤: 2
+2025-03-13 14:25:44,045 - INFO - 当前参数状态: [0.6666667  0.         0.5        0.19999999 0.5        0.        ]
+2025-03-13 14:25:44,045 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 20, 'param_3': 14, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:25:44,045 - INFO - 对应的 reward 值: 44.849999999999916
+2025-03-13 14:25:44,186 - INFO - 当前步骤: 3
+2025-03-13 14:25:44,186 - INFO - 当前参数状态: [0.6666667  0.         0.8        0.19999999 0.5        0.        ]
+2025-03-13 14:25:44,186 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 26, 'param_3': 14, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:25:44,186 - INFO - 对应的 reward 值: 13.730000000000025
+2025-03-13 14:25:44,325 - INFO - 当前步骤: 4
+2025-03-13 14:25:44,325 - INFO - 当前参数状态: [0.6666667  0.         0.8        0.19999999 0.65       0.        ]
+2025-03-13 14:25:44,325 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 26, 'param_3': 14, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:25:44,325 - INFO - 对应的 reward 值: -15.5
+2025-03-13 14:25:44,441 - INFO - 当前步骤: 5
+2025-03-13 14:25:44,441 - INFO - 当前参数状态: [0.6666667  0.33333334 0.8        0.19999999 0.65       0.        ]
+2025-03-13 14:25:44,441 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 26, 'param_3': 14, 'param_4': 1.7249999642372131, 'param_5': 'true'}
+2025-03-13 14:25:44,441 - INFO - 对应的 reward 值: 10.549999999999983
+2025-03-13 14:25:44,558 - INFO - 当前步骤: 6
+2025-03-13 14:25:44,558 - INFO - 当前参数状态: [0.6666667  0.33333334 0.8        0.19999999 0.34999996 0.        ]
+2025-03-13 14:25:44,558 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 26, 'param_3': 14, 'param_4': 1.2749999463558197, 'param_5': 'true'}
+2025-03-13 14:25:44,558 - INFO - 对应的 reward 值: 33.88999999999995
+2025-03-13 14:25:44,671 - INFO - 当前步骤: 7
+2025-03-13 14:25:44,671 - INFO - 当前参数状态: [0.6666667  0.33333334 0.8        0.19999999 0.34999996 0.        ]
+2025-03-13 14:25:44,671 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 26, 'param_3': 14, 'param_4': 1.2749999463558197, 'param_5': 'true'}
+2025-03-13 14:25:44,671 - INFO - 对应的 reward 值: 33.88999999999995
+2025-03-13 14:25:44,786 - INFO - 当前步骤: 8
+2025-03-13 14:25:44,786 - INFO - 当前参数状态: [0.6666667  0.33333334 0.8        0.19999999 0.04999995 0.        ]
+2025-03-13 14:25:44,786 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 26, 'param_3': 14, 'param_4': 0.8249999284744263, 'param_5': 'true'}
+2025-03-13 14:25:44,786 - INFO - 对应的 reward 值: -25.710000000000015
+2025-03-13 14:25:44,895 - INFO - 当前步骤: 9
+2025-03-13 14:25:44,895 - INFO - 当前参数状态: [0.6666667  0.33333334 0.8        0.19999999 0.34999996 0.        ]
+2025-03-13 14:25:44,895 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 26, 'param_3': 14, 'param_4': 1.2749999463558197, 'param_5': 'true'}
+2025-03-13 14:25:44,895 - INFO - 对应的 reward 值: 33.88999999999995
+2025-03-13 14:25:45,035 - INFO - 当前步骤: 10
+2025-03-13 14:25:45,035 - INFO - 当前参数状态: [0.6666667  0.         0.8        0.19999999 0.34999996 0.        ]
+2025-03-13 14:25:45,035 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 26, 'param_3': 14, 'param_4': 1.2749999463558197, 'param_5': 'true'}
+2025-03-13 14:25:45,035 - INFO - 对应的 reward 值: -33.98999999999996
+2025-03-13 14:25:45,171 - INFO - 当前步骤: 11
+2025-03-13 14:25:45,171 - INFO - 当前参数状态: [0.6666667  0.         0.8        0.         0.34999996 0.        ]
+2025-03-13 14:25:45,171 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 26, 'param_3': 10, 'param_4': 1.2749999463558197, 'param_5': 'true'}
+2025-03-13 14:25:45,171 - INFO - 对应的 reward 值: 67.2400000000001
+2025-03-13 14:25:45,171 - INFO - 训练完成，最佳参数:
+2025-03-13 14:25:45,171 - INFO - 最佳 Reward: 80.08999999999996
+2025-03-13 14:25:45,171 - INFO - 最佳参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 23, 'param_4': 1.4999999552965164, 'param_5': 'true'}
+2025-03-13 14:26:25,367 - INFO - 当前步骤: 0
+2025-03-13 14:26:25,367 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:26:25,367 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:26:25,367 - INFO - 对应的 reward 值: 70.20999999999992
+2025-03-13 14:26:25,476 - INFO - 当前步骤: 0
+2025-03-13 14:26:25,476 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.19999999 0.        ]
+2025-03-13 14:26:25,476 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.0499999821186066, 'param_5': 'true'}
+2025-03-13 14:26:25,476 - INFO - 对应的 reward 值: 59.239999999999895
+2025-03-13 14:26:25,476 - INFO - 当前步骤: 1
+2025-03-13 14:26:25,476 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.19999999 1.        ]
+2025-03-13 14:26:25,476 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.0499999821186066, 'param_5': 'false'}
+2025-03-13 14:26:25,476 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:25,476 - INFO - 当前步骤: 2
+2025-03-13 14:26:25,485 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.65       0.19999999 1.        ]
+2025-03-13 14:26:25,485 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 23, 'param_4': 1.0499999821186066, 'param_5': 'false'}
+2025-03-13 14:26:25,485 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:25,485 - INFO - 当前步骤: 3
+2025-03-13 14:26:25,485 - INFO - 当前参数状态: [0.6666667  0.33333334 0.5        0.65       0.19999999 1.        ]
+2025-03-13 14:26:25,485 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 20, 'param_3': 23, 'param_4': 1.0499999821186066, 'param_5': 'false'}
+2025-03-13 14:26:25,485 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:25,485 - INFO - 当前步骤: 4
+2025-03-13 14:26:25,485 - INFO - 当前参数状态: [0.6666667  0.33333334 0.19999999 0.65       0.19999999 1.        ]
+2025-03-13 14:26:25,485 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 14, 'param_3': 23, 'param_4': 1.0499999821186066, 'param_5': 'false'}
+2025-03-13 14:26:25,485 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:25,485 - INFO - 当前步骤: 5
+2025-03-13 14:26:25,488 - INFO - 当前参数状态: [0.6666667  0.33333334 0.19999999 0.65       0.         1.        ]
+2025-03-13 14:26:25,488 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 14, 'param_3': 23, 'param_4': 0.75, 'param_5': 'false'}
+2025-03-13 14:26:25,488 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:25,488 - INFO - 当前步骤: 6
+2025-03-13 14:26:25,489 - INFO - 当前参数状态: [0.6666667  0.33333334 0.19999999 0.65       0.3        1.        ]
+2025-03-13 14:26:25,489 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 14, 'param_3': 23, 'param_4': 1.2000000178813934, 'param_5': 'false'}
+2025-03-13 14:26:25,489 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:25,490 - INFO - 当前步骤: 7
+2025-03-13 14:26:25,490 - INFO - 当前参数状态: [0.6666667  0.33333334 0.19999999 0.65       0.15       1.        ]
+2025-03-13 14:26:25,490 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 14, 'param_3': 23, 'param_4': 0.9750000089406967, 'param_5': 'false'}
+2025-03-13 14:26:25,490 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:25,490 - INFO - 当前步骤: 8
+2025-03-13 14:26:25,491 - INFO - 当前参数状态: [0.6666667  0.33333334 0.19999999 0.65       0.         1.        ]
+2025-03-13 14:26:25,491 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 14, 'param_3': 23, 'param_4': 0.75, 'param_5': 'false'}
+2025-03-13 14:26:25,491 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:25,491 - INFO - 当前步骤: 9
+2025-03-13 14:26:25,491 - INFO - 当前参数状态: [0.6666667  0.33333334 0.         0.65       0.         1.        ]
+2025-03-13 14:26:25,491 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 10, 'param_3': 23, 'param_4': 0.75, 'param_5': 'false'}
+2025-03-13 14:26:25,491 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,507 - INFO - 当前步骤: 0
+2025-03-13 14:26:27,507 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:26:27,507 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:26:27,507 - INFO - 对应的 reward 值: 70.20999999999992
+2025-03-13 14:26:27,507 - INFO - 新的最佳参数! Reward: 70.20999999999992
+2025-03-13 14:26:27,507 - INFO - 参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:26:27,616 - INFO - 当前步骤: 1
+2025-03-13 14:26:27,616 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.8        0.        ]
+2025-03-13 14:26:27,616 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.9500000178813934, 'param_5': 'true'}
+2025-03-13 14:26:27,616 - INFO - 对应的 reward 值: 31.340000000000053
+2025-03-13 14:26:27,616 - INFO - 当前步骤: 2
+2025-03-13 14:26:27,616 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.8        1.        ]
+2025-03-13 14:26:27,616 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,616 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,616 - INFO - 当前步骤: 3
+2025-03-13 14:26:27,616 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.19999999 0.8        1.        ]
+2025-03-13 14:26:27,616 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 14, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,616 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,616 - INFO - 当前步骤: 4
+2025-03-13 14:26:27,616 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.19999999 0.8        1.        ]
+2025-03-13 14:26:27,616 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 14, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,616 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,616 - INFO - 当前步骤: 5
+2025-03-13 14:26:27,616 - INFO - 当前参数状态: [0.33333334 0.         0.5        0.19999999 0.8        1.        ]
+2025-03-13 14:26:27,616 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMA', 'param_2': 20, 'param_3': 14, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,616 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,621 - INFO - 当前步骤: 6
+2025-03-13 14:26:27,621 - INFO - 当前参数状态: [0.33333334 0.         0.5        0.35       0.8        1.        ]
+2025-03-13 14:26:27,621 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMA', 'param_2': 20, 'param_3': 17, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,621 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,621 - INFO - 当前步骤: 7
+2025-03-13 14:26:27,621 - INFO - 当前参数状态: [0.33333334 0.         0.35       0.35       0.8        1.        ]
+2025-03-13 14:26:27,621 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMA', 'param_2': 17, 'param_3': 17, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,621 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,622 - INFO - 当前步骤: 8
+2025-03-13 14:26:27,622 - INFO - 当前参数状态: [0.33333334 1.         0.35       0.35       0.8        1.        ]
+2025-03-13 14:26:27,622 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 17, 'param_3': 17, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,622 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,622 - INFO - 当前步骤: 9
+2025-03-13 14:26:27,623 - INFO - 当前参数状态: [0.33333334 1.         0.35       0.35       0.8        1.        ]
+2025-03-13 14:26:27,623 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 17, 'param_3': 17, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,623 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,623 - INFO - 当前步骤: 10
+2025-03-13 14:26:27,623 - INFO - 当前参数状态: [0.33333334 1.         0.35       0.35       0.8        1.        ]
+2025-03-13 14:26:27,623 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 17, 'param_3': 17, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,623 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,623 - INFO - 当前步骤: 11
+2025-03-13 14:26:27,623 - INFO - 当前参数状态: [0.33333334 1.         0.19999999 0.35       0.8        1.        ]
+2025-03-13 14:26:27,624 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 14, 'param_3': 17, 'param_4': 1.9500000178813934, 'param_5': 'false'}
+2025-03-13 14:26:27,624 - INFO - 对应的 reward 值: 0
+2025-03-13 14:26:27,625 - INFO - 训练完成，最佳参数:
+2025-03-13 14:26:27,625 - INFO - 最佳 Reward: 70.20999999999992
+2025-03-13 14:26:27,625 - INFO - 最佳参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.5, 'param_5': 'true'}
+2025-03-13 14:30:35,493 - INFO - 当前步骤: 0
+2025-03-13 14:30:35,494 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:30:35,494 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:30:35,494 - INFO - 对应的 reward 值: 29.940000000000037
+2025-03-13 14:30:35,607 - INFO - 当前步骤: 0
+2025-03-13 14:30:35,607 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:30:35,607 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:30:35,607 - INFO - 对应的 reward 值: 29.940000000000037
+2025-03-13 14:30:35,728 - INFO - 当前步骤: 1
+2025-03-13 14:30:35,728 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.8        0.        ]
+2025-03-13 14:30:35,728 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2.3400000214576724, 'param_5': 'true'}
+2025-03-13 14:30:35,728 - INFO - 对应的 reward 值: 101.77999999999997
+2025-03-13 14:30:35,847 - INFO - 当前步骤: 2
+2025-03-13 14:30:35,847 - INFO - 当前参数状态: [0.33333334 0.33333334 0.8        0.5        0.8        0.        ]
+2025-03-13 14:30:35,848 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 26, 'param_3': 20, 'param_4': 2.3400000214576724, 'param_5': 'true'}
+2025-03-13 14:30:35,848 - INFO - 对应的 reward 值: 101.65999999999994
+2025-03-13 14:30:35,960 - INFO - 当前步骤: 3
+2025-03-13 14:30:35,960 - INFO - 当前参数状态: [0.33333334 0.33333334 0.8        0.35       0.8        0.        ]
+2025-03-13 14:30:35,960 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 26, 'param_3': 17, 'param_4': 2.3400000214576724, 'param_5': 'true'}
+2025-03-13 14:30:35,960 - INFO - 对应的 reward 值: 96.94999999999997
+2025-03-13 14:30:36,107 - INFO - 当前步骤: 4
+2025-03-13 14:30:36,110 - INFO - 当前参数状态: [0.33333334 0.6666667  0.8        0.35       0.8        0.        ]
+2025-03-13 14:30:36,110 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'WMA', 'param_2': 26, 'param_3': 17, 'param_4': 2.3400000214576724, 'param_5': 'true'}
+2025-03-13 14:30:36,110 - INFO - 对应的 reward 值: 73.85000000000002
+2025-03-13 14:30:36,222 - INFO - 当前步骤: 5
+2025-03-13 14:30:36,223 - INFO - 当前参数状态: [0.33333334 1.         0.8        0.35       0.8        0.        ]
+2025-03-13 14:30:36,223 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 17, 'param_4': 2.3400000214576724, 'param_5': 'true'}
+2025-03-13 14:30:36,223 - INFO - 对应的 reward 值: 83.95000000000003
+2025-03-13 14:30:36,223 - INFO - 当前步骤: 6
+2025-03-13 14:30:36,223 - INFO - 当前参数状态: [0.33333334 1.         0.8        0.35       0.8        1.        ]
+2025-03-13 14:30:36,223 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 17, 'param_4': 2.3400000214576724, 'param_5': 'false'}
+2025-03-13 14:30:36,223 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,225 - INFO - 当前步骤: 7
+2025-03-13 14:30:36,225 - INFO - 当前参数状态: [0.33333334 1.         0.8        0.35       0.8        1.        ]
+2025-03-13 14:30:36,225 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 17, 'param_4': 2.3400000214576724, 'param_5': 'false'}
+2025-03-13 14:30:36,225 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,226 - INFO - 当前步骤: 8
+2025-03-13 14:30:36,226 - INFO - 当前参数状态: [0.33333334 1.         0.8        0.5        0.8        1.        ]
+2025-03-13 14:30:36,226 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 20, 'param_4': 2.3400000214576724, 'param_5': 'false'}
+2025-03-13 14:30:36,226 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,228 - INFO - 当前步骤: 9
+2025-03-13 14:30:36,228 - INFO - 当前参数状态: [0.33333334 1.         0.8        0.5        0.8        1.        ]
+2025-03-13 14:30:36,228 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMMA', 'param_2': 26, 'param_3': 20, 'param_4': 2.3400000214576724, 'param_5': 'false'}
+2025-03-13 14:30:36,228 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,347 - INFO - 当前步骤: 0
+2025-03-13 14:30:36,348 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:30:36,348 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:30:36,348 - INFO - 对应的 reward 值: 29.940000000000037
+2025-03-13 14:30:36,348 - INFO - 新的最佳参数! Reward: 101.77999999999997
+2025-03-13 14:30:36,348 - INFO - 参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2.3400000214576724, 'param_5': 'true'}
+2025-03-13 14:30:36,460 - INFO - 当前步骤: 1
+2025-03-13 14:30:36,460 - INFO - 当前参数状态: [0.33333334 0.33333334 0.35       0.5        0.5        0.        ]
+2025-03-13 14:30:36,460 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:30:36,460 - INFO - 对应的 reward 值: 39.38000000000002
+2025-03-13 14:30:36,460 - INFO - 当前步骤: 2
+2025-03-13 14:30:36,460 - INFO - 当前参数状态: [0.33333334 0.33333334 0.35       0.5        0.5        1.        ]
+2025-03-13 14:30:36,460 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'false'}
+2025-03-13 14:30:36,460 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,464 - INFO - 当前步骤: 3
+2025-03-13 14:30:36,464 - INFO - 当前参数状态: [0.         0.33333334 0.35       0.5        0.5        1.        ]
+2025-03-13 14:30:36,464 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'false'}
+2025-03-13 14:30:36,465 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,465 - INFO - 当前步骤: 4
+2025-03-13 14:30:36,465 - INFO - 当前参数状态: [0.         0.33333334 0.35       0.5        0.5        1.        ]
+2025-03-13 14:30:36,465 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'false'}
+2025-03-13 14:30:36,465 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,465 - INFO - 当前步骤: 5
+2025-03-13 14:30:36,465 - INFO - 当前参数状态: [0.         0.33333334 0.35       0.5        0.5        1.        ]
+2025-03-13 14:30:36,465 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'false'}
+2025-03-13 14:30:36,465 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,465 - INFO - 当前步骤: 6
+2025-03-13 14:30:36,465 - INFO - 当前参数状态: [0.        0.6666667 0.35      0.5       0.5       1.       ]
+2025-03-13 14:30:36,465 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'false'}
+2025-03-13 14:30:36,468 - INFO - 对应的 reward 值: 0
+2025-03-13 14:30:36,615 - INFO - 当前步骤: 7
+2025-03-13 14:30:36,616 - INFO - 当前参数状态: [0.        0.6666667 0.35      0.5       0.5       0.       ]
+2025-03-13 14:30:36,616 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:30:36,617 - INFO - 对应的 reward 值: 92.87000000000003
+2025-03-13 14:30:36,761 - INFO - 当前步骤: 8
+2025-03-13 14:30:36,761 - INFO - 当前参数状态: [0.        0.6666667 0.35      0.5       0.5       0.       ]
+2025-03-13 14:30:36,761 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 20, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:30:36,761 - INFO - 对应的 reward 值: 92.87000000000003
+2025-03-13 14:30:36,905 - INFO - 当前步骤: 9
+2025-03-13 14:30:36,905 - INFO - 当前参数状态: [0.        0.6666667 0.35      0.8       0.5       0.       ]
+2025-03-13 14:30:36,905 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 26, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:30:36,905 - INFO - 对应的 reward 值: 148.17000000000002
+2025-03-13 14:30:36,905 - INFO - 新的最佳参数! Reward: 148.17000000000002
+2025-03-13 14:30:36,905 - INFO - 参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 26, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:30:37,055 - INFO - 当前步骤: 10
+2025-03-13 14:30:37,055 - INFO - 当前参数状态: [0.         0.6666667  0.35       0.8        0.19999999 0.        ]
+2025-03-13 14:30:37,062 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 26, 'param_4': 1.259999978542328, 'param_5': 'true'}
+2025-03-13 14:30:37,062 - INFO - 对应的 reward 值: 64.03999999999986
+2025-03-13 14:30:37,205 - INFO - 当前步骤: 11
+2025-03-13 14:30:37,205 - INFO - 当前参数状态: [0.         0.6666667  0.35       0.65       0.19999999 0.        ]
+2025-03-13 14:30:37,205 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 23, 'param_4': 1.259999978542328, 'param_5': 'true'}
+2025-03-13 14:30:37,205 - INFO - 对应的 reward 值: 18.89999999999986
+2025-03-13 14:30:37,205 - INFO - 训练完成，最佳参数:
+2025-03-13 14:30:37,205 - INFO - 最佳 Reward: 148.17000000000002
+2025-03-13 14:30:37,205 - INFO - 最佳参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 26, 'param_4': 1.8000000000000003, 'param_5': 'true'}
+2025-03-13 14:32:51,865 - INFO - 当前步骤: 0
+2025-03-13 14:32:51,865 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.8        0.        ]
+2025-03-13 14:32:51,871 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:51,871 - INFO - 对应的 reward 值: 5.839999999999996
+2025-03-13 14:32:51,985 - INFO - 当前步骤: 0
+2025-03-13 14:32:51,986 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.5        0.        ]
+2025-03-13 14:32:51,986 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:51,986 - INFO - 对应的 reward 值: 98.15000000000003
+2025-03-13 14:32:52,096 - INFO - 当前步骤: 1
+2025-03-13 14:32:52,096 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.8        0.        ]
+2025-03-13 14:32:52,096 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:52,096 - INFO - 对应的 reward 值: 46.78999999999999
+2025-03-13 14:32:52,205 - INFO - 当前步骤: 2
+2025-03-13 14:32:52,205 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.8        0.        ]
+2025-03-13 14:32:52,205 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:52,205 - INFO - 对应的 reward 值: 46.78999999999999
+2025-03-13 14:32:52,355 - INFO - 当前步骤: 3
+2025-03-13 14:32:52,355 - INFO - 当前参数状态: [0.        0.6666667 0.5       0.8       0.8       0.       ]
+2025-03-13 14:32:52,355 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 20, 'param_3': 26, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:52,355 - INFO - 对应的 reward 值: 39.14999999999998
+2025-03-13 14:32:52,465 - INFO - 当前步骤: 4
+2025-03-13 14:32:52,465 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.8        0.        ]
+2025-03-13 14:32:52,465 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:52,465 - INFO - 对应的 reward 值: 46.78999999999999
+2025-03-13 14:32:52,579 - INFO - 当前步骤: 5
+2025-03-13 14:32:52,579 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.8        0.        ]
+2025-03-13 14:32:52,579 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:52,579 - INFO - 对应的 reward 值: 46.78999999999999
+2025-03-13 14:32:52,695 - INFO - 当前步骤: 6
+2025-03-13 14:32:52,695 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.7        0.        ]
+2025-03-13 14:32:52,695 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:52,695 - INFO - 对应的 reward 值: 98.15000000000003
+2025-03-13 14:32:52,815 - INFO - 当前步骤: 7
+2025-03-13 14:32:52,815 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.7        0.        ]
+2025-03-13 14:32:52,815 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:52,815 - INFO - 对应的 reward 值: 98.15000000000003
+2025-03-13 14:32:52,934 - INFO - 当前步骤: 8
+2025-03-13 14:32:52,934 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.7        0.        ]
+2025-03-13 14:32:52,935 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:52,935 - INFO - 对应的 reward 值: 98.15000000000003
+2025-03-13 14:32:53,050 - INFO - 当前步骤: 9
+2025-03-13 14:32:53,054 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.7        0.        ]
+2025-03-13 14:32:53,054 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:53,054 - INFO - 对应的 reward 值: 98.15000000000003
+2025-03-13 14:32:53,165 - INFO - 当前步骤: 0
+2025-03-13 14:32:53,165 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.5        0.        ]
+2025-03-13 14:32:53,165 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:53,165 - INFO - 对应的 reward 值: 83.07000000000002
+2025-03-13 14:32:53,165 - INFO - 新的最佳参数! Reward: 98.15000000000003
+2025-03-13 14:32:53,165 - INFO - 参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:53,285 - INFO - 当前步骤: 1
+2025-03-13 14:32:53,285 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.5        0.        ]
+2025-03-13 14:32:53,285 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:53,285 - INFO - 对应的 reward 值: 83.07000000000002
+2025-03-13 14:32:53,395 - INFO - 当前步骤: 2
+2025-03-13 14:32:53,395 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.5        0.        ]
+2025-03-13 14:32:53,395 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:53,395 - INFO - 对应的 reward 值: 83.07000000000002
+2025-03-13 14:32:53,505 - INFO - 当前步骤: 3
+2025-03-13 14:32:53,505 - INFO - 当前参数状态: [0.33333334 0.33333334 0.65       0.5        0.5        0.        ]
+2025-03-13 14:32:53,505 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:53,505 - INFO - 对应的 reward 值: 27.010000000000034
+2025-03-13 14:32:53,618 - INFO - 当前步骤: 4
+2025-03-13 14:32:53,625 - INFO - 当前参数状态: [0.33333334 0.33333334 0.65       0.5        0.8        0.        ]
+2025-03-13 14:32:53,625 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:53,625 - INFO - 对应的 reward 值: 43.14999999999998
+2025-03-13 14:32:53,735 - INFO - 当前步骤: 5
+2025-03-13 14:32:53,735 - INFO - 当前参数状态: [0.33333334 0.33333334 0.35       0.5        0.8        0.        ]
+2025-03-13 14:32:53,735 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:53,735 - INFO - 对应的 reward 值: 10.169999999999995
+2025-03-13 14:32:53,845 - INFO - 当前步骤: 6
+2025-03-13 14:32:53,845 - INFO - 当前参数状态: [0.33333334 0.33333334 0.35       0.5        1.         0.        ]
+2025-03-13 14:32:53,845 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:53,845 - INFO - 对应的 reward 值: 10.169999999999995
+2025-03-13 14:32:53,959 - INFO - 当前步骤: 7
+2025-03-13 14:32:53,959 - INFO - 当前参数状态: [0.33333334 0.33333334 0.35       0.5        1.         0.        ]
+2025-03-13 14:32:53,959 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:32:53,961 - INFO - 对应的 reward 值: 10.169999999999995
+2025-03-13 14:32:54,073 - INFO - 当前步骤: 8
+2025-03-13 14:32:54,073 - INFO - 当前参数状态: [0.33333334 0.33333334 0.35       0.5        0.7        0.        ]
+2025-03-13 14:32:54,073 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:54,073 - INFO - 对应的 reward 值: 86.27000000000007
+2025-03-13 14:32:54,196 - INFO - 当前步骤: 9
+2025-03-13 14:32:54,196 - INFO - 当前参数状态: [0.         0.33333334 0.35       0.5        0.7        0.        ]
+2025-03-13 14:32:54,196 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:54,196 - INFO - 对应的 reward 值: 149.89999999999998
+2025-03-13 14:32:54,197 - INFO - 新的最佳参数! Reward: 149.89999999999998
+2025-03-13 14:32:54,197 - INFO - 参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:32:54,311 - INFO - 当前步骤: 10
+2025-03-13 14:32:54,312 - INFO - 当前参数状态: [0.         0.33333334 0.35       0.5        0.19999999 0.        ]
+2025-03-13 14:32:54,312 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 1, 'param_5': 'true'}
+2025-03-13 14:32:54,312 - INFO - 对应的 reward 值: 47.00999999999997
+2025-03-13 14:32:54,312 - INFO - 当前步骤: 11
+2025-03-13 14:32:54,312 - INFO - 当前参数状态: [0.         0.33333334 0.35       0.5        0.19999999 1.        ]
+2025-03-13 14:32:54,312 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 1, 'param_5': 'false'}
+2025-03-13 14:32:54,312 - INFO - 对应的 reward 值: 0
+2025-03-13 14:32:54,312 - INFO - 训练完成，最佳参数:
+2025-03-13 14:32:54,312 - INFO - 最佳 Reward: 149.89999999999998
+2025-03-13 14:32:54,312 - INFO - 最佳参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 17, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:00,957 - INFO - 当前步骤: 0
+2025-03-13 14:36:00,957 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.5        1.        ]
+2025-03-13 14:36:00,957 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:36:00,957 - INFO - 对应的 reward 值: 0
+2025-03-13 14:36:01,065 - INFO - 当前步骤: 0
+2025-03-13 14:36:01,065 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.65       0.        ]
+2025-03-13 14:36:01,065 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:01,065 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 14:36:01,175 - INFO - 当前步骤: 1
+2025-03-13 14:36:01,176 - INFO - 当前参数状态: [1.         0.33333334 0.5        0.5        0.65       0.        ]
+2025-03-13 14:36:01,176 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:01,176 - INFO - 对应的 reward 值: 43.16000000000001
+2025-03-13 14:36:01,176 - INFO - 当前步骤: 2
+2025-03-13 14:36:01,177 - INFO - 当前参数状态: [1.         0.33333334 0.5        0.5        0.65       1.        ]
+2025-03-13 14:36:01,177 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:36:01,177 - INFO - 对应的 reward 值: 0
+2025-03-13 14:36:01,177 - INFO - 当前步骤: 3
+2025-03-13 14:36:01,177 - INFO - 当前参数状态: [1.         0.33333334 0.5        0.5        0.5        1.        ]
+2025-03-13 14:36:01,177 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:36:01,177 - INFO - 对应的 reward 值: 0
+2025-03-13 14:36:01,177 - INFO - 当前步骤: 4
+2025-03-13 14:36:01,177 - INFO - 当前参数状态: [1.         0.33333334 0.65       0.5        0.5        1.        ]
+2025-03-13 14:36:01,177 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:36:01,177 - INFO - 对应的 reward 值: 0
+2025-03-13 14:36:01,177 - INFO - 当前步骤: 5
+2025-03-13 14:36:01,177 - INFO - 当前参数状态: [1.         0.33333334 0.65       0.19999999 0.5        1.        ]
+2025-03-13 14:36:01,177 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'EMA', 'param_2': 23, 'param_3': 14, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:36:01,177 - INFO - 对应的 reward 值: 0
+2025-03-13 14:36:01,286 - INFO - 当前步骤: 6
+2025-03-13 14:36:01,286 - INFO - 当前参数状态: [1.         0.33333334 0.65       0.19999999 0.5        0.        ]
+2025-03-13 14:36:01,286 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'EMA', 'param_2': 23, 'param_3': 14, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:01,287 - INFO - 对应的 reward 值: 50.650000000000034
+2025-03-13 14:36:01,395 - INFO - 当前步骤: 7
+2025-03-13 14:36:01,396 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.19999999 0.5        0.        ]
+2025-03-13 14:36:01,396 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 14, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:01,396 - INFO - 对应的 reward 值: 46.34999999999997
+2025-03-13 14:36:01,506 - INFO - 当前步骤: 8
+2025-03-13 14:36:01,506 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.19999999 0.5        0.        ]
+2025-03-13 14:36:01,506 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 14, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:01,506 - INFO - 对应的 reward 值: 46.34999999999997
+2025-03-13 14:36:01,645 - INFO - 当前步骤: 9
+2025-03-13 14:36:01,645 - INFO - 当前参数状态: [0.         0.6666667  0.65       0.19999999 0.5        0.        ]
+2025-03-13 14:36:01,645 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 23, 'param_3': 14, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:01,645 - INFO - 对应的 reward 值: 8.150000000000034
+2025-03-13 14:36:03,652 - INFO - 当前步骤: 0
+2025-03-13 14:36:03,652 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.5        0.        ]
+2025-03-13 14:36:03,652 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:03,653 - INFO - 对应的 reward 值: 83.07000000000002
+2025-03-13 14:36:03,653 - INFO - 新的最佳参数! Reward: 85.44000000000005
+2025-03-13 14:36:03,653 - INFO - 参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:03,760 - INFO - 当前步骤: 1
+2025-03-13 14:36:03,762 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.35       0.5        0.        ]
+2025-03-13 14:36:03,762 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 17, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:03,762 - INFO - 对应的 reward 值: 89.60000000000001
+2025-03-13 14:36:03,762 - INFO - 新的最佳参数! Reward: 89.60000000000001
+2025-03-13 14:36:03,762 - INFO - 参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 17, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:03,865 - INFO - 当前步骤: 2
+2025-03-13 14:36:03,865 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.35       0.5        0.        ]
+2025-03-13 14:36:03,865 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 17, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:03,865 - INFO - 对应的 reward 值: 89.60000000000001
+2025-03-13 14:36:04,007 - INFO - 当前步骤: 3
+2025-03-13 14:36:04,007 - INFO - 当前参数状态: [0.        0.6666667 0.65      0.35      0.5       0.       ]
+2025-03-13 14:36:04,007 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 23, 'param_3': 17, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,007 - INFO - 对应的 reward 值: 15.589999999999996
+2025-03-13 14:36:04,148 - INFO - 当前步骤: 4
+2025-03-13 14:36:04,148 - INFO - 当前参数状态: [0.        0.6666667 0.65      0.35      0.5       0.       ]
+2025-03-13 14:36:04,148 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 23, 'param_3': 17, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,148 - INFO - 对应的 reward 值: 15.589999999999996
+2025-03-13 14:36:04,285 - INFO - 当前步骤: 5
+2025-03-13 14:36:04,285 - INFO - 当前参数状态: [0.         0.6666667  0.65       0.04999999 0.5        0.        ]
+2025-03-13 14:36:04,290 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,290 - INFO - 对应的 reward 值: 40.859999999999914
+2025-03-13 14:36:04,425 - INFO - 当前步骤: 6
+2025-03-13 14:36:04,430 - INFO - 当前参数状态: [0.33333334 0.6666667  0.65       0.04999999 0.5        0.        ]
+2025-03-13 14:36:04,430 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'WMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,430 - INFO - 对应的 reward 值: 93.16999999999997
+2025-03-13 14:36:04,430 - INFO - 新的最佳参数! Reward: 93.16999999999997
+2025-03-13 14:36:04,430 - INFO - 参数: {'param_0': 'open', 'param_1': 'WMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,535 - INFO - 当前步骤: 7
+2025-03-13 14:36:04,535 - INFO - 当前参数状态: [0.33333334 0.33333334 0.65       0.04999999 0.5        0.        ]
+2025-03-13 14:36:04,535 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,535 - INFO - 对应的 reward 值: 31.720000000000013
+2025-03-13 14:36:04,644 - INFO - 当前步骤: 8
+2025-03-13 14:36:04,644 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.04999999 0.5        0.        ]
+2025-03-13 14:36:04,644 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,644 - INFO - 对应的 reward 值: 108.94000000000005
+2025-03-13 14:36:04,644 - INFO - 新的最佳参数! Reward: 108.94000000000005
+2025-03-13 14:36:04,644 - INFO - 参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,775 - INFO - 当前步骤: 9
+2025-03-13 14:36:04,775 - INFO - 当前参数状态: [0.         0.         0.65       0.04999999 0.5        0.        ]
+2025-03-13 14:36:04,775 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'SMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:36:04,775 - INFO - 对应的 reward 值: 20.919999999999984
+2025-03-13 14:36:04,775 - INFO - 当前步骤: 10
+2025-03-13 14:36:04,775 - INFO - 当前参数状态: [0.         0.         0.65       0.04999999 0.5        1.        ]
+2025-03-13 14:36:04,775 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'SMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:36:04,775 - INFO - 对应的 reward 值: 0
+2025-03-13 14:36:04,775 - INFO - 当前步骤: 11
+2025-03-13 14:36:04,775 - INFO - 当前参数状态: [0.         0.         0.65       0.35000002 0.5        1.        ]
+2025-03-13 14:36:04,775 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'SMA', 'param_2': 23, 'param_3': 17, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:36:04,775 - INFO - 对应的 reward 值: 0
+2025-03-13 14:36:04,775 - INFO - 训练完成，最佳参数:
+2025-03-13 14:36:04,775 - INFO - 最佳 Reward: 108.94000000000005
+2025-03-13 14:36:04,775 - INFO - 最佳参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 11, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:44,733 - INFO - 当前步骤: 0
+2025-03-13 14:38:44,734 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:38:44,734 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:44,734 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 14:38:44,846 - INFO - 当前步骤: 0
+2025-03-13 14:38:44,846 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.8        0.5        0.        ]
+2025-03-13 14:38:44,846 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:44,846 - INFO - 对应的 reward 值: 98.15000000000003
+2025-03-13 14:38:44,982 - INFO - 当前步骤: 1
+2025-03-13 14:38:44,982 - INFO - 当前参数状态: [0.  0.  0.5 0.8 0.5 0. ]
+2025-03-13 14:38:44,982 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'SMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:44,984 - INFO - 对应的 reward 值: 11.24999999999995
+2025-03-13 14:38:45,114 - INFO - 当前步骤: 2
+2025-03-13 14:38:45,114 - INFO - 当前参数状态: [1.  0.  0.5 0.8 0.5 0. ]
+2025-03-13 14:38:45,114 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'SMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,114 - INFO - 对应的 reward 值: 1.72999999999994
+2025-03-13 14:38:45,246 - INFO - 当前步骤: 3
+2025-03-13 14:38:45,246 - INFO - 当前参数状态: [1.  0.  0.5 0.8 0.5 0. ]
+2025-03-13 14:38:45,246 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'SMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,246 - INFO - 对应的 reward 值: 1.72999999999994
+2025-03-13 14:38:45,365 - INFO - 当前步骤: 4
+2025-03-13 14:38:45,365 - INFO - 当前参数状态: [1.  1.  0.5 0.8 0.5 0. ]
+2025-03-13 14:38:45,365 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'SMMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,365 - INFO - 对应的 reward 值: 72.24
+2025-03-13 14:38:45,485 - INFO - 当前步骤: 5
+2025-03-13 14:38:45,485 - INFO - 当前参数状态: [1.  1.  0.5 0.8 0.5 0. ]
+2025-03-13 14:38:45,485 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'SMMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,485 - INFO - 对应的 reward 值: 72.24
+2025-03-13 14:38:45,594 - INFO - 当前步骤: 6
+2025-03-13 14:38:45,594 - INFO - 当前参数状态: [1.   1.   0.5  0.95 0.5  0.  ]
+2025-03-13 14:38:45,594 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'SMMA', 'param_2': 20, 'param_3': 29, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,594 - INFO - 对应的 reward 值: 75.29999999999998
+2025-03-13 14:38:45,594 - INFO - 当前步骤: 7
+2025-03-13 14:38:45,594 - INFO - 当前参数状态: [1.   1.   0.5  0.95 0.5  1.  ]
+2025-03-13 14:38:45,594 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'SMMA', 'param_2': 20, 'param_3': 29, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,594 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,594 - INFO - 当前步骤: 8
+2025-03-13 14:38:45,604 - INFO - 当前参数状态: [1.        0.6666667 0.5       0.95      0.5       1.       ]
+2025-03-13 14:38:45,604 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 20, 'param_3': 29, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,604 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,744 - INFO - 当前步骤: 9
+2025-03-13 14:38:45,744 - INFO - 当前参数状态: [1.        0.6666667 0.5       0.95      0.5       0.       ]
+2025-03-13 14:38:45,744 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 20, 'param_3': 29, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,744 - INFO - 对应的 reward 值: 72.78000000000003
+2025-03-13 14:38:45,870 - INFO - 当前步骤: 0
+2025-03-13 14:38:45,870 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:38:45,870 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,870 - INFO - 对应的 reward 值: 33.35000000000005
+2025-03-13 14:38:45,875 - INFO - 新的最佳参数! Reward: 98.15000000000003
+2025-03-13 14:38:45,875 - INFO - 参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,875 - INFO - 当前步骤: 1
+2025-03-13 14:38:45,875 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        1.        ]
+2025-03-13 14:38:45,875 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,875 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,875 - INFO - 当前步骤: 2
+2025-03-13 14:38:45,875 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.8        1.        ]
+2025-03-13 14:38:45,875 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 3, 'param_5': 'false'}
+2025-03-13 14:38:45,875 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,875 - INFO - 当前步骤: 3
+2025-03-13 14:38:45,875 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.7        1.        ]
+2025-03-13 14:38:45,875 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,875 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,875 - INFO - 当前步骤: 4
+2025-03-13 14:38:45,879 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.7        1.        ]
+2025-03-13 14:38:45,879 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,879 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,880 - INFO - 当前步骤: 5
+2025-03-13 14:38:45,880 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.7        1.        ]
+2025-03-13 14:38:45,880 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,880 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,985 - INFO - 当前步骤: 6
+2025-03-13 14:38:45,994 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.7        0.        ]
+2025-03-13 14:38:45,994 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:38:45,994 - INFO - 对应的 reward 值: 83.07000000000002
+2025-03-13 14:38:45,994 - INFO - 当前步骤: 7
+2025-03-13 14:38:45,994 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.7        1.        ]
+2025-03-13 14:38:45,994 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,994 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,994 - INFO - 当前步骤: 8
+2025-03-13 14:38:45,994 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.7        1.        ]
+2025-03-13 14:38:45,994 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,994 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,994 - INFO - 当前步骤: 9
+2025-03-13 14:38:45,994 - INFO - 当前参数状态: [0.         0.33333334 0.65       0.5        0.7        1.        ]
+2025-03-13 14:38:45,994 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,994 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,994 - INFO - 当前步骤: 10
+2025-03-13 14:38:45,994 - INFO - 当前参数状态: [0.        0.6666667 0.65      0.5       0.7       1.       ]
+2025-03-13 14:38:45,994 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 23, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:45,994 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:45,994 - INFO - 当前步骤: 11
+2025-03-13 14:38:45,994 - INFO - 当前参数状态: [0.        0.6666667 0.35      0.5       0.7       1.       ]
+2025-03-13 14:38:46,001 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'WMA', 'param_2': 17, 'param_3': 20, 'param_4': 2, 'param_5': 'false'}
+2025-03-13 14:38:46,001 - INFO - 对应的 reward 值: 0
+2025-03-13 14:38:46,001 - INFO - 训练完成，最佳参数:
+2025-03-13 14:38:46,001 - INFO - 最佳 Reward: 98.15000000000003
+2025-03-13 14:38:46,001 - INFO - 最佳参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 26, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:16,626 - INFO - 当前步骤: 0
+2025-03-13 14:40:16,627 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.5        0.35       0.        ]
+2025-03-13 14:40:16,627 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:16,627 - INFO - 对应的 reward 值: 85.44000000000005
+2025-03-13 14:40:16,744 - INFO - 当前步骤: 0
+2025-03-13 14:40:16,744 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.65       0.5        0.        ]
+2025-03-13 14:40:16,744 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 23, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:16,744 - INFO - 对应的 reward 值: 78.82000000000005
+2025-03-13 14:40:16,861 - INFO - 当前步骤: 1
+2025-03-13 14:40:16,861 - INFO - 当前参数状态: [0.         0.33333334 0.5        0.65       0.5        0.        ]
+2025-03-13 14:40:16,861 - INFO - 当前参数: {'param_0': 'close', 'param_1': 'EMA', 'param_2': 20, 'param_3': 23, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:16,861 - INFO - 对应的 reward 值: 78.82000000000005
+2025-03-13 14:40:16,974 - INFO - 当前步骤: 2
+2025-03-13 14:40:16,974 - INFO - 当前参数状态: [1.         0.33333334 0.5        0.65       0.5        0.        ]
+2025-03-13 14:40:16,974 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'EMA', 'param_2': 20, 'param_3': 23, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:16,974 - INFO - 对应的 reward 值: 39.86
+2025-03-13 14:40:17,120 - INFO - 当前步骤: 3
+2025-03-13 14:40:17,120 - INFO - 当前参数状态: [1.        0.6666667 0.5       0.65      0.5       0.       ]
+2025-03-13 14:40:17,124 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 20, 'param_3': 23, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:17,124 - INFO - 对应的 reward 值: 117.31
+2025-03-13 14:40:17,287 - INFO - 当前步骤: 4
+2025-03-13 14:40:17,287 - INFO - 当前参数状态: [1.        0.6666667 0.8       0.65      0.5       0.       ]
+2025-03-13 14:40:17,287 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 26, 'param_3': 23, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:17,287 - INFO - 对应的 reward 值: 60.89999999999996
+2025-03-13 14:40:17,454 - INFO - 当前步骤: 5
+2025-03-13 14:40:17,454 - INFO - 当前参数状态: [1.        0.6666667 0.8       0.5       0.5       0.       ]
+2025-03-13 14:40:17,454 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 26, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:17,454 - INFO - 对应的 reward 值: 13.98
+2025-03-13 14:40:17,599 - INFO - 当前步骤: 6
+2025-03-13 14:40:17,599 - INFO - 当前参数状态: [1.        0.6666667 0.8       0.5       0.8       0.       ]
+2025-03-13 14:40:17,599 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 26, 'param_3': 20, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:40:17,599 - INFO - 对应的 reward 值: 35.659999999999975
+2025-03-13 14:40:17,748 - INFO - 当前步骤: 7
+2025-03-13 14:40:17,748 - INFO - 当前参数状态: [1.        0.6666667 0.8       0.8       0.8       0.       ]
+2025-03-13 14:40:17,748 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 26, 'param_3': 26, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:40:17,748 - INFO - 对应的 reward 值: 26.21000000000001
+2025-03-13 14:40:17,904 - INFO - 当前步骤: 8
+2025-03-13 14:40:17,904 - INFO - 当前参数状态: [1.        0.6666667 0.8       0.8       1.        0.       ]
+2025-03-13 14:40:17,904 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 26, 'param_3': 26, 'param_4': 3, 'param_5': 'true'}
+2025-03-13 14:40:17,909 - INFO - 对应的 reward 值: 26.21000000000001
+2025-03-13 14:40:17,909 - INFO - 当前步骤: 9
+2025-03-13 14:40:17,909 - INFO - 当前参数状态: [1.        0.6666667 0.8       0.8       1.        1.       ]
+2025-03-13 14:40:17,909 - INFO - 当前参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 26, 'param_3': 26, 'param_4': 3, 'param_5': 'false'}
+2025-03-13 14:40:17,909 - INFO - 对应的 reward 值: 0
+2025-03-13 14:40:18,054 - INFO - 当前步骤: 0
+2025-03-13 14:40:18,054 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:40:18,054 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:18,054 - INFO - 对应的 reward 值: 33.35000000000005
+2025-03-13 14:40:18,054 - INFO - 新的最佳参数! Reward: 117.31
+2025-03-13 14:40:18,054 - INFO - 参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 20, 'param_3': 23, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:18,170 - INFO - 当前步骤: 1
+2025-03-13 14:40:18,170 - INFO - 当前参数状态: [0.33333334 0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:40:18,170 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:18,170 - INFO - 对应的 reward 值: 33.35000000000005
+2025-03-13 14:40:18,284 - INFO - 当前步骤: 2
+2025-03-13 14:40:18,284 - INFO - 当前参数状态: [0.6666667  0.33333334 0.5        0.5        0.5        0.        ]
+2025-03-13 14:40:18,284 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'EMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:18,284 - INFO - 对应的 reward 值: 57.95999999999994
+2025-03-13 14:40:18,414 - INFO - 当前步骤: 3
+2025-03-13 14:40:18,414 - INFO - 当前参数状态: [0.6666667 0.        0.5       0.5       0.5       0.       ]
+2025-03-13 14:40:18,414 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:18,414 - INFO - 对应的 reward 值: 24.029999999999966
+2025-03-13 14:40:18,549 - INFO - 当前步骤: 4
+2025-03-13 14:40:18,549 - INFO - 当前参数状态: [0.6666667 0.        0.5       0.5       0.5       0.       ]
+2025-03-13 14:40:18,549 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 20, 'param_3': 20, 'param_4': 2, 'param_5': 'true'}
+2025-03-13 14:40:18,549 - INFO - 对应的 reward 值: 24.029999999999966
+2025-03-13 14:40:18,712 - INFO - 当前步骤: 5
+2025-03-13 14:40:18,712 - INFO - 当前参数状态: [0.6666667  0.         0.5        0.5        0.19999999 0.        ]
+2025-03-13 14:40:18,712 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 20, 'param_3': 20, 'param_4': 1, 'param_5': 'true'}
+2025-03-13 14:40:18,712 - INFO - 对应的 reward 值: -21.060000000000095
+2025-03-13 14:40:18,844 - INFO - 当前步骤: 6
+2025-03-13 14:40:18,849 - INFO - 当前参数状态: [0.6666667  0.         0.65       0.5        0.19999999 0.        ]
+2025-03-13 14:40:18,849 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 23, 'param_3': 20, 'param_4': 1, 'param_5': 'true'}
+2025-03-13 14:40:18,849 - INFO - 对应的 reward 值: 31.74000000000005
+2025-03-13 14:40:18,990 - INFO - 当前步骤: 7
+2025-03-13 14:40:18,990 - INFO - 当前参数状态: [0.6666667 0.        0.65      0.5       0.        0.       ]
+2025-03-13 14:40:18,990 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 23, 'param_3': 20, 'param_4': 1, 'param_5': 'true'}
+2025-03-13 14:40:18,990 - INFO - 对应的 reward 值: 31.74000000000005
+2025-03-13 14:40:19,124 - INFO - 当前步骤: 8
+2025-03-13 14:40:19,124 - INFO - 当前参数状态: [0.6666667 0.        0.65      0.65      0.        0.       ]
+2025-03-13 14:40:19,124 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 23, 'param_3': 23, 'param_4': 1, 'param_5': 'true'}
+2025-03-13 14:40:19,124 - INFO - 对应的 reward 值: 24.77000000000002
+2025-03-13 14:40:19,237 - INFO - 当前步骤: 9
+2025-03-13 14:40:19,237 - INFO - 当前参数状态: [0.6666667 1.        0.65      0.65      0.        0.       ]
+2025-03-13 14:40:19,237 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMMA', 'param_2': 23, 'param_3': 23, 'param_4': 1, 'param_5': 'true'}
+2025-03-13 14:40:19,244 - INFO - 对应的 reward 值: 21.690000000000065
+2025-03-13 14:40:19,374 - INFO - 当前步骤: 10
+2025-03-13 14:40:19,374 - INFO - 当前参数状态: [0.6666667 0.        0.65      0.65      0.        0.       ]
+2025-03-13 14:40:19,374 - INFO - 当前参数: {'param_0': 'high', 'param_1': 'SMA', 'param_2': 23, 'param_3': 23, 'param_4': 1, 'param_5': 'true'}
+2025-03-13 14:40:19,374 - INFO - 对应的 reward 值: 24.77000000000002
+2025-03-13 14:40:19,515 - INFO - 当前步骤: 11
+2025-03-13 14:40:19,515 - INFO - 当前参数状态: [0.33333334 0.         0.65       0.65       0.         0.        ]
+2025-03-13 14:40:19,515 - INFO - 当前参数: {'param_0': 'open', 'param_1': 'SMA', 'param_2': 23, 'param_3': 23, 'param_4': 1, 'param_5': 'true'}
+2025-03-13 14:40:19,515 - INFO - 对应的 reward 值: 13.399999999999874
+2025-03-13 14:40:19,515 - INFO - 训练完成，最佳参数:
+2025-03-13 14:40:19,515 - INFO - 最佳 Reward: 117.31
+2025-03-13 14:40:19,515 - INFO - 最佳参数: {'param_0': 'low', 'param_1': 'WMA', 'param_2': 20, 'param_3': 23, 'param_4': 2, 'param_5': 'true'}

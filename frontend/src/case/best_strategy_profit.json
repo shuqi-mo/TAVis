@@ -25,6 +25,19 @@
       "down": "mid - multiplier * band",
       "long": "cross(price,down)",
       "short": "cross(up,price)"
+    },
+    {
+      "name": "MACD&boll",
+      "shortterm_MACD": "EMA(close,14)",
+      "longterm_MACD": "EMA(close,26)",
+      "price_boll": "close",
+      "mid_boll": "EMA(price_boll,20)",
+      "band_boll": "movingstd(price_boll,17)",
+      "multiplier_boll": "2",
+      "up_boll": "mid_boll + multiplier_boll * band_boll",
+      "down_boll": "mid_boll - multiplier_boll * band_boll",
+      "long": "cross(shortterm_MACD,longterm_MACD) & (up_boll > price_boll)",
+      "short": "cross(longterm_MACD,shortterm_MACD) & (price_boll > down_boll)"
     }
   ],
   "evaluation": {

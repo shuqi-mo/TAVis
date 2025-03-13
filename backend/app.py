@@ -6,6 +6,7 @@ import os
 from sklearn.manifold import TSNE
 import csv
 import json
+from stable_baselines3.common.env_checker import check_env
 
 from indicator import *
 from process import *
@@ -132,6 +133,8 @@ def process_stock():
                 avgReturnList.append(r)
             for r in res[3]:
                 curve.append(r)
+        if tradeCount == 0:
+            continue
         performance.append([name, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
         boxplotData.append([name, curve])
     
@@ -177,10 +180,17 @@ def process_stock():
     for key in keys_to_remove:
         del ring_indicator_stock[key]
     
+    keys_to_remove = [key for key, value in ring_stock_indicator.items() if value is None or len(value) <= 1]
+    for key in keys_to_remove:
+        del ring_stock_indicator[key]
+
     ring_indicator_stock_format = transform_data_ring(ring_indicator_stock)
     ring_stock_indicator_format = transform_data_ring(ring_stock_indicator)
     anova_analysis_indicator_stock = anova_analysis(ring_indicator_stock)
-    anova_analysis_stock_indicator = anova_analysis(ring_stock_indicator)
+    if len(ring_stock_indicator) > 0:
+        anova_analysis_stock_indicator = anova_analysis(ring_stock_indicator)
+    else:
+        anova_analysis_stock_indicator = []
     return jsonify([float_trade, performance, boxplotData, res_stock, res_curve, ring_indicator_stock_format, ring_stock_indicator_format, anova_analysis_indicator_stock, anova_analysis_stock_indicator])
 
 @app.route('/process_exampler', methods=['POST'])
@@ -347,20 +357,77 @@ def process_strategy():
 @app.route('/strategy_recommend', methods=['POST'])
 def strategy_recommend():
     data = request.get_json()
-    with open('best_strategy.json', 'r') as f:
-        best_strategy = json.load(f)
-    
-    best_params, best_reward, optimized_strategy = fine_tune_strategy(
-        best_strategy,
-        model_path="best_strategy_model",
-        best_params_path="best_params.json",
-        fine_tune_steps=10
+    stocks = []
+    strategy_json = json.loads(data["code"])
+    new_strategy, strategy_config = extract_parameters_from_indicators(strategy_json)
+    for item in data["stockList"]:
+        stocks.append(pd.read_csv(stock_file_path + item + ".csv"))
+    env = TradingStrategyEnv(new_strategy, strategy_config, stocks, data["valueKey"], max_steps=20)
+    env = DiscretizedActionWrapper(env)
+    check_env(env, warn=True)
+    callback = BestParamsCallback()
+    # 使用 DQN 训练模型
+    model = DQN(
+        "MlpPolicy",
+        env,
+        device="cuda",
+        verbose=1,
+        learning_rate=1e-3,
+        buffer_size=10000,
+        exploration_fraction=0.3,  # 增加探索率，让模型尝试更多参数组合
+        exploration_final_eps=0.05,
+        learning_starts=100
     )
+    model.learn(total_timesteps=10, callback=callback)
+    if os.path.exists('best_params.json'):
+        with open('best_params.json', 'r') as f:
+            best_data = json.load(f)
+            best_reward = best_data['best_reward']
+            best_params = best_data['best_params']
+
+            logger.info("训练完成，最佳参数:")
+            logger.info(f"最佳 Reward: {best_reward}")
+            logger.info(f"最佳参数: {best_params}")
+
+            # 用最佳参数恢复策略
+            restored_strategy = restore_indicators(new_strategy, best_params)
+            with open('best_strategy.json', 'w') as f:
+                json.dump(restored_strategy, f, indent=2)
+
+            print("训练完成")
+            print(f"最佳 Reward: {best_reward}")
+            print(f"最佳参数: {best_params}")
+            print("最佳策略已保存到 best_strategy.json")
+    else:
+        logger.warning("训练完成，但没有找到最佳参数记录")
     
-    print(f"微调后最佳奖励: {best_reward:.4f}")
-    print("微调后的策略:")
-    print(json.dumps(optimized_strategy, indent=2))
-    return
+    if restored_strategy == strategy_json:
+        return jsonify([])
+
+    tradeCount = 0
+    successCount = 0
+    profitCount = 0
+    avgReturnList = []
+    process_strategy = process_data(restored_strategy)
+    for item in data["stockList"]:
+        stock = pd.read_csv(stock_file_path + item + ".csv")
+        for indicator in process_strategy["indicators"]:
+            long = execute_expr(indicator["long"], stock)
+            short = execute_expr(indicator["short"], stock)
+            long = CustomList(long)
+            short = CustomList(short)
+            trade_origin = process_trades(long, short)
+            price, trade = updatePeriod(stock, trade_origin, process_strategy["evaluation"]["startDate"], process_strategy["evaluation"]["endDate"])
+            res_singlestock = calBacktest(price, trade, process_strategy["evaluation"]["ahead"])
+            tradeCount += len(res_singlestock[0])
+            if len(res_singlestock[0]) == 0:
+                continue
+            successCount += sum(res_singlestock[0])
+            profitCount += res_singlestock[1][-1]
+            for r in res_singlestock[2]:
+                avgReturnList.append(r)
+    
+    return jsonify([restored_strategy, tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
 
 if __name__ == '__main__':
     app.run()

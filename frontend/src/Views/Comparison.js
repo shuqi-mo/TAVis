@@ -2,7 +2,6 @@ import React, { useState, useMemo, useEffect } from "react";
 import { Button, Select, Flex } from "antd";
 import StrategyMap from "./StrategyMap";
 import MultiBarcodeTree from "./MultiBarcodeTree";
-import { Indicator, Evaluation } from "../utils/ClassDefinitions";
 import * as d3 from "d3";
 import axios from "axios";
 
@@ -121,7 +120,7 @@ const Comparison = ({
     };
   
     fetchData();
-  }, [stockList, initialCode, best_strategy_avgReturn_format, best_strategy_successRate_format, best_strategy_profit_format]);
+  }, [stockList]);
   
 
   useEffect(()=>{
@@ -168,7 +167,7 @@ const Comparison = ({
     try {
       // 等待axios请求完成并获取响应数据
       const response = await axios.post(`${API_URL}/process_strategy`, {
-        initialCode,
+        code: initialCode,
         stockList,
       });
       const newNode = {
@@ -179,6 +178,22 @@ const Comparison = ({
         totalProfit: response.data[3],
         children: [],
       };
+      const strategyResponse = await axios.post(`${API_URL}/strategy_recommend`, {
+        code: newNode.code,
+        stockList,
+        valueKey
+      });
+      if(strategyResponse.data) {
+        const recommendedStrategy = {
+          code: strategyResponse.data[0],
+          totalTrades: strategyResponse.data[1],
+          successRate: strategyResponse.data[2],
+          avgReturn: strategyResponse.data[3],
+          totalProfit: strategyResponse.data[4],
+          children: [],
+        };
+        newNode.children.push(recommendedStrategy);
+      }
       let newTree = structuredClone(treeData);
       traverseTree(newTree, selectedNode.data.code, (node) => {
         if (!node.children) {
@@ -188,8 +203,8 @@ const Comparison = ({
       });
       setTreeData(newTree);
       setSelectedNode(null);
-
       setCodeList((prevCodeList) => [...prevCodeList, newNode.code]);
+      setCodeList((prevCodeList) => [...prevCodeList, JSON.stringify(strategyResponse.data[0])]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -215,7 +230,6 @@ const Comparison = ({
       <MultiBarcodeTree
         data={groups}
         sharedChildrenMap={sharedChildrenMap}
-        // data={groupsData}
         width={780}
         height={400}
         margin={20}
