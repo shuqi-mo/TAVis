@@ -56,26 +56,112 @@ def process_trades(buy, sell):
     
     return trades
 
-# 计算欧式距离矩阵的函数
-def compute_euclidean_distance_matrix(data):
-    # 使用广播机制高效计算欧式距离
-    distance_matrix = np.linalg.norm(data[:, np.newaxis] - data[np.newaxis, :], axis=2)
-    return distance_matrix
+def summarize_trades(indicatorName, trade_origin):
+    trades = []
+    i = 0
+    n = len(trade_origin)
 
-# 使用 dtaidistance 库内置的高效距离矩阵计算方法
-def compute_dtw_distance_matrix_fast(data):
-    # 计算DTW距离矩阵
-    distance_matrix = dtw.distance_matrix_fast(data, parallel=True, compact=False)
-    return distance_matrix
+    while i < n:
+        if trade_origin[i] == 1:
+            # 开始一个long交易
+            start = i
+            i += 1
+            j = i
+            while j < n and trade_origin[j] != -1:
+                j += 1
+            if j < n and trade_origin[j] == -1:
+                # 找到对应的卖出时机
+                end = j
+                trades.append([indicatorName, 'long', start, end])
+            i += 1
+        elif trade_origin[i] == -1:
+            # 开始一个short交易
+            start = i
+            i += 1
+            j = i
+            while j < n and trade_origin[j] != 1:
+                j += 1
+            if j < n and trade_origin[j] == 1:
+                # 找到对应的买入时机
+                end = j
+                trades.append([indicatorName, 'short', start, end])
+            i += 1
+        else:
+            # 如果是0，则跳过
+            i += 1
 
-# 结合两种距离矩阵的函数
-def combine_distance_matrices(euclidean_matrix, dtw_matrix, weight_euclidean=0.5, weight_dtw=0.5):
-    scaler = MinMaxScaler()
-    # 归一化欧式距离
-    euclidean_scaled = scaler.fit_transform(euclidean_matrix)
-    # 归一化DTW距离
-    dtw_scaled = scaler.fit_transform(dtw_matrix)
+    return trades
+
+def sort_by_third_element(trade_list):
+    """
+    按照第三个元素（起始时间）从小到大排序
+    """
+    return sorted(trade_list, key=lambda x: x[2])
+
+def categorize_trades(trade_summarization):
+    """
+    给每一段交易分类，根据区间内long和short信号的统计
+    """
+    # 先按照起始时间排序
+    sorted_trades = sort_by_third_element(trade_summarization)
     
-    # 加权结合
-    combined_matrix = weight_euclidean * euclidean_scaled + weight_dtw * dtw_scaled
-    return combined_matrix
+    # 创建结果列表
+    categorized_trades = []
+    
+    for trade in sorted_trades:
+        indicator, signal_type, start_time, end_time = trade
+        
+        # 统计区间内其他交易的信号
+        long_count = 0
+        short_count = 0
+        
+        for other_trade in sorted_trades:
+            if other_trade == trade:  # 跳过自身
+                continue
+                
+            other_indicator, other_signal, other_start, other_end = other_trade
+            
+            # 检查other交易的起始或终止时间是否在当前交易区间内
+            # long信号的起始时间或short信号的终止时间在区间内，计为long信号
+            if other_signal == 'long' and start_time <= other_start <= end_time:
+                long_count += 1
+            elif other_signal == 'short' and start_time <= other_end <= end_time:
+                long_count += 1
+            
+            # long信号的终止时间或short信号的起始时间在区间内，计为short信号
+            if other_signal == 'long' and start_time <= other_end <= end_time:
+                short_count += 1
+            elif other_signal == 'short' and start_time <= other_start <= end_time:
+                short_count += 1
+        
+        # 计算信号净值并确定分类
+        signal_difference = long_count - short_count
+        
+        # 根据原交易信号确定正负
+        if signal_type == 'long':
+            expected_direction = 1
+        else:  # 'short'
+            expected_direction = -1
+        
+        # 分类
+        if signal_difference == 0:
+            category = "Neural"
+        else:
+            actual_direction = 1 if signal_difference > 0 else -1
+            if actual_direction == expected_direction:
+                # 正档
+                if abs(signal_difference) <= 2:
+                    category = "Weakly Supportive"
+                else:
+                    category = "Strongly Supportive"
+            else:
+                # 负档
+                if abs(signal_difference) <= 2:
+                    category = "Weakly Contradictive"
+                else:
+                    category = "Strongly Contradictive"
+        
+        # 添加到结果列表
+        categorized_trades.append(trade + [long_count, short_count, signal_difference, category])
+    
+    return categorized_trades

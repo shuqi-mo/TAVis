@@ -4,6 +4,7 @@ import * as d3 from "d3";
 function Candle({
   data,
   trade,
+  tradeSummarization,
   indicatorsTrade,
   startDate,
   endDate,
@@ -34,7 +35,7 @@ function Candle({
     gapBetweenBrushAndExampler;
   // 副图区域可用总高度
   const examplerTotalHeight = height - examplerRegionY - margin.bottom;
-  
+
   const d3Node = useRef(null);
   const getSvg = () => d3.select(d3Node.current);
   const checkElementExist = (element) => {
@@ -72,14 +73,14 @@ function Candle({
       d3.selectAll(".buy-marker-rect").each(function (d) {
         // 如果对应指标交易信号为 1，则恢复橙色，否则改为灰色
         if (indicatorsTrade[selectedIndex][d.index] === 1) {
-          d3.select(this).attr("fill", "blue");
+          d3.select(this).attr("fill", getArrowColor(d.index));
         } else {
           d3.select(this).attr("fill", "white");
         }
       });
       d3.selectAll(".buy-marker-triangle").each(function (d) {
         if (indicatorsTrade[selectedIndex][d.index] === 1) {
-          d3.select(this).attr("fill", "blue");
+          d3.select(this).attr("fill", getArrowColor(d.index));
         } else {
           d3.select(this).attr("fill", "white");
         }
@@ -87,14 +88,14 @@ function Candle({
       // 对于卖出标记
       d3.selectAll(".sell-marker-rect").each(function (d) {
         if (indicatorsTrade[selectedIndex][d.index] === -1) {
-          d3.select(this).attr("fill", "blue");
+          d3.select(this).attr("fill", getArrowColor(d.index));
         } else {
           d3.select(this).attr("fill", "white");
         }
       });
       d3.selectAll(".sell-marker-triangle").each(function (d) {
         if (indicatorsTrade[selectedIndex][d.index] === -1) {
-          d3.select(this).attr("fill", "blue");
+          d3.select(this).attr("fill", getArrowColor(d.index));
         } else {
           d3.select(this).attr("fill", "white");
         }
@@ -102,11 +103,19 @@ function Candle({
     }
 
     function resetMainChartMarkers() {
-      // 恢复主图所有交易标记的原始颜色
-      d3.selectAll(".buy-marker-rect").attr("fill", "blue");
-      d3.selectAll(".buy-marker-triangle").attr("fill", "blue");
-      d3.selectAll(".sell-marker-rect").attr("fill", "blue");
-      d3.selectAll(".sell-marker-triangle").attr("fill", "blue");
+      // 恢复主图所有交易标记的原始颜色（根据tradeSummarization）
+      d3.selectAll(".buy-marker-rect").each(function (d) {
+        d3.select(this).attr("fill", getArrowColor(d.index));
+      });
+      d3.selectAll(".buy-marker-triangle").each(function (d) {
+        d3.select(this).attr("fill", getArrowColor(d.index));
+      });
+      d3.selectAll(".sell-marker-rect").each(function (d) {
+        d3.select(this).attr("fill", getArrowColor(d.index));
+      });
+      d3.selectAll(".sell-marker-triangle").each(function (d) {
+        d3.select(this).attr("fill", getArrowColor(d.index));
+      });
     }
 
     let svg = getSvg()
@@ -242,6 +251,71 @@ function Candle({
       context.select(".axis--x").call(xAxis2);
     }
 
+    // Add this function after the candlestickWidth() function
+    function getArrowColor(index) {
+      // Default color is blue (Neural)
+      let color = "blue";
+
+      if (tradeSummarization && tradeSummarization.length > 0) {
+        // Find matching trade signal in tradeSummarization
+        const tradeSignal = tradeSummarization.find(
+          (signal) => signal[2] === index
+        );
+
+        if (tradeSignal) {
+          const classification = tradeSignal[7];
+          switch (classification) {
+            case "Weakly Contradictive":
+              color = "lightgreen";
+              break;
+            case "Strongly Contradictive":
+              color = "darkgreen";
+              break;
+            case "Weakly Supportive":
+              color = "lightcoral";
+              break;
+            case "Strongly Supportive":
+              color = "darkred";
+              break;
+            default:
+              color = "blue"; // Neural
+          }
+        }
+      }
+
+      return color;
+    }
+
+    // Add this function to handle the click event on trade arrows
+    function handleArrowClick(event, d) {
+      event.stopPropagation();
+      // Remove any existing highlight rectangle
+      focus.selectAll(".trade-highlight-rect").remove();
+
+      // Find matching trade signal in tradeSummarization
+      if (!tradeSummarization) return;
+
+      const tradeSignal = tradeSummarization.find(signal => 
+        signal[2] === d.index // 查找以当前箭头索引作为起始索引的交易信号
+      );
+
+      if (tradeSignal) {
+        const startIndex = tradeSignal[2];
+        const endIndex = tradeSignal[3];
+        const color = getArrowColor(d.index);
+        // Draw transparent rectangle from start to end time
+        focus
+          .append("rect")
+          .attr("class", "trade-highlight-rect")
+          .attr("x", xScale(startIndex))
+          .attr("y", 0)
+          .attr("width", xScale(endIndex) - xScale(startIndex))
+          .attr("height", mainChartHeight)
+          .attr("fill", color)
+          .attr("fill-opacity", 0.2);
+      }
+    }
+
     // 定义 x 轴（主图）及上下文区域 x 轴的刻度格式
     const xAxis = d3.axisBottom(xScale);
     const xAxis2 = d3.axisBottom(xScale2);
@@ -353,8 +427,12 @@ function Candle({
 
     // —— 绘制主图中的交易信号标记 —— //
 
+    const sellMarkers = candlestick
+      .append("g")
+      .attr("class", "sell-markers-group")
+      .style("pointer-events", "all");
     // 卖出标记：矩形（位于 K 线最高价上方）
-    candlestick
+    sellMarkers
       .selectAll(".sell-marker-rect")
       .data(stackData.filter((d) => d.trade === -1))
       .enter()
@@ -364,10 +442,12 @@ function Candle({
       .attr("height", rectHeight)
       .attr("x", (d) => xScale(d.index))
       .attr("y", (d) => yScale(d.max) - markerOffset - rectHeight)
-      .attr("fill", "blue");
+      .attr("fill", (d) => getArrowColor(d.index))
+      .style("cursor", "pointer")
+      .on("click", handleArrowClick);
 
     // 卖出标记：三角形（尖角朝下）
-    candlestick
+    sellMarkers
       .selectAll(".sell-marker-triangle")
       .data(stackData.filter((d) => d.trade === -1))
       .enter()
@@ -381,10 +461,18 @@ function Candle({
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
       })
-      .attr("fill", "blue");
+      .attr("fill", (d) => getArrowColor(d.index))
+      .style("cursor", "pointer")
+      .on("click", handleArrowClick);
 
     // 买入标记：矩形（位于 K 线最低价下方）
-    candlestick
+    // 买入标记：矩形和三角形应该放在最上层
+    const buyMarkers = candlestick
+      .append("g")
+      .attr("class", "buy-markers-group")
+      .style("pointer-events", "all"); // 确保该组能接收鼠标事件
+
+    buyMarkers
       .selectAll(".buy-marker-rect")
       .data(stackData.filter((d) => d.trade === 1))
       .enter()
@@ -394,10 +482,12 @@ function Candle({
       .attr("height", rectHeight)
       .attr("x", (d) => xScale(d.index))
       .attr("y", (d) => yScale(d.min) + markerOffset)
-      .attr("fill", "blue");
+      .attr("fill", (d) => getArrowColor(d.index))
+      .style("cursor", "pointer")
+      .on("click", handleArrowClick);
 
     // 买入标记：三角形（尖角朝上）
-    candlestick
+    buyMarkers
       .selectAll(".buy-marker-triangle")
       .data(stackData.filter((d) => d.trade === 1))
       .enter()
@@ -411,7 +501,9 @@ function Candle({
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
       })
-      .attr("fill", "blue");
+      .attr("fill", (d) => getArrowColor(d.index))
+      .style("cursor", "pointer")
+      .on("click", handleArrowClick);
 
     // —— 绘制上下文（刷选）区域 —— //
 
@@ -494,7 +586,12 @@ function Candle({
         tooltipBottomGroup.style("display", "none");
       })
       .on("mousemove", mousemove)
-      .on("wheel", wheelHandler);
+      .on("wheel", wheelHandler)
+      .on("click", function () {
+        focus.selectAll(".trade-highlight-rect").remove();
+      });
+
+    overlay.lower(); // 将overlay移到底层
 
     // 十字线组（用于显示垂直和水平线）
     const crosshair = focus
@@ -552,8 +649,7 @@ function Candle({
     const eachExamplerHeightFixed = examplerTotalHeight / visibleCount;
 
     // 这里将原先的 totalExamplerContentHeight 改为加上副图间距
-    const totalExamplerContentHeight =
-      eachExamplerHeightFixed * numExamplers;
+    const totalExamplerContentHeight = eachExamplerHeightFixed * numExamplers;
 
     // 定义 clipPath 用于副图容器
     svg
@@ -647,10 +743,7 @@ function Candle({
         const subChart = examplerContentGroup
           .append("g")
           .attr("class", "exampler-chart")
-          .attr(
-            "transform",
-            `translate(0, ${i * eachExamplerHeightFixed})`
-          );
+          .attr("transform", `translate(0, ${i * eachExamplerHeightFixed})`);
 
         // 添加一个透明覆盖矩形，捕获点击事件
         subChart
@@ -980,6 +1073,43 @@ function Candle({
         const tipY = baseY - triangleHeight;
         const tipX = (x1 + x2) / 2;
         return `${x1},${baseY} ${x2},${baseY} ${tipX},${tipY}`;
+      });
+
+      // 在brushed函数末尾添加
+      // 更新交易高亮矩形（如果存在）
+      focus.selectAll(".trade-highlight-rect").each(function () {
+        // 找到对应的交易信号数据（假设数据属性已绑定）
+        const highlightRect = d3.select(this);
+
+        // 找出可能的tradeSummarization对应项
+        for (let i = 0; i < tradeSummarization.length; i++) {
+          const signal = tradeSummarization[i];
+          if (signal[2] >= start && signal[2] <= end) {
+            // 信号开始点在可见范围内
+            highlightRect
+              .attr("x", xScale(signal[2]))
+              .attr(
+                "width",
+                xScale(Math.min(signal[3], end)) - xScale(signal[2])
+              );
+            break;
+          } else if (signal[3] >= start && signal[3] <= end) {
+            // 信号结束点在可见范围内
+            highlightRect
+              .attr("x", xScale(Math.max(signal[2], start)))
+              .attr(
+                "width",
+                xScale(signal[3]) - xScale(Math.max(signal[2], start))
+              );
+            break;
+          } else if (signal[2] <= start && signal[3] >= end) {
+            // 信号范围覆盖整个可见区域
+            highlightRect
+              .attr("x", xScale(start))
+              .attr("width", xScale(end) - xScale(start));
+            break;
+          }
+        }
       });
 
       // —— 更新副图（exampler）区域 —— //

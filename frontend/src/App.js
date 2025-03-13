@@ -164,6 +164,7 @@ function App() {
   const [ringDataStockIndicator, setRingDataStockIndicator] = useState(null);
   const [anovaIndicatorStock, setAnovaIndicatorStock] = useState(null);
   const [anovaStockIndicator, setAnovaStockIndicator] = useState(null);
+  const [tradeSummarization, setTradeSummarization] = useState(null);
 
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState("current stock");
@@ -515,6 +516,7 @@ function App() {
       setRingDataStockIndicator(response.data[6]);
       setAnovaIndicatorStock(response.data[7]);
       setAnovaStockIndicator(response.data[8]);
+      setTradeSummarization(response.data[9]);
     } catch (error) {
       console.error("Error:", error);
     }
@@ -574,6 +576,7 @@ function App() {
               <Candle
                 data={data}
                 trade={trade}
+                tradeSummarization={tradeSummarization}
                 indicatorsTrade={tradeByIndicators}
                 startDate={evaluation.startDate}
                 endDate={evaluation.endDate}

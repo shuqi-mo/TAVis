@@ -113,6 +113,8 @@ def process_stock():
     res_stock = []
     res_curve = []
 
+    trade_summarization = []
+
     # 环状图数据
     ring_indicator_stock = {}
     ring_stock_indicator = {}
@@ -129,9 +131,15 @@ def process_stock():
         long = CustomList(long)
         short = CustomList(short)
         trade_origin = process_trades(long, short)
+        trade_summarization_single_indicator = summarize_trades(name, trade_origin)
+        for item in trade_summarization_single_indicator:
+            trade_summarization.append(item)
         float_trade.append([float(x) for x in trade_origin])
         price, trade = updatePeriod(data_df, trade_origin, data["startDate"], data["endDate"])
     
+    sorted_trades = sort_by_third_element(trade_summarization)
+    categorized_results = categorize_trades(sorted_trades)
+
     # 多个股票数据，指标维度
     for i in range(len(data["indicatorName"])):
         name = data["indicatorName"][i]
@@ -216,7 +224,7 @@ def process_stock():
         anova_analysis_stock_indicator = anova_analysis(ring_stock_indicator)
     else:
         anova_analysis_stock_indicator = []
-    return jsonify([float_trade, performance, boxplotData, res_stock, res_curve, ring_indicator_stock_format, ring_stock_indicator_format, anova_analysis_indicator_stock, anova_analysis_stock_indicator])
+    return jsonify([float_trade, performance, boxplotData, res_stock, res_curve, ring_indicator_stock_format, ring_stock_indicator_format, anova_analysis_indicator_stock, anova_analysis_stock_indicator, categorized_results])
 
 @app.route('/process_exampler', methods=['POST'])
 def process_exampler():
