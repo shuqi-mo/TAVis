@@ -5,11 +5,13 @@ import numpy as np
 import os
 from sklearn.manifold import TSNE
 import csv
+import json
 
 from indicator import *
 from process import *
 from evaluation import *
 from parser import *
+from environment import *
 
 app = Flask(__name__)
 CORS(app)
@@ -320,16 +322,17 @@ def process_strategy():
     successCount = 0
     profitCount = 0
     avgReturnList = []
+    process_strategy = process_data(eval(data["code"]))
     for item in data["stockList"]:
         stock = pd.read_csv(stock_file_path + item + ".csv")
-        for i in range(len(data["exprLongList"])):
-            long = execute_expr(data["exprLongList"][i], stock)
-            short = execute_expr(data["exprShortList"][i], stock)
+        for indicator in process_strategy["indicators"]:
+            long = execute_expr(indicator["long"], stock)
+            short = execute_expr(indicator["short"], stock)
             long = CustomList(long)
             short = CustomList(short)
             trade_origin = process_trades(long, short)
-            price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
-            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
+            price, trade = updatePeriod(stock, trade_origin, process_strategy["evaluation"]["startDate"], process_strategy["evaluation"]["endDate"])
+            res_singlestock = calBacktest(price, trade, process_strategy["evaluation"]["ahead"])
             tradeCount += len(res_singlestock[0])
             if len(res_singlestock[0]) == 0:
                 continue
@@ -340,6 +343,24 @@ def process_strategy():
     if tradeCount == 0:
         return jsonify([0, 0, 0, 0])
     return jsonify([tradeCount, successCount / tradeCount, sum(avgReturnList) / len(avgReturnList), profitCount])
+
+@app.route('/strategy_recommend', methods=['POST'])
+def strategy_recommend():
+    data = request.get_json()
+    with open('best_strategy.json', 'r') as f:
+        best_strategy = json.load(f)
+    
+    best_params, best_reward, optimized_strategy = fine_tune_strategy(
+        best_strategy,
+        model_path="best_strategy_model",
+        best_params_path="best_params.json",
+        fine_tune_steps=10
+    )
+    
+    print(f"微调后最佳奖励: {best_reward:.4f}")
+    print("微调后的策略:")
+    print(json.dumps(optimized_strategy, indent=2))
+    return
 
 if __name__ == '__main__':
     app.run()

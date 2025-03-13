@@ -699,8 +699,6 @@ function App() {
                 <div style={{}}>
                   <Comparison
                     initialCode={code}
-                    indicators={indicators}
-                    evaluation={evaluation}
                     stockList={stockList}
                     onSelectCode={(code) => {
                       setCode(code);

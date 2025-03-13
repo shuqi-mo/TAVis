@@ -4,6 +4,9 @@ from utils import setup_logger
 from parser import restore_indicators, process_data
 from evaluation import *
 from stable_baselines3.common.callbacks import BaseCallback
+from stable_baselines3 import DQN
+import os
+import json
 
 logger = setup_logger('training.log')
 class TradingStrategyEnv(gym.Env):
@@ -176,15 +179,40 @@ class TradingStrategyEnv(gym.Env):
             print(f"最佳参数: {actual_params}")
         return self.state.copy(), reward, terminated, truncated, info
 
-    def reset(self, seed=None, options=None):
-        super().reset(seed=seed)
-        self.current_step = 0
-        self.state = self._init_state()
-        return self.state.copy(), {}
-
-    def render(self, mode="human"):
-        actual_params = self._denormalize(self.state)
-        print("当前参数配置:", actual_params)
+    def set_params_state(self, params_dict):
+        """
+        根据给定的参数字典设置环境的当前状态
+        
+        参数:
+        - params_dict: 包含参数ID和值的字典
+        """
+        # 将参数字典转换为规范化状态向量
+        for i, param_def in enumerate(self.param_list):
+            param_id = param_def["id"]
+            if param_id in params_dict:
+                value = params_dict[param_id]
+                
+                if param_def["type"] in ["int", "float"]:
+                    # 数值型参数归一化
+                    norm_value = (value - param_def["min"]) / (param_def["max"] - param_def["min"])
+                    self.state[i] = norm_value
+                elif param_def["type"] == "str":
+                    # 字符串参数查找索引并归一化
+                    try:
+                        index = param_def["options"].index(value)
+                        if len(param_def["options"]) > 1:
+                            self.state[i] = index / (len(param_def["options"]) - 1)
+                        else:
+                            self.state[i] = 0.0
+                    except ValueError:
+                        # 如果值不在选项中，使用默认值
+                        self.state[i] = param_def["default"]
+        
+        # 重置最佳记录，以便在微调中跟踪新的最佳结果
+        self.best_reward = -float('inf')
+        self.best_params = None
+        
+        return self.state.copy()
 
 class DiscretizedActionWrapper(gym.ActionWrapper):
     """
@@ -225,3 +253,124 @@ class BestParamsCallback(BaseCallback):
                 }, f, indent=2)
 
         return True
+
+def fine_tune_strategy(raw_strategy_json, model_path="best_strategy_model", best_params_path="best_params.json", 
+                      fine_tune_steps=10, stocks_paths=None):
+    """
+    基于已有的最佳策略和模型进行微调
+    
+    参数:
+    - raw_strategy_json: 原始或修改后的策略json
+    - model_path: 之前训练好的模型路径
+    - best_params_path: 最佳参数保存的路径
+    - fine_tune_steps: 微调步数
+    - stocks_paths: 股票数据文件路径列表
+    
+    返回:
+    - 微调后的最佳参数
+    """
+    # 载入策略
+    strategy_json = json.loads(raw_strategy_json) if isinstance(raw_strategy_json, str) else raw_strategy_json
+    new_strategy, strategy_config = extract_parameters_from_indicators(strategy_json)
+    
+    # 载入股票数据
+    if stocks_paths is None:
+        stocks_paths = [
+            "stock/600893.SH.csv",
+            "stock/000651.SZ.csv",
+            "stock/002241.SZ.csv",
+            "stock/002555.SZ.csv",
+            "stock/002594.SZ.csv"
+        ]
+    
+    virtual_prices = [pd.read_csv(path) for path in stocks_paths]
+    
+    # 创建环境
+    env = TradingStrategyEnv(new_strategy, strategy_config, virtual_prices, max_steps=fine_tune_steps)
+    env = DiscretizedActionWrapper(env)
+    
+    # 检查是否有最佳参数文件
+    if os.path.exists(best_params_path):
+        with open(best_params_path, 'r') as f:
+            best_data = json.load(f)
+            previous_best_params = best_data['best_params']
+            
+        # 将最佳参数设置为初始状态
+        # 需要修改环境类，添加一个设置当前参数的方法
+        if hasattr(env.unwrapped, 'set_params_state'):
+            env.unwrapped.set_params_state(previous_best_params)
+        else:
+            logger.warning("环境没有set_params_state方法，无法直接设置最佳参数作为起点")
+    else:
+        logger.warning(f"没有找到最佳参数文件: {best_params_path}")
+    
+    # 检查模型是否存在
+    if os.path.exists(model_path + ".zip"):
+        # 加载模型
+        try:
+            model = DQN.load(model_path, env=env)
+            logger.info("成功加载之前训练的模型")
+        except Exception as e:
+            logger.error(f"加载模型失败: {e}")
+            logger.info("创建新模型")
+            model = DQN("MlpPolicy", env, verbose=1)
+    else:
+        logger.warning(f"没有找到模型文件: {model_path}.zip")
+        logger.info("创建新模型")
+        model = DQN("MlpPolicy", env, verbose=1)
+    
+    # 执行微调
+    obs, _ = env.reset()
+    total_reward = 0
+    best_step_reward = -float('inf')
+    best_step_params = None
+    
+    logger.info("开始微调过程...")
+    
+    for step in range(fine_tune_steps):
+        # 使用模型预测动作
+        action, _ = model.predict(obs, deterministic=False)  # 使用一定的随机性
+        
+        # 执行动作
+        obs, reward, terminated, truncated, info = env.step(action)
+        total_reward += reward
+        
+        logger.info(f"微调步骤 {step+1}/{fine_tune_steps}, 奖励: {reward:.4f}")
+        
+        # 记录这一步的最佳参数
+        if reward > best_step_reward:
+            best_step_reward = reward
+            best_step_params = info["actual_params"].copy()
+            logger.info(f"发现更好的参数! 奖励: {reward:.4f}")
+            logger.info(f"参数: {best_step_params}")
+        
+        if terminated or truncated:
+            break
+    
+    # 获取环境中记录的最佳参数
+    env_best_reward = env.unwrapped.best_reward
+    env_best_params = env.unwrapped.best_params
+    
+    # 比较环境记录的最佳和步骤中的最佳
+    final_best_params = env_best_params if env_best_reward > best_step_reward else best_step_params
+    final_best_reward = max(env_best_reward, best_step_reward)
+    
+    # 保存微调后的最佳参数
+    with open('fine_tuned_params.json', 'w') as f:
+        json.dump({
+            'best_reward': final_best_reward,
+            'best_params': final_best_params
+        }, f, indent=2)
+    
+    # 使用最佳参数恢复完整策略
+    restored_strategy = restore_indicators(new_strategy, final_best_params)
+    with open('fine_tuned_strategy.json', 'w') as f:
+        json.dump(restored_strategy, f, indent=2)
+    
+    logger.info("微调完成")
+    logger.info(f"微调后最佳奖励: {final_best_reward:.4f}")
+    logger.info(f"微调后最佳参数: {final_best_params}")
+    logger.info("参数已保存到 fine_tuned_params.json")
+    logger.info("完整策略已保存到 fine_tuned_strategy.json")
+    
+    return final_best_params, final_best_reward, restored_strategy
