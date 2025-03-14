@@ -1,5 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
+import ReactDOM from "react-dom";
+import { Tooltip } from "antd";
+import { EllipsisOutlined } from "@ant-design/icons";
 
 // ============ 辅助函数 ==============
 
@@ -125,6 +128,7 @@ function toggleNodeExpansion(node, trees) {
 }
 
 function wrapText(textSelection, width, boxHeight) {
+  let totalTextHeight = 0;
   textSelection.each(function () {
     const text = d3.select(this);
     const textString = text.text();
@@ -173,7 +177,7 @@ function wrapText(textSelection, width, boxHeight) {
     }
     const lineHeight = 1.2;
     const fontSize = parseFloat(window.getComputedStyle(this).fontSize);
-    const totalTextHeight = lines.length * lineHeight * fontSize;
+    totalTextHeight = lines.length * lineHeight * fontSize;
     const startY = originalY - totalTextHeight / 2 + fontSize / 2;
     lines.forEach((line, i) => {
       text
@@ -184,6 +188,7 @@ function wrapText(textSelection, width, boxHeight) {
         .text(line);
     });
   });
+  return totalTextHeight;
 }
 
 function drawTriangle(nodeGroup, x, width, nodeHeight, node, trees) {
@@ -440,7 +445,8 @@ const MultiBarcodeTree = ({
     const numIndicatorCols = indicatorNames.length;
     const colGap = 5;
     const cellWidthIndicators =
-      (indicatorsSectionWidth - (numIndicatorCols - 1) * colGap) / numIndicatorCols;
+      (indicatorsSectionWidth - (numIndicatorCols - 1) * colGap) /
+      numIndicatorCols;
     const cellHeightIndicators = rowHeight;
     let evaluationNames = [];
     groups.forEach((group) => {
@@ -543,7 +549,40 @@ const MultiBarcodeTree = ({
               .attr("fill", "black")
               .text(node.name)
               .style("pointer-events", "none");
-            wrapText(textElem, nodeWidth, nodeHeight);
+
+            // 测量文本高度
+            const textHeight = wrapText(textElem, nodeWidth, nodeHeight);
+
+            // 判断文本高度是否超出节点高度
+            if (textHeight > nodeHeight * 0.9) {
+              // 如果超出，隐藏文本元素
+              textElem.remove();
+              const foreignObject = gNode
+                .append("foreignObject")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("width", nodeWidth)
+                .attr("height", nodeHeight);
+              const div = foreignObject
+                .append("xhtml:div")
+                .style("width", "100%")
+                .style("height", "100%")
+                .style("display", "flex")
+                .style("justify-content", "center")
+                .style("align-items", "center");
+              const tooltipContainer = document.createElement("div");
+              ReactDOM.render(
+                React.createElement(
+                  Tooltip,
+                  { title: node.name },
+                  React.createElement(EllipsisOutlined, {
+                    style: { fontSize: "16px" },
+                  })
+                ),
+                tooltipContainer
+              );
+              div.node().appendChild(tooltipContainer);
+            }
           });
           if (expandedParents.length > 0) {
             drawExpandedConnector(
@@ -662,7 +701,40 @@ const MultiBarcodeTree = ({
               .attr("fill", "black")
               .text(node.name)
               .style("pointer-events", "none");
-            wrapText(textElem, nodeWidth, nodeHeight);
+
+            // 测量文本高度
+            const textHeight = wrapText(textElem, nodeWidth, nodeHeight);
+            if (textHeight > nodeHeight * 0.9) {
+              // 如果超出，隐藏文本元素
+              textElem.remove();
+              const foreignObject = gNode
+                .append("foreignObject")
+                .attr("x", x)
+                .attr("y", y)
+                .attr("width", nodeWidth)
+                .attr("height", nodeHeight);
+              const div = foreignObject
+                .append("xhtml:div")
+                .style("width", "100%")
+                .style("height", "100%")
+                .style("display", "flex")
+                .style("justify-content", "center")
+                .style("align-items", "center");
+              const tooltipContainer = document.createElement("div");
+              ReactDOM.render(
+                React.createElement(
+                  Tooltip,
+                  { title: node.name },
+                  React.createElement(EllipsisOutlined, {
+                    style: { fontSize: "16px" },
+                  })
+                ),
+                tooltipContainer
+              );
+
+              // 将React元素附加到div中
+              div.node().appendChild(tooltipContainer);
+            }
           });
           if (expandedParents.length > 0) {
             drawExpandedConnector(

@@ -2,9 +2,9 @@
   "indicators": [
     {
       "name": "boll",
-      "price": "low",
-      "mid": "WMA(price,20)",
-      "band": "movingstd(price,23)",
+      "price": "close",
+      "mid": "EMA(price,17)",
+      "band": "movingstd(price,20)",
       "multiplier": "2",
       "up": "mid + multiplier * band",
       "down": "mid - multiplier * band",

@@ -1,10 +1,10 @@
 {
-  "best_reward": 117.31,
+  "best_reward": 149.89999999999998,
   "best_params": {
-    "param_0": "low",
-    "param_1": "WMA",
-    "param_2": 20,
-    "param_3": 23,
+    "param_0": "close",
+    "param_1": "EMA",
+    "param_2": 17,
+    "param_3": 20,
     "param_4": 2,
     "param_5": "true"
   }
