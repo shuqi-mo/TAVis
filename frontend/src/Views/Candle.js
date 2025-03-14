@@ -295,8 +295,8 @@ function Candle({
       // Find matching trade signal in tradeSummarization
       if (!tradeSummarization) return;
 
-      const tradeSignal = tradeSummarization.find(signal => 
-        signal[2] === d.index // 查找以当前箭头索引作为起始索引的交易信号
+      const tradeSignal = tradeSummarization.find(
+        (signal) => signal[2] === d.index // 查找以当前箭头索引作为起始索引的交易信号
       );
 
       if (tradeSignal) {
@@ -307,6 +307,7 @@ function Candle({
         focus
           .append("rect")
           .attr("class", "trade-highlight-rect")
+          .datum(tradeSignal)
           .attr("x", xScale(startIndex))
           .attr("y", 0)
           .attr("width", xScale(endIndex) - xScale(startIndex))
@@ -1078,37 +1079,21 @@ function Candle({
       // 在brushed函数末尾添加
       // 更新交易高亮矩形（如果存在）
       focus.selectAll(".trade-highlight-rect").each(function () {
-        // 找到对应的交易信号数据（假设数据属性已绑定）
-        const highlightRect = d3.select(this);
+        const signal = d3.select(this).datum();
+        if (!signal) return;
+        const signalStart = signal[2];
+        const signalEnd = signal[3];
 
-        // 找出可能的tradeSummarization对应项
-        for (let i = 0; i < tradeSummarization.length; i++) {
-          const signal = tradeSummarization[i];
-          if (signal[2] >= start && signal[2] <= end) {
-            // 信号开始点在可见范围内
-            highlightRect
-              .attr("x", xScale(signal[2]))
-              .attr(
-                "width",
-                xScale(Math.min(signal[3], end)) - xScale(signal[2])
-              );
-            break;
-          } else if (signal[3] >= start && signal[3] <= end) {
-            // 信号结束点在可见范围内
-            highlightRect
-              .attr("x", xScale(Math.max(signal[2], start)))
-              .attr(
-                "width",
-                xScale(signal[3]) - xScale(Math.max(signal[2], start))
-              );
-            break;
-          } else if (signal[2] <= start && signal[3] >= end) {
-            // 信号范围覆盖整个可见区域
-            highlightRect
-              .attr("x", xScale(start))
-              .attr("width", xScale(end) - xScale(start));
-            break;
-          }
+        // 如果当前信号完全不在刷选区间内，则设置宽度为 0（或可选择隐藏）
+        if (signalEnd < start || signalStart > end) {
+          d3.select(this).attr("width", 0);
+        } else {
+          // 计算信号与可见区间的交集
+          const newStart = Math.max(signalStart, start);
+          const newEnd = Math.min(signalEnd, end);
+          d3.select(this)
+            .attr("x", xScale(newStart))
+            .attr("width", xScale(newEnd) - xScale(newStart));
         }
       });
 
