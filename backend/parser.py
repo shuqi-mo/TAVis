@@ -681,7 +681,9 @@ def process_evaluation_RL(data):
       {
           'startDate': '2023-07-01',
           'endDate': '2024-07-01',
-          'ahead': -1
+          'ahead': -1,
+          'loss': -1,
+          'gain': -1
       }
     """
     evaluation = data.get('evaluation', {})
@@ -689,10 +691,15 @@ def process_evaluation_RL(data):
         period = evaluation.get('period', [])
         startDate = period[0] if len(period) > 0 else None
         endDate = period[1] if len(period) > 1 else None
-        # 假设 stop 是列表，取第一个字典中的 ahead 字段，并转换为整数
+        
+        # 获取 stop 列表中的字段
         stop_list = evaluation.get('stop', [])
-        ahead_val = None
+        ahead_val = -1  # 默认值
+        loss_val = -1   # 默认值
+        gain_val = -1   # 默认值
+        
         if stop_list:
+            # 获取 ahead 字段，并尝试转换为整数或浮动数值
             ahead_str = stop_list[0].get('ahead', None)
             if ahead_str is not None:
                 try:
@@ -702,9 +709,33 @@ def process_evaluation_RL(data):
                         ahead_val = float(ahead_str)
                     except ValueError:
                         ahead_val = ahead_str
-        return {'startDate': startDate, 'endDate': endDate, 'ahead': ahead_val}
+
+            # 获取 loss 字段，并尝试转换为整数或浮动数值
+            loss_str = stop_list[0].get('loss', None)
+            if loss_str is not None:
+                try:
+                    loss_val = int(loss_str)
+                except ValueError:
+                    try:
+                        loss_val = float(loss_str)
+                    except ValueError:
+                        loss_val = loss_str
+
+            # 获取 gain 字段，并尝试转换为整数或浮动数值
+            gain_str = stop_list[0].get('gain', None)
+            if gain_str is not None:
+                try:
+                    gain_val = int(gain_str)
+                except ValueError:
+                    try:
+                        gain_val = float(gain_str)
+                    except ValueError:
+                        gain_val = gain_str
+        
+        return {'startDate': startDate, 'endDate': endDate, 'ahead': ahead_val, 'loss': loss_val, 'gain': gain_val}
     else:
         return {}
+
 
 def process_data(data):
     """

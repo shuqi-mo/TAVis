@@ -1043,11 +1043,11 @@ function Candle({
         .attr("y2", (d) => yScale(d.min));
 
       focus
-        .selectAll(".buy-marker-rect")
+        .selectAll(".sell-marker-rect")
         .attr("x", (d) => xScale(d.index))
         .attr("y", (d) => yScale(d.max) - markerOffset - rectHeight)
         .attr("width", getCandlestickWidth(end - start));
-      focus.selectAll(".buy-marker-triangle").attr("points", (d) => {
+      focus.selectAll(".sell-marker-triangle").attr("points", (d) => {
         const x1 = xScale(d.index) - horizontalPadding;
         const x2 =
           xScale(d.index) +
@@ -1060,11 +1060,11 @@ function Candle({
       });
 
       focus
-        .selectAll(".sell-marker-rect")
+        .selectAll(".buy-marker-rect")
         .attr("x", (d) => xScale(d.index))
         .attr("y", (d) => yScale(d.min) + markerOffset)
         .attr("width", getCandlestickWidth(end - start));
-      focus.selectAll(".sell-marker-triangle").attr("points", (d) => {
+      focus.selectAll(".buy-marker-triangle").attr("points", (d) => {
         const x1 = xScale(d.index) - horizontalPadding;
         const x2 =
           xScale(d.index) +

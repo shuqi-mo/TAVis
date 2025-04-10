@@ -464,6 +464,7 @@ function App() {
     try {
       // 等待axios请求完成并获取响应数据
       const response = await axios.post(`${API_URL}/process_stock`, {
+        code,
         indicatorName,
         exprLongList,
         exprShortList,

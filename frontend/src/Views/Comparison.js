@@ -47,16 +47,19 @@ const Comparison = ({
   const best_strategy_successRate = require("../case/best_strategy_successRate.json");
   const best_strategy_avgReturn = require("../case/best_strategy_avgReturn.json");
   const best_strategy_profit = require("../case/best_strategy_profit.json");
+  const expri_origin = require("../case/experiment2.json");
 
   const best_strategy_successRate_format = JSON.stringify(best_strategy_successRate, null, 2);
   const best_strategy_avgReturn_format = JSON.stringify(best_strategy_avgReturn, null, 2);
   const best_strategy_profit_format = JSON.stringify(best_strategy_profit, null, 2);
+  const expri = JSON.stringify(expri_origin, null, 2);
 
   const [treeData, setTreeData] = useState(null);
   const [selectedNode, setSelectedNode] = useState(null);
   const [valueKey, setValueKey] = useState("successRate");
   const [groups, setGroups] = useState([]);
   const [codeList, setCodeList] = useState([initialCode,best_strategy_successRate_format,best_strategy_avgReturn_format, best_strategy_profit_format]);
+  // const [codeList, setCodeList] = useState([initialCode,expri]);
   const [sharedChildrenMap, setShareChildrenMap] = useState(null);
 
   useEffect(() => {
@@ -101,6 +104,7 @@ const Comparison = ({
           best_strategy_successRate_format,
           best_strategy_avgReturn_format,
           best_strategy_profit_format
+          // expri
         ];
   
         // 并行请求所有子节点数据
@@ -183,9 +187,10 @@ const Comparison = ({
         stockList,
         valueKey
       });
+      // console.log(strategyResponse.data);
       if(strategyResponse.data) {
         const recommendedStrategy = {
-          code: strategyResponse.data[0],
+          code: JSON.stringify(strategyResponse.data[0]),
           totalTrades: strategyResponse.data[1],
           successRate: strategyResponse.data[2],
           avgReturn: strategyResponse.data[3],

@@ -1,13 +1,10 @@
 {
   "indicators": [
     {
-      "name": "boll",
-      "price": "close",
-      "mid": "EMA(price,17)",
-      "band": "movingstd(price,20)",
-      "multiplier": "2",
-      "up": "mid + multiplier * band",
-      "down": "mid - multiplier * band",
+      "name": "rsi",
+      "price": "rsi(close,14)",
+      "up": "70",
+      "down": "30",
       "long": "cross(price,down)",
       "short": "cross(up,price)"
     }
@@ -19,7 +16,8 @@
     ],
     "stop": [
       {
-        "ahead": "-1"
+        "ahead": "-1",
+        "loss": "0.1"
       }
     ]
   }

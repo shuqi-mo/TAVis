@@ -1,0 +1,27 @@
+{
+    "indicators": [
+      {
+        "name": "MACD",
+        "shortterm": "SMA(close,12)",
+        "longterm": "SMA(close,26)",
+        "long": "cross(shortterm,longterm)",
+        "short": "cross(longterm,shortterm)"
+      },
+      {
+        "name": "boll",
+        "price": "close",
+        "mid": "EMA(price,20)",
+        "band": "movingstd(price,20)",
+        "multiplier": 2,
+        "up": "mid + multiplier * band",
+        "down": "mid - multiplier * band",
+        "long": "cross(price,down)",
+        "short": "cross(up,price)"
+      }
+    ],
+    "evaluation": {
+      "period": ["2023-07-01", "2024-07-01"],
+      "stop": [{ "ahead": "-1" }]
+    }
+  }
+  

@@ -156,7 +156,7 @@ def process_stock():
             short = CustomList(short)
             trade_origin = process_trades(long, short)
             price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
-            res = calBacktest(price, trade, data["getAheadStopTime"])
+            res = calBacktest(price, trade, data["getAheadStopTime"], data["getStopLossThreshold"], data["getTakeProfitThreshold"])
             tradeCount += len(res[0])
             if len(res[0]) == 0:
                 continue
@@ -187,7 +187,7 @@ def process_stock():
             short = CustomList(short)
             trade_origin = process_trades(long, short)
             price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
-            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
+            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"], data["getStopLossThreshold"], data["getTakeProfitThreshold"])
             tradeCount += len(res_singlestock[0])
             if len(res_singlestock[0]) == 0:
                 continue
@@ -199,7 +199,8 @@ def process_stock():
                 curve.append(r)
                 # current_performance.append(r[-1])
             for r in res_singlestock[5]:
-                current_performance.append(r[-1])
+                if len(r) > 0:
+                    current_performance.append(r[-1])
             ring_indicator_stock[data["indicatorName"][i]].append([item, current_performance])
             ring_stock_indicator[item].append([data["indicatorName"][i], current_performance])
         if tradeCount == 0:
@@ -266,7 +267,7 @@ def process_stock_all():
             short = CustomList(short)
             trade_origin = process_trades(long, short)
             price, trade = updatePeriod(stock, trade_origin, data["startDate"], data["endDate"])
-            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"])
+            res_singlestock = calBacktest(price, trade, data["getAheadStopTime"], data["getStopLossThreshold"], data["getTakeProfitThreshold"])
             if len(res_singlestock[0]) == 0:
                 continue
             tradeCount += len(res_singlestock[0])
@@ -375,7 +376,7 @@ def process_strategy():
             short = CustomList(short)
             trade_origin = process_trades(long, short)
             price, trade = updatePeriod(stock, trade_origin, process_strategy["evaluation"]["startDate"], process_strategy["evaluation"]["endDate"])
-            res_singlestock = calBacktest(price, trade, process_strategy["evaluation"]["ahead"])
+            res_singlestock = calBacktest(price, trade, process_strategy["evaluation"]["ahead"], process_strategy["evaluation"]["loss"], process_strategy["evaluation"]["gain"])
             tradeCount += len(res_singlestock[0])
             if len(res_singlestock[0]) == 0:
                 continue
@@ -451,7 +452,7 @@ def strategy_recommend():
             short = CustomList(short)
             trade_origin = process_trades(long, short)
             price, trade = updatePeriod(stock, trade_origin, process_strategy["evaluation"]["startDate"], process_strategy["evaluation"]["endDate"])
-            res_singlestock = calBacktest(price, trade, process_strategy["evaluation"]["ahead"])
+            res_singlestock = calBacktest(price, trade, process_strategy["evaluation"]["ahead"], process_strategy["evaluation"]["loss"], process_strategy["evaluation"]["gain"])
             tradeCount += len(res_singlestock[0])
             if len(res_singlestock[0]) == 0:
                 continue

@@ -124,7 +124,7 @@ class Evaluation {
     const lossCondition = this.stopConditions.find(
       (condition) => condition.loss
     );
-    return lossCondition ? parseFloat(lossCondition.loss) : null;
+    return lossCondition ? parseFloat(lossCondition.loss) : -1;
   }
 
   // 获取止盈阈值（百分比）
@@ -132,7 +132,7 @@ class Evaluation {
     const gainCondition = this.stopConditions.find(
       (condition) => condition.gain
     );
-    return gainCondition ? parseFloat(gainCondition.gain) : null;
+    return gainCondition ? parseFloat(gainCondition.gain) : -1;
   }
 
   // 获取提前停止的时间（如果有）
@@ -140,7 +140,7 @@ class Evaluation {
     const aheadCondition = this.stopConditions.find(
       (condition) => condition.ahead
     );
-    return aheadCondition ? parseInt(aheadCondition.ahead) : null;
+    return aheadCondition ? parseInt(aheadCondition.ahead) : -1;
   }
 }
 
