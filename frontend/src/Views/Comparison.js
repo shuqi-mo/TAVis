@@ -133,7 +133,7 @@ const Comparison = ({
       .post(`${API_URL}/process_code`, { codeList })
       .then((response) => {
         setGroups(response.data[0]);
-        console.log(response.data[0]);
+        // console.log(response.data[0]);
         setShareChildrenMap(response.data[1]);
       })
       .catch((error) => {

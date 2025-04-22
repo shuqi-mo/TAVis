@@ -1,8 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
 import * as d3 from "d3";
 
-const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => {
+const ParallelCoordinatesChart = ({
+  data,
+  width,
+  height,
+  colorAssignments,
+}) => {
   const svgRef = useRef(null);
+
+  // 维度管理状态
   const [activeDimensions, setActiveDimensions] = useState([
     "totalTrades",
     "successRate",
@@ -10,17 +17,42 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
     "totalProfit",
   ]);
 
+  // 连线显示状态
+  const [lineVisibility, setLineVisibility] = useState({});
+
+  // 更新坐标轴连线显示状态
+  const toggleLineVisibility = (dim) => {
+    // 复制现有的 lineVisibility 状态对象
+    const newVisibility = { ...lineVisibility };
+
+    // 遍历所有相邻坐标轴的组合
+    for (let i = 0; i < activeDimensions.length - 1; i++) {
+      const currentDim = activeDimensions[i];
+      const nextDim = activeDimensions[i + 1];
+
+      // 如果当前维度是被双击的坐标轴或其相邻坐标轴，切换连线显示状态
+      if (dim === currentDim) {
+        const lineKey = `${currentDim}-${nextDim}`;
+        // 切换该连线的显示状态
+        newVisibility[lineKey] = !newVisibility[lineKey];
+      }
+    }
+    // 更新 lineVisibility 状态，保留其他连线的状态
+    setLineVisibility(newVisibility);
+  };
+
   useEffect(() => {
     if (!colorAssignments) return;
 
     const margin = { top: 30, right: 5, bottom: 50, left: 0 };
     const svg = d3.select(svgRef.current);
-    svg.selectAll("*").remove();
+    svg.selectAll("*").remove(); // 每次更新时清空之前的内容
 
     const colorScale = d3
       .scaleOrdinal(d3.schemeCategory10)
       .domain(data.map((d) => d.name));
 
+    // 根据 activeDimensions 动态定义 yScales
     const yScales = {};
     activeDimensions.forEach((dim) => {
       yScales[dim] = d3
@@ -35,31 +67,22 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
       .padding(0.5)
       .domain(activeDimensions);
 
-    const lineGenerator = d3.line();
     const path = (d) => {
-      return lineGenerator(
-        activeDimensions.map((dim) => [xScale(dim), yScales[dim](d[dim])])
-      );
+      const points = [];
+      for (let i = 0; i < activeDimensions.length - 1; i++) {
+        const currentDim = activeDimensions[i];
+        const nextDim = activeDimensions[i + 1];
+        const lineKey = `${currentDim}-${nextDim}`;
+        if (lineVisibility[lineKey]) {
+          points.push([xScale(currentDim), yScales[currentDim](d[currentDim])]);
+          points.push([xScale(nextDim), yScales[nextDim](d[nextDim])]);
+        }
+      }
+      return d3.line()(points);
     };
 
-    svg
-      .selectAll(".data-line")
-      .data(data)
-      .enter()
-      .append("path")
-      .attr("class", "data-line")
-      .attr("d", path)
-      .attr("fill", "none")
-      .attr("stroke", (d) => {
-        const colorMatch = colorAssignments.find(
-          (item) => item[0] === d.name
-        );
-        return colorMatch ? colorMatch[1] : colorScale(d.name);
-      })
-      .attr("stroke-width", 1)
-      .attr("opacity", 0.7);
-
-    activeDimensions.forEach((dim) => {
+    // 绘制坐标轴
+    activeDimensions.forEach((dim, index) => {
       svg
         .append("g")
         .attr("transform", `translate(${xScale(dim)}, 0)`)
@@ -69,9 +92,49 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
         .attr("x", 0)
         .attr("text-anchor", "middle")
         .attr("fill", "black")
-        .text(dim);
+        .text(dim)
+        .on("dblclick", () => toggleLineVisibility(dim)); // 双击事件，切换连线显示状态
+    });
+    // 清除旧的连线路径
+    svg.selectAll(".line-link").remove();
+
+    // 绘制坐标轴之间的连线
+    svg
+      .selectAll(".line-link")
+      .data(data)
+      .enter()
+      .append("path")
+      .attr("class", "line-link")
+      .attr("d", path)
+      .attr("fill", "none")
+      .attr("stroke", (d) => {
+        const colorMatch = colorAssignments.find((item) => item[0] === d.name);
+        return colorMatch ? colorMatch[1] : colorScale(d.name);
+      })
+      .attr("stroke-width", 1)
+      .attr("opacity", 0.7);
+
+    // 绘制每个坐标轴上的数据点
+    activeDimensions.forEach((dim) => {
+      svg
+        .selectAll(`.data-point-${dim}`)
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr("class", `data-point-${dim}`)
+        .attr("cx", xScale(dim))
+        .attr("cy", (d) => yScales[dim](d[dim]))
+        .attr("r", 4)
+        .attr("fill", (d) => {
+          const colorMatch = colorAssignments.find(
+            (item) => item[0] === d.name
+          );
+          return colorMatch ? colorMatch[1] : colorScale(d.name);
+        })
+        .attr("opacity", 0.7);
     });
 
+    // 图例绘制部分
     const uniqueNames = [...new Set(data.map((d) => d.name))];
     const legendG = svg
       .append("g")
@@ -113,9 +176,7 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
         .attr("width", 12)
         .attr("height", 12)
         .style("fill", () => {
-          const colorMatch = colorAssignments.find(
-            (item) => item[0] === name
-          );
+          const colorMatch = colorAssignments.find((item) => item[0] === name);
           return colorMatch ? colorMatch[1] : colorScale(name);
         });
 
@@ -132,7 +193,7 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
     });
 
     measureG.remove();
-  }, [data, colorAssignments, activeDimensions]);
+  }, [data, colorAssignments, activeDimensions, lineVisibility]);
 
   const handleDimensionClick = (dim) => {
     setActiveDimensions((prev) =>
@@ -142,6 +203,7 @@ const ParallelCoordinatesChart = ({ data, width, height, colorAssignments }) => 
     );
   };
 
+  // 坐标轴选择按钮
   return (
     <div style={{ textAlign: "center" }}>
       <div style={{ display: "flex", justifyContent: "center" }}>
