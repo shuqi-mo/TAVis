@@ -345,14 +345,6 @@ function Candle({
       .attr("transform", `translate(${margin.left}, ${margin.top})`)
       .call(yAxis);
 
-    // 定义上下文区域的面积图
-    const area = d3
-      .area()
-      .curve(d3.curveMonotoneX)
-      .x((d, i) => xScale2(i))
-      .y0(brushChartHeight)
-      .y1((d, i) => yScale2(d[2]));
-
     // 定义刷选（brush），使用 xScale2 的区间
     var brush = d3
       .brushX()
@@ -526,13 +518,55 @@ function Candle({
 
     updateXAxis2();
 
-    context
-      .append("path")
-      .attr("class", "area")
-      .datum(data.data)
-      .attr("d", area)
-      .attr("fill", "steelblue")
-      .attr("fill-opacity", 0.3);
+    // 绘制刷选区域
+    if (indicatorsTrade && indicatorsTrade.length) {
+      const nIndicators = indicatorsTrade.length;
+      const bandH = brushChartHeight / nIndicators; // 每条带的高度
+      
+      function buildSpans(tradeArr) {
+        const spans = [];
+        let cur = null;
+        tradeArr.forEach((v, idx) => {
+          if (v === 1 || v === -1) {
+            if (!cur && v === 1) {
+              // 建立新仓位
+              cur = { type: v, start: idx };
+            } else if (v === -cur.type) {
+              // 反向信号→平仓
+              const priceStart = data.data[cur.start][2]; // 这里用收盘价
+              const priceEnd = data.data[idx][2];
+              const success =
+                cur.type === 1
+                  ? priceEnd > priceStart // long→short 成功
+                  : priceEnd < priceStart; // short→long 成功
+              spans.push({ start: cur.start, end: idx, success });
+              cur = null;
+            }
+          }
+        });
+        return spans;
+      }
+
+      const stripG = context.append("g").attr("class", "trade-strips");
+
+      indicatorsTrade.forEach((tArr, i) => {
+        const spans = buildSpans(tArr);
+        console.log(spans);
+        const y0 = i * bandH;
+        stripG
+          .selectAll(".span-" + i)
+          .data(spans)
+          .enter()
+          .append("rect")
+          .attr("class", "span-" + i)
+          .attr("x", (d) => xScale2(d.start))
+          .attr("y", y0)
+          .attr("width", (d) => xScale2(d.end) - xScale2(d.start))
+          .attr("height", bandH - 1) // -1 px 看得见分隔线
+          .attr("fill", (d) => (d.success ? "#ff4d4f" : "#52c41a"))
+          .attr("fill-opacity", 0.55);
+      });
+    }
 
     // 在上下文区域外绘制刷选框底部的三角形
     const textOffset = 10;
