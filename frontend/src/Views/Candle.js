@@ -525,27 +525,38 @@ function Candle({
       
       function buildSpans(tradeArr) {
         const spans = [];
-        let cur = null;
+        let cur = null;  // 当前持仓
+        let prevTrade = null;  // 上一个平仓信号，用于处理反向信号的平仓
+        
         tradeArr.forEach((v, idx) => {
-          if (v === 1 || v === -1) {
-            if (!cur && v === 1) {
-              // 建立新仓位
+          if (v === 1 || v === -1) {  // 处理开仓信号
+            if (!cur) {  // 如果当前没有持仓，建立新仓位
               cur = { type: v, start: idx };
-            } else if (v === -cur.type) {
-              // 反向信号→平仓
-              const priceStart = data.data[cur.start][2]; // 这里用收盘价
+            } else if (v === -cur.type) {  // 反向信号，平仓当前持仓
+              const priceStart = data.data[cur.start][2];  // 用收盘价判断盈亏
               const priceEnd = data.data[idx][2];
-              const success =
-                cur.type === 1
-                  ? priceEnd > priceStart // long→short 成功
-                  : priceEnd < priceStart; // short→long 成功
+              const success = cur.type === 1
+                ? priceEnd > priceStart  // long → short 成功
+                : priceEnd < priceStart;  // short → long 成功
               spans.push({ start: cur.start, end: idx, success });
-              cur = null;
+              cur = null;  // 平仓后，清空当前持仓
             }
+            // 无论是否平仓，都重新开仓
+            cur = { type: v, start: idx };  // 开新的仓位
           }
         });
+        // 最后一个交易信号处理：若仍然有未平仓的持仓，忽略
+        if (cur) {
+          const priceStart = data.data[cur.start][2];
+          const priceEnd = data.data[tradeArr.length - 1][2];
+          const success = cur.type === 1
+            ? priceEnd > priceStart  // long → short 成功
+            : priceEnd < priceStart;  // short → long 成功
+          spans.push({ start: cur.start, end: tradeArr.length - 1, success });
+        }
+        
         return spans;
-      }
+      }      
 
       const stripG = context.append("g").attr("class", "trade-strips");
 
