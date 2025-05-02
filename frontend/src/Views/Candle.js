@@ -522,60 +522,147 @@ function Candle({
     if (indicatorsTrade && indicatorsTrade.length) {
       const nIndicators = indicatorsTrade.length;
       const bandH = brushChartHeight / nIndicators; // 每条带的高度
-      
+
       function buildSpans(tradeArr) {
         const spans = [];
-        let cur = null;  // 当前持仓
-        let prevTrade = null;  // 上一个平仓信号，用于处理反向信号的平仓
-        
+        let cur = null; // 当前持仓
+
         tradeArr.forEach((v, idx) => {
-          if (v === 1 || v === -1) {  // 处理开仓信号
-            if (!cur) {  // 如果当前没有持仓，建立新仓位
+          if (v === 1 || v === -1) {
+            // 处理开仓信号
+            if (!cur) {
+              // 如果当前没有持仓，建立新仓位
               cur = { type: v, start: idx };
-            } else if (v === -cur.type) {  // 反向信号，平仓当前持仓
-              const priceStart = data.data[cur.start][2];  // 用收盘价判断盈亏
-              const priceEnd = data.data[idx][2];
-              const success = cur.type === 1
-                ? priceEnd > priceStart  // long → short 成功
-                : priceEnd < priceStart;  // short → long 成功
-              spans.push({ start: cur.start, end: idx, success });
-              cur = null;  // 平仓后，清空当前持仓
+            } else if (v === -cur.type) {
+              // 反向信号，平仓当前持仓
+              const priceStart = data.data[cur.start][2]; // 开仓时的收盘价
+              const priceEnd = data.data[idx][2]; // 平仓时的收盘价
+              const isProfit =
+                cur.type === 1 ? priceEnd > priceStart : priceEnd < priceStart;
+              const profit =
+                cur.type === 1
+                  ? priceEnd - priceStart // long 盈利
+                  : priceStart - priceEnd; // short 盈利
+
+              // 为每一天计算一个colorFill
+              const dailyColorFills = [];
+              for (let i = cur.start; i <= idx; i++) {
+                const dailyPrice = data.data[i][2]; // 每日的收盘价
+                const isDailyProfit =
+                  cur.type === 1
+                    ? dailyPrice > priceStart
+                    : dailyPrice < priceStart;
+                const dailyProfit =
+                  cur.type === 1
+                    ? dailyPrice - priceStart // long 盈利
+                    : priceStart - dailyPrice; // short 盈利
+                const dailyColorFill = isDailyProfit
+                  ? "rgba(255, 0, 0, " + Math.min(dailyProfit / 10, 1) + ")"
+                  : "rgba(0, 255, 0, " + Math.min(-1 * dailyProfit / 10, 1) + ")"; // 根据当天盈亏计算填充颜色的深浅
+                dailyColorFills.push(dailyColorFill);
+              }
+
+              const borderColor = isProfit ? "red" : "green"; // 外框颜色：红色为盈利，绿色为亏损
+              spans.push({
+                start: cur.start,
+                end: idx,
+                success: isProfit,
+                dailyColorFills, // 存储每日的colorFill
+                borderColor, // 外框颜色
+              });
+              cur = null; // 平仓后，清空当前持仓
             }
+
             // 无论是否平仓，都重新开仓
-            cur = { type: v, start: idx };  // 开新的仓位
+            cur = { type: v, start: idx }; // 开新的仓位
           }
         });
+
         // 最后一个交易信号处理：若仍然有未平仓的持仓，忽略
         if (cur) {
           const priceStart = data.data[cur.start][2];
           const priceEnd = data.data[tradeArr.length - 1][2];
-          const success = cur.type === 1
-            ? priceEnd > priceStart  // long → short 成功
-            : priceEnd < priceStart;  // short → long 成功
-          spans.push({ start: cur.start, end: tradeArr.length - 1, success });
+          const isProfit =
+            cur.type === 1 ? priceEnd > priceStart : priceEnd < priceStart;
+          const profit =
+            cur.type === 1
+              ? priceEnd - priceStart // long 盈利
+              : priceStart - priceEnd; // short 盈利
+
+          // 为每一天计算一个colorFill
+          const dailyColorFills = [];
+          for (let i = cur.start; i < tradeArr.length; i++) {
+            const dailyPrice = data.data[i][2]; // 每日的收盘价
+            const isDailyProfit =
+              cur.type === 1
+                ? dailyPrice > priceStart
+                : dailyPrice < priceStart;
+            const dailyProfit =
+              cur.type === 1
+                ? dailyPrice - priceStart // long 盈利
+                : priceStart - dailyPrice; // short 盈利
+            const dailyColorFill = isDailyProfit
+              ? "rgba(255, 0, 0, " + Math.min(dailyProfit/10, 1) + ")"
+              : "rgba(0, 255, 0, " + Math.min(-1 * dailyProfit/10, 1) + ")"; // 根据当天盈亏计算填充颜色的深浅
+            dailyColorFills.push(dailyColorFill);
+          }
+
+          const borderColor = isProfit ? "red" : "green"; // 外框颜色
+          spans.push({
+            start: cur.start,
+            end: tradeArr.length - 1,
+            success: isProfit,
+            dailyColorFills, // 存储每日的colorFill
+            borderColor, // 外框颜色
+          });
         }
-        
+
         return spans;
-      }      
+      }
 
       const stripG = context.append("g").attr("class", "trade-strips");
 
       indicatorsTrade.forEach((tArr, i) => {
         const spans = buildSpans(tArr);
-        console.log(spans);
         const y0 = i * bandH;
+
+        console.log(spans);
+
         stripG
           .selectAll(".span-" + i)
           .data(spans)
           .enter()
-          .append("rect")
+          .append("g") // 使用g来包裹每个交易段
           .attr("class", "span-" + i)
-          .attr("x", (d) => xScale2(d.start))
-          .attr("y", y0)
-          .attr("width", (d) => xScale2(d.end) - xScale2(d.start))
-          .attr("height", bandH - 1) // -1 px 看得见分隔线
-          .attr("fill", (d) => (d.success ? "#ff4d4f" : "#52c41a"))
-          .attr("fill-opacity", 0.55);
+          .each(function (d) {
+            // 绘制每个交易段的外框（只绘制一次）
+            const xStart = xScale2(d.start); // 计算开仓的起始位置
+            const xEnd = xScale2(d.end); // 计算平仓的结束位置
+            // 为整个交易段绘制外框
+            d3.select(this)
+                .append("rect")
+                .attr("x", xStart)
+                .attr("y", y0)
+                .attr("width", xEnd - xStart)  // 整个交易段的宽度
+                .attr("height", bandH - 1) // 控制矩形高度
+                .attr("fill", "none") // 外框不能有填充颜色
+                .attr("stroke", d.borderColor) // 外框颜色：只有整个交易段才有外框
+                .attr("stroke-width", 2); // 外框宽度
+            // 对每个交易段，绘制每日的矩形条带
+            d.dailyColorFills.forEach((colorFill, idx) => {
+              const xStart = xScale2(d.start + idx); // 根据每日索引计算起始位置
+              const xEnd = xScale2(d.start + idx + 1); // 计算结束位置
+
+              // 为每一天绘制一个矩形
+              d3.select(this)
+                .append("rect")
+                .attr("x", xStart)
+                .attr("y", y0)
+                .attr("width", xEnd - xStart) // 每天的宽度
+                .attr("height", bandH - 1) // 控制矩形高度
+                .attr("fill", colorFill) // 根据每日盈亏设置填充颜色
+            });
+          });
       });
     }
 
